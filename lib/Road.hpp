@@ -7,14 +7,16 @@
 
 #include "TrafficRule.hpp"
 #include "Type.hpp"
+#include "Geometry.hpp"
+#include "Elevation.hpp"
 #include <memory>
 
 namespace opendrive {
 
-/**
- * Wrapper for the OpenDRIVE road.
- * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_roads
- */
+    /**
+     * Wrapper for the OpenDRIVE road.
+     * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_roads
+     */
     class Road {
     private:
 
@@ -22,6 +24,21 @@ namespace opendrive {
          * The type.
          */
         std::shared_ptr<Type> type;
+
+        /**
+         * The plan view.
+         */
+        std::vector<std::shared_ptr<Geometry>> planView;
+
+        /**
+         * The OpenDRIVE elevations.
+         */
+        std::vector<std::shared_ptr<Elevation>> elevationProfile;
+
+        /**
+         * The OpenDRIVE super elevations.
+         */
+        std::vector<std::shared_ptr<Elevation>> lateralProfile;
 
     public:
         /**
@@ -89,7 +106,43 @@ namespace opendrive {
          * @set
          */
         void setType(pugi::xpath_node typeNode);
-    };
-}
 
+        /**
+         * @get
+         */
+        const std::vector<std::shared_ptr<Geometry>> &getPlanView() const;
+
+        /**
+         * @get
+         */
+        const std::vector<std::shared_ptr<Elevation>> &getElevationProfile() const;
+
+        /**
+         * @get
+         */
+        const std::vector<std::shared_ptr<Elevation>> &getLateralProfile() const;
+
+        /**
+         * @add
+         */
+        template<typename T>
+        void add(pugi::xpath_node node);
+
+        /**
+         * @add
+         */
+        void add(const Geometry &_geometry);
+
+        /**
+         * @add
+         */
+        void add(const Elevation &_elevation);
+
+        /**
+         * @add
+         */
+        void add(const SuperElevation &_superElevation);
+    };
+
+}
 #endif //OPENDRIVE_ROAD_HPP

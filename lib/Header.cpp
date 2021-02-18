@@ -51,4 +51,5 @@ namespace opendrive {
     void Header::setGeoReference(pugi::xpath_node geoReferenceNode) {
         setGeoReference(GeoReference(geoReferenceNode));
     }
+
 }

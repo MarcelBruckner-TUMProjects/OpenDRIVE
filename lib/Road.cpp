@@ -45,4 +45,39 @@ namespace opendrive {
         return rule;
     }
 
+    template<typename T>
+    void Road::add(pugi::xpath_node typeNode) {
+        add(T(typeNode));
+    }
+
+    template void Road::add<Geometry>(pugi::xpath_node node);
+
+    template void Road::add<Elevation>(pugi::xpath_node node);
+
+    template void Road::add<SuperElevation>(pugi::xpath_node node);
+
+    const std::vector<std::shared_ptr<Geometry>> &Road::getPlanView() const {
+        return planView;
+    }
+
+    void Road::add(const Geometry &_geometry) {
+        planView.emplace_back(std::make_shared<Geometry>(_geometry));
+    }
+
+    void Road::add(const Elevation &_elevation) {
+        elevationProfile.emplace_back(std::make_shared<Elevation>(_elevation));
+    }
+
+    void Road::add(const SuperElevation &_superElevation) {
+        lateralProfile.emplace_back(std::make_shared<SuperElevation>(_superElevation));
+    }
+
+    const std::vector<std::shared_ptr<Elevation>> &Road::getElevationProfile() const {
+        return elevationProfile;
+    }
+
+    const std::vector<std::shared_ptr<Elevation>> &Road::getLateralProfile() const {
+        return lateralProfile;
+    }
+
 }

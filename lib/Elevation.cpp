@@ -24,4 +24,10 @@ namespace opendrive {
         os << "d=\"" << obj.d << std::endl;
         return os;
     }
+
+    SuperElevation::SuperElevation(pugi::xpath_node superElevationNode) : Elevation(superElevationNode) {}
+
+    SuperElevation::SuperElevation(double s, double a, double b, double c, double d) : Elevation(s, a, b, c, d) {
+
+    }
 }

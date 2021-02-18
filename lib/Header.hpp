@@ -90,6 +90,11 @@ namespace opendrive {
         explicit Header(pugi::xpath_node headerNode);
 
         /**
+         * @destructor
+         */
+        virtual ~Header() = default;
+
+        /**
          * @operator
          */
         friend std::ostream &operator<<(std::ostream &os, const Header &obj);

@@ -19,11 +19,16 @@ namespace opendrive {
      */
     class Geometry {
     private:
+//        /**
+//         * A projection used to transform the x, y coordinate from the original transverse mercator projection to
+//         * latitude and longitude.
+//         */
+//        PJ *projection;
+
         /**
-         * A projection used to transform the x, y coordinate from the original transverse mercator projection to
-         * latitude and longitude.
+         * The parametric polynomial curve defining the geometry.
          */
-        PJ *projection;
+        std::shared_ptr<ParamPoly3> paramPoly3;
 
     public:
 
@@ -53,25 +58,14 @@ namespace opendrive {
         double length;
 
         /**
-         * The parametric polynomial curve defining the geometry.
+         * @constructor
          */
-        ParamPoly3 paramPoly3;
-
-        /**
-         * The transformed coordinate.
-         */
-        PJ_COORD latLong{};
+        explicit Geometry(pugi::xpath_node geometryNode);
 
         /**
          * @constructor
          */
-        explicit Geometry(pugi::xpath_node geometryNode, PJ *projection);
-
-        /**
-         * @constructor
-         */
-        Geometry(double s, double x, double y, double hdg, double length, const ParamPoly3 &paramPoly3,
-                 PJ *projection);
+        Geometry(double s, double x, double y, double hdg, double length);
 
         /**
          * @destructor
@@ -84,19 +78,19 @@ namespace opendrive {
         friend std::ostream &operator<<(std::ostream &os, const Geometry &obj);
 
         /**
-         * @get x in latitude.
+         * @get
          */
-        double getLat() const;
+        const std::shared_ptr<ParamPoly3> &getPrimitive() const;
 
         /**
-         * @get y in longitude.
+         * @set
          */
-        double getLong() const;
+        void setParamPoly3(const ParamPoly3 &paramPoly3);
 
         /**
-         * @get A string representation of the latitude and longitude.
+         * @get
          */
-        std::string getLatLong() const;
+        void setPrimitive(pugi::xpath_node paramPoly3Node);
     };
 }
 

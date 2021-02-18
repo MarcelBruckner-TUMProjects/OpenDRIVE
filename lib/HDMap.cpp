@@ -39,12 +39,22 @@ namespace opendrive {
         for (const auto &roadNode : doc.select_nodes("//road")) {
             auto road = Road(roadNode);
             road.setType(roadNode.node().select_node("//type"));
-            roads.emplace_back(road);
-        }
-    }
 
-    pugi::xpath_node_set HDMap::findNodesByType(const std::string &type) {
-        return findNodesByXPath("//" + type);
+            for (const auto &geometryNode : roadNode.node().select_nodes("//geometry")) {
+                road.add<Geometry>(geometryNode);
+                road.getPlanView().back()->setPrimitive(geometryNode.node().select_nodes("//paramPoly3")[0]);
+            }
+
+            for (const auto &elevationNode : roadNode.node().select_nodes("//elevation")) {
+                road.add<Elevation>(elevationNode);
+            }
+
+            for (const auto &superElevationNode : roadNode.node().select_nodes("//superelevation")) {
+                road.add<SuperElevation>(superElevationNode);
+            }
+
+            roads.emplace_back(std::make_shared<Road>(road));
+        }
     }
 
     pugi::xpath_node_set HDMap::findNodesByXPath(const std::string &path) {
@@ -52,64 +62,32 @@ namespace opendrive {
     }
 
     bool HDMap::hasRoad(const std::string &id) {
-        return std::any_of(roads.begin(), roads.end(), [id](const Road &road) {
-            if (road.id == id) {
+        return std::any_of(roads.begin(), roads.end(), [id](const std::shared_ptr<Road> &road) {
+            if (road->id == id) {
                 return true;
             }
             return false;
         });
     }
 
-    Road HDMap::getRoad(const std::string &id) const {
+    std::shared_ptr<Road> HDMap::getRoad(const std::string &id) const {
         for (const auto &road : getRoads()) {
-            if (road.id == id) {
+            if (road->id == id) {
                 return road;
             }
         }
         throw std::invalid_argument("Cannot find road");
     }
 
-    std::string HDMap::getRoadSelector(pugi::xpath_node road) {
-        if (std::strcmp(road.node().name(), "road") != 0) {
-            return "//fdsnhjkgbnkfdhgbjhf";
-        }
-        return getRoadSelector(road.node().attribute("id").value());
-    }
-
-    std::string HDMap::getRoadSelector(std::string id) {
-        return "//road[@id = '" + std::string(std::move(id)) + "']";
-    }
-
-    pugi::xpath_node_set HDMap::getObjects(pugi::xpath_node road) {
-        return findNodesByXPath(getRoadSelector(road) + "/objects/object");
-    }
-
-    pugi::xpath_node_set HDMap::getSignals(pugi::xpath_node road) {
-        return findNodesByXPath(getRoadSelector(road) + "/signals/signal");
-    }
-
-    std::vector<Geometry> HDMap::getGeometries(pugi::xpath_node road) {
-        auto nodes = findNodesByXPath(getRoadSelector(road) + "/planView/geometry");
-
-        std::vector<Geometry> geometries;
-        for (const auto &geometry : nodes) {
-            if (std::strcmp(geometry.node().first_child().name(), "paramPoly3") == 0) {
-                geometries.emplace_back(geometry, projection);
-            }
-        }
-        return geometries;
-    }
-
-
     HDMap::~HDMap() {
         proj_destroy(projection);
     }
 
-    const std::vector<Road> &HDMap::getRoads() const {
-        return roads;
-    }
-
     const std::shared_ptr<Header> &HDMap::getHeader() const {
         return header;
+    }
+
+    const std::vector<std::shared_ptr<Road>> &HDMap::getRoads() const {
+        return roads;
     }
 }

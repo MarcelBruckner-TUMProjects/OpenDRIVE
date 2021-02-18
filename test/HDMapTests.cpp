@@ -47,7 +47,7 @@ namespace opendrive {
                 ASSERT_EQ(hdMap->getRoads().size(), 1);
                 ASSERT_EQ(hdMap->hasRoad(id), true);
 
-                road = std::make_shared<Road>(hdMap->getRoad(id));
+                road = hdMap->getRoad(id);
             }
         };
 
@@ -63,7 +63,7 @@ namespace opendrive {
         }
 
         /**
-         * Tests parsing the HD map road basic attributes.
+         * Tests parsing the test road basic attributes.
          */
         TEST_F(HDMapTests, testParsingRoadAttributes) {
             ASSERT_STREQ(road->name.c_str(), "");
@@ -73,7 +73,7 @@ namespace opendrive {
         }
 
         /**
-         * Tests parsing the HD map type.
+         * Tests parsingthe test road type.
          */
         TEST_F(HDMapTests, testParsingType) {
             EXPECT_NEAR(road->getType()->s, 0.0, maxDifference);
@@ -82,11 +82,63 @@ namespace opendrive {
         }
 
         /**
-         * Tests parsing the HD map rule.
+         * Tests parsing the test road rule.
          */
         TEST_F(HDMapTests, testParsingRule) {
             ASSERT_EQ(road->getRule(), TrafficRule::RHT);
         }
+
+        /**
+         * Tests parsing the test road plan view.
+         */
+        TEST_F(HDMapTests, testParsingPlanView) {
+            auto planView = road->getPlanView();
+            ASSERT_EQ(planView.size(), 4);
+
+            EXPECT_NEAR(planView[0]->getPrimitive()->aU, -0.000000000000e+00, maxDifference);
+            EXPECT_NEAR(planView[0]->getPrimitive()->bU, 1.000000000000e+00, maxDifference);
+            EXPECT_NEAR(planView[0]->getPrimitive()->cU, -2.864238929279e-11, maxDifference);
+            EXPECT_NEAR(planView[0]->getPrimitive()->dU, 9.895389049440e-14, maxDifference);
+
+            EXPECT_NEAR(planView[0]->getPrimitive()->aV, 0.000000000000e+00, maxDifference);
+            EXPECT_NEAR(planView[0]->getPrimitive()->bV, 2.775557561563e-16, maxDifference);
+            EXPECT_NEAR(planView[0]->getPrimitive()->cV, -1.284829717715e-07, maxDifference);
+            EXPECT_NEAR(planView[0]->getPrimitive()->dV, 3.576738398807e-10, maxDifference);
+
+            ASSERT_STREQ(planView[0]->getPrimitive()->pRange.c_str(), "arcLength");
+        }
+
+        /**
+         * Tests parsing the test road elevation profile.
+         */
+        TEST_F(HDMapTests, testParsingElevationProfile) {
+            auto elevationProfile = road->getElevationProfile();
+            ASSERT_EQ(elevationProfile.size(), 12);
+
+            EXPECT_NEAR(elevationProfile[0]->s, 0.000000000000e+00, maxDifference);
+
+            EXPECT_NEAR(elevationProfile[0]->a, 5.299890546737e+02, maxDifference);
+            EXPECT_NEAR(elevationProfile[0]->b, 1.580599780197e-03, maxDifference);
+            EXPECT_NEAR(elevationProfile[0]->c, -1.160874186427e-05, maxDifference);
+            EXPECT_NEAR(elevationProfile[0]->d, 6.476066427343e-08, maxDifference);
+        }
+
+        /**
+         * Tests parsing the test road lateral profile.
+         */
+        TEST_F(HDMapTests, testParsingLateralProfile) {
+            auto lateralProfile = road->getLateralProfile();
+            ASSERT_EQ(lateralProfile.size(), 9);
+
+            EXPECT_NEAR(lateralProfile[0]->s, 0.000000000000e+00, maxDifference);
+
+            EXPECT_NEAR(lateralProfile[0]->a, 3.192305336358e-02, maxDifference);
+            EXPECT_NEAR(lateralProfile[0]->b, -7.543093979616e-05, maxDifference);
+            EXPECT_NEAR(lateralProfile[0]->c, -4.921087190205e-08, maxDifference);
+            EXPECT_NEAR(lateralProfile[0]->d, 1.391947694799e-09, maxDifference);
+        }
+
+
 
         //		/**
 //		 * Tests the geometry counts in the map.
