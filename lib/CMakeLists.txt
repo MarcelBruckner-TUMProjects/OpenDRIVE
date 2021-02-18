@@ -1,21 +1,47 @@
 ########################################################################################################################
+### PUGI XML ###
+########################################################################################################################
+
+# Download and unpack pugixml at configure time
+configure_file(CMakeLists.txt.in pugixml-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+        RESULT_VARIABLE result
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/pugixml-download)
+if (result)
+    message(FATAL_ERROR "CMake step for pugixml failed: ${result}")
+endif ()
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+        RESULT_VARIABLE result
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/pugixml-download)
+if (result)
+    message(FATAL_ERROR "Build step for pugixml failed: ${result}")
+endif ()
+
+# Add pugixml directly to our build.
+add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/pugixml-src
+        ${CMAKE_CURRENT_BINARY_DIR}/pugixml-build
+        EXCLUDE_FROM_ALL)
+
+########################################################################################################################
 ### Library ###
 ########################################################################################################################
 
-execute_process (
-    COMMAND bash -c "xsdcxx cxx-tree standard/xsd_schema/*.xsd"
-)
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
 
-add_subdirectory(standard)
+find_package(PROJ)
 
 add_library(libOpenDRIVE
-        Core.cpp
-        Junction.cpp
-        Lane.cpp
-        Object.cpp
-        Railroad.cpp
+        HDMap.cpp
+        Geometry.cpp
+        Elevation.cpp
+        GeoReference.cpp
+        Header.cpp
+        ParamPoly3.cpp
         Road.cpp
-        Signal.cpp
+        Shape.cpp
+        TrafficRule.cpp
+        Type.cpp
         )
 
 target_include_directories(libOpenDRIVE
@@ -23,4 +49,8 @@ target_include_directories(libOpenDRIVE
         PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
         )
 
-target_link_libraries(libOpenDRIVE libOpenDRIVEStandard)
+target_link_libraries(libOpenDRIVE
+        ${Boost_LIBRARIES}
+        ${PROJ_LIBRARIES}
+        pugixml
+        )
