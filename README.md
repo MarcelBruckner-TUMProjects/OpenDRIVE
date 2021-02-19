@@ -14,3 +14,9 @@ Install these on your system:
 
 Automatically built by CMake:
 - [GoogleTest](https://github.com/google/googletest.git)
+
+# Setup
+
+Before running any code you have to download the OpenDRIVE V1.4 standard by VIRES Simulationstechnologie GmbH and use the XSD schema to generate C++ data bindings.
+
+To make this process easier there is the `bootstrap.sh` script. Run it and follow the instructions to download and generate the standard.
