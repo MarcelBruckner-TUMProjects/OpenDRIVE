@@ -1,4 +1,4 @@
 **
-!bootstrap.sh
+!../../bootstrap.sh
 !.gitignore
 !CMakeLists.txt

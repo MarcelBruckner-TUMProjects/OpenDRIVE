@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<OpenDRIVE xmlns="http://www.opendrive.org">
+<OpenDRIVE>
   <header revMajor="1" revMinor="4" name="Providentia" date="14-12-17" north="5.350576134016e+06" east="5.350576134016e+06" south="5.350576134016e+06" west="5.350576134016e+06" vendor="3D Mapping Solutions">
     <geoReference><![CDATA[+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=500000 +y_0=0 +datum=WGS84 +units=m +no_defs]]></geoReference>
   </header>

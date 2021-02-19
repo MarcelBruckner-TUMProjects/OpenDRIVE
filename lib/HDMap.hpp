@@ -9,12 +9,9 @@
 #include <string>
 #include <vector>
 
-#include "pugixml.hpp"
 #include "proj.h"
-#include "Road.hpp"
-#include "Geometry.hpp"
-#include "Header.hpp"
-#include "Elevation.hpp"
+
+#include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
 
 namespace opendrive {
 
@@ -31,74 +28,26 @@ namespace opendrive {
         std::string filename;
 
         /**
-         * The parsed XML document.
+         * The parsed open drive object model.
          */
-        pugi::xml_document doc;
-
-        /**
-         * The coordinate transformation.
-         */
-        PJ *projection{};
-
-        /**
-         * The OpenDRIVE header.
-         */
-        std::shared_ptr<Header> header;
-
-        /**
-         * The OpenDRIVE roads.
-         */
-        std::vector<std::shared_ptr<Road>> roads;
-
-
-        /**
-        * Finds all nodes by the given XPath.
-        */
-        pugi::xpath_node_set findNodesByXPath(const std::string &path);
+        std::unique_ptr<OpenDRIVE> _openDrive;
 
     public:
-
         /**
-         * @constructor Parses the given XML document.
-         * Does NOT parse the OpenDRIVE elements in the document.
-        */
-        explicit HDMap(std::string filename);
-
-        /**
-        * @destructor
-        */
-        virtual ~HDMap();
-
-        /**
-         * Main parsing function for the OpenDRIVE standard.
+         * @constructor
          */
-        void parse();
-
-        /**
-         * Parses the OpenDRIVE header.
-         */
-        void parseHeader();
-
-        /**
-        * @get Checks if the road with the given id exists.
-        */
-        bool hasRoad(const std::string &id);
-
-        /**
-        * @get Gets a specific road with the given id.
-        * @throws invalid_argument if no road with the given id is found.
-        */
-        std::shared_ptr<Road> getRoad(const std::string &id) const;
+        explicit HDMap(const std::string &filename);
 
         /**
          * @get
          */
-        const std::shared_ptr<Header> &getHeader() const;
+        const std::unique_ptr<OpenDRIVE> &openDrive() const;
 
         /**
          * @get
          */
-        const std::vector<std::shared_ptr<Road>> &getRoads() const;
+        const road &getRoad(const std::string &id) const;
+
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP
