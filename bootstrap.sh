@@ -7,7 +7,7 @@ totalPath="$standardPath$zipFileName"
 
 if [ ! -f "$totalPath" ]; then
   echo "Usage:"
-  echo "Open https://www.asam.net/standards/detail/opendrive/ and download OpenDRIVE V1.4 by VIRES Simulationstechnologie GmbH."
+  echo "Open https://www.asam.net/standards/detail/opendrive/ and 'Download OpenDRIVE V1.4 (by VIRES Simulationstechnologie GmbH)'."
   echo "You can find the link in the 'Older Versions' section."
   echo "This downloads a ZIP archive named $zipFileName"
   echo "Copy the downloaded $zipFileName into the $standardPath folder."
