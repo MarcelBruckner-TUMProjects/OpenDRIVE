@@ -39,6 +39,11 @@ namespace opendrive {
         explicit HDMap(const std::string &filename);
 
         /**
+         * @destructor
+         */
+        virtual ~HDMap() = default;
+
+        /**
          * @get
          */
         const std::unique_ptr<OpenDRIVE> &openDrive() const;

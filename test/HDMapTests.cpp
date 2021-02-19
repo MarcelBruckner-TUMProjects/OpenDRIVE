@@ -24,7 +24,7 @@ namespace opendrive {
             /**
              * The maximal difference after parsing.
              */
-            const double maxDifference = 1e-52;
+            double maxDifference = 1e-52;
 
             /**
              * The test road.
