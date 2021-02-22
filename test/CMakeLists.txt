@@ -45,6 +45,8 @@ endif ()
 ########################################################################################################################
 add_executable(Tests
         HDMapTests.cpp
+        ParsingTests.cpp
+        RoadTests.cpp
         )
 target_link_libraries(Tests PUBLIC libOpenDRIVE gtest_main)
 target_include_directories(Tests PUBLIC tests "${PROJECT_BINARY_DIR}")

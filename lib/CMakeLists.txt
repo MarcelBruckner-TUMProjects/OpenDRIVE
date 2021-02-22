@@ -14,6 +14,8 @@ add_library(libOpenDRIVE
         Road.cpp
         Object.cpp
         OpenDriveWrapper.cpp
+        Geometry.cpp
+        Point.cpp
         )
 
 target_include_directories(libOpenDRIVE

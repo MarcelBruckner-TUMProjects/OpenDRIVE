@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
+#include "Point.hpp"
 
 namespace opendrive {
 
@@ -21,7 +22,7 @@ namespace opendrive {
     protected:
 
         /**
-         * A pointer to the original parsing result.
+         * A Pointer to the original parsing result.
          */
         std::shared_ptr<S> openDriveObject;
 
@@ -50,8 +51,19 @@ namespace opendrive {
         /**
          * @operator true if the id of the underlying parser object is equal to the given id, false else.
          */
-        virtual bool operator==(const std::string &id) = 0;
+        virtual bool operator==(const std::string &id);
 
+        /**
+         * The interpolation function used to find the world coordinates of an object.
+         * @param s The position along the reference line.
+         * @param t The offset from the reference line.
+         */
+        virtual Point interpolate(double s, double t) = 0;
+
+        /**
+         * @get
+         */
+        virtual double getS() const;
     };
 
 }

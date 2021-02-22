@@ -15,6 +15,7 @@
 #include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
 
 #include "Road.hpp"
+#include "Geometry.hpp"
 
 namespace opendrive {
 
@@ -29,8 +30,8 @@ namespace opendrive {
          */
         std::string filename;
 
-
         std::map<std::string, Road> roads;
+
 
         void setRoads();
 
@@ -52,7 +53,7 @@ namespace opendrive {
 
         bool operator==(const std::string &roadId) override;
 
-
+        Point interpolate(double s, double t) override;
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

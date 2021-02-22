@@ -9,6 +9,7 @@
 
 #include "Object.hpp"
 #include "OpenDriveWrapper.hpp"
+#include "Geometry.hpp"
 
 namespace opendrive {
 
@@ -24,9 +25,19 @@ namespace opendrive {
         std::map<std::string, Object> objects;
 
         /**
+         * The list of planView defining the road.
+         */
+        std::map<double, Geometry> planView;
+
+        /**
          * @set
          */
         void setObjects();
+
+        /**
+         * @set
+         */
+        void setGeometries();
 
     public:
 
@@ -48,7 +59,22 @@ namespace opendrive {
         /**
          * @get
          */
+        const std::map<double, Geometry> &getPlanView() const;
+
+        /**
+         * @get
+         */
         const Object &getObject(const std::string &id) const;
+
+        /**
+         * @get
+         */
+        const Geometry &getGeometry(double s) const;
+
+        /**
+         * @get
+         */
+        double getLength() const;
 
         /**
          * @singleton
@@ -56,6 +82,8 @@ namespace opendrive {
         static Road &empty();
 
         bool operator==(const std::string &roadId) override;
+
+        Point interpolate(double s, double t) override;
     };
 }
 

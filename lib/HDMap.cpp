@@ -33,4 +33,8 @@ namespace opendrive {
     bool HDMap::operator==(const std::string &roadId) {
         return false;
     }
+
+    Point HDMap::interpolate(double s, double t) {
+        return {0, 0};
+    }
 }

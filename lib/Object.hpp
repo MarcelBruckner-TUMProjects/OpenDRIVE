@@ -33,7 +33,9 @@ namespace opendrive {
          */
         static Object &empty();
 
-        bool operator==(const std::string &objectId) override;
+        Point interpolate(double s, double t) override;
+
+        double getS() const override;
     };
 }
 
