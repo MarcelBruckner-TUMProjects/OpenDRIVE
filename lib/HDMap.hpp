@@ -8,18 +8,20 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "proj.h"
 
 #include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
 
-namespace opendrive {
+#include "Road.hpp"
 
+namespace opendrive {
 
     /**
      * A class for parsing and querying the OpenDrive HD maps.
      */
-    class HDMap {
+    class HDMap : public OpenDriveWrapper<OpenDRIVE> {
     private:
 
         /**
@@ -27,16 +29,16 @@ namespace opendrive {
          */
         std::string filename;
 
-        /**
-         * The parsed open drive object model.
-         */
-        std::unique_ptr<OpenDRIVE> _openDrive;
+
+        std::map<std::string, Road> roads;
+
+        void setRoads();
 
     public:
         /**
          * @constructor
          */
-        explicit HDMap(const std::string &filename);
+        explicit HDMap(std::string filename);
 
         /**
          * @destructor
@@ -46,12 +48,10 @@ namespace opendrive {
         /**
          * @get
          */
-        const std::unique_ptr<OpenDRIVE> &openDrive() const;
+        const Road &getRoad(const std::string &id) const;
 
-        /**
-         * @get
-         */
-        const road &getRoad(const std::string &id) const;
+        bool operator==(const std::string &roadId) override;
+
 
     };
 }

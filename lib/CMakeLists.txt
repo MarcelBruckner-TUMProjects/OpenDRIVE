@@ -11,6 +11,9 @@ find_package(PROJ)
 
 add_library(libOpenDRIVE
         HDMap.cpp
+        Road.cpp
+        Object.cpp
+        OpenDriveWrapper.cpp
         )
 
 target_include_directories(libOpenDRIVE
