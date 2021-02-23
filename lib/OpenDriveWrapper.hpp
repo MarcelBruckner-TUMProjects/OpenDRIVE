@@ -19,7 +19,7 @@ namespace opendrive {
     template<class T>
     class OpenDriveWrapper {
 
-    public:
+    protected:
 
         /**
          * A Pointer to the original parsing result.

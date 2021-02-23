@@ -9,6 +9,12 @@ namespace opendrive {
          * Base setup for the geometry calculation tests.
          */
         class GeometryTests : public HDMapTests {
+        public:
+            /**
+             * @destrcutor
+             */
+            ~GeometryTests() override = default;
+
         protected:
 
             /**

@@ -18,7 +18,6 @@ namespace opendrive {
     Point Geometry::interpolatePrimitive<paramPoly3>(double s) {
         auto primitive = openDriveObject->paramPoly3().get();
 
-        // TODO Find out if this is really correct.
         double p = s;
         auto p2 = p * p;
         auto p3 = p2 * p;

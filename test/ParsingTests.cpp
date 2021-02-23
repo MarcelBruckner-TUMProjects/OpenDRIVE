@@ -10,7 +10,11 @@ namespace opendrive {
          * Base setup for the tests that parse the mock HD map.
          */
         class ParsingTests : public HDMapTests {
-            // Empty only for test naming
+        public:
+            /**
+             * @destrcutor
+             */
+            ~ParsingTests() override = default;
         };
 
         /**

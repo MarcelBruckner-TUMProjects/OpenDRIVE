@@ -71,9 +71,11 @@ namespace opendrive {
 
     const Geometry &Road::throwGeometryNotFound(double s) {
         throw std::invalid_argument(std::to_string(s) + " is not on the road.");
+        return *new Geometry();
     }
 
     const Object &Road::throwObjectNotFound(const std::string &id) {
         throw std::invalid_argument("There exists no object " + id + ".");
+        return *new Object();
     }
 }

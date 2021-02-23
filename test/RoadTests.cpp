@@ -9,6 +9,12 @@ namespace opendrive {
          * Base setup for the tests of the Road class.
          */
         class RoadTests : public HDMapTests {
+        public:
+            /**
+             * @destrcutor
+             */
+            ~RoadTests() override = default;
+
         protected:
 
             /**
