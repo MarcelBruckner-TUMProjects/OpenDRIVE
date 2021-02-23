@@ -13,9 +13,10 @@
 namespace opendrive {
 
     /**
-     * Wrapper for the OpenDRIVE object class
+     * Wrapper for the OpenDRIVE object class.
+     * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_objects
      */
-    class Object : public OpenDriveWrapper<object> {
+    class Object : public OpenDriveWrapperWithCoordinate<object> {
     public:
 
         /**
@@ -29,13 +30,9 @@ namespace opendrive {
         explicit Object(const class object &openDriveObject);
 
         /**
-         * @singleton
+         * @destructor
          */
-        static Object &empty();
-
-        Point interpolate(double s, double t) override;
-
-        double getS() const override;
+        ~Object() override = default;
     };
 }
 

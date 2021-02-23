@@ -5,42 +5,59 @@
 namespace opendrive {
     namespace tests {
 
+        /**
+         * Base setup for the tests of the Road class.
+         */
         class RoadTests : public HDMapTests {
         protected:
+
+            /**
+             * Asserts that for the given object the expected s coordinate is retrieved.
+             */
             void assertCorrectGeometryForObject(const std::string &objectId, double expected) {
-                Object object = _road->getObject(objectId);
-                EXPECT_NEAR(_road->getGeometry(object.getS()).getS(), expected, maxDifference);
+                Object object = road.getObject(objectId);
+                EXPECT_NEAR(road.getGeometry(object.getSCoordinate()).getSCoordinate(), expected, maxDifference);
             }
         };
 
         /**
-         * Tests finding the correct geometry for the given s value.
+         * Tests finding the correct geometry for a given s value.
          */
         TEST_F(RoadTests, testFindCorrectGeometry) {
-            ASSERT_EQ(_road->getPlanView().size(), 4);
+            ASSERT_EQ(road.getPlanView().size(), 5);
             double expected;
 
             expected = 0;
             for (int i = (int) expected; i < 2.874078777576e+02; i++) {
-                EXPECT_NEAR(_road->getGeometry(i).getS(), expected, maxDifference);
+                EXPECT_NEAR(road.getGeometry(i).getSCoordinate(), expected, maxDifference);
             }
 
             expected = 2.874078777576e+02;
             for (int i = (int) expected + 1; i < 8.622236665343e+02; i++) {
-                EXPECT_NEAR(_road->getGeometry(i).getS(), expected, maxDifference);
+                EXPECT_NEAR(road.getGeometry(i).getSCoordinate(), expected, maxDifference);
             }
 
             expected = 8.622236665343e+02;
             for (int i = (int) expected + 1; i < 1.437039521207e+03; i++) {
-                EXPECT_NEAR(_road->getGeometry(i).getS(), expected, maxDifference);
+                EXPECT_NEAR(road.getGeometry(i).getSCoordinate(), expected, maxDifference);
             }
 
             expected = 1.437039521207e+03;
-            for (int i = (int) expected + 1; i < _road->getLength(); i++) {
-                EXPECT_NEAR(_road->getGeometry(i).getS(), expected, maxDifference);
+            for (int i = (int) expected + 1; i < road.getLength(); i++) {
+                EXPECT_NEAR(road.getGeometry(i).getSCoordinate(), expected, maxDifference);
             }
         }
 
+
+        /**
+         * Tests that searching for an invalid s coordinate throws an error.
+         */
+        TEST_F(RoadTests, testErrorThrownOnInvalidGeometry) {
+            EXPECT_THROW(road.getGeometry(-32324), std::invalid_argument);
+            EXPECT_THROW(road.getGeometry(-1), std::invalid_argument);
+            EXPECT_THROW(road.getGeometry(65453), std::invalid_argument);
+            EXPECT_THROW(road.getGeometry(56435634), std::invalid_argument);
+        }
 
         /**
          * Tests finding the correct geometry for a given object.
@@ -67,6 +84,16 @@ namespace opendrive {
             assertCorrectGeometryForObject("4007981", expected);
             assertCorrectGeometryForObject("4007983", expected);
             assertCorrectGeometryForObject("4007985", expected);
+        }
+
+        /**
+         * Tests that searching for an invalid object throws an error.
+         */
+        TEST_F(RoadTests, testErrorThrownOnInvalidObject) {
+            EXPECT_THROW(road.getObject("-32324"), std::invalid_argument);
+            EXPECT_THROW(road.getObject("fdsdsf"), std::invalid_argument);
+            EXPECT_THROW(road.getObject("foo"), std::invalid_argument);
+            EXPECT_THROW(road.getObject("bar"), std::invalid_argument);
         }
     }// namespace tests
 }// namespace opendrive

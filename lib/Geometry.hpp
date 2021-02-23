@@ -13,8 +13,9 @@ namespace opendrive {
 
     /**
      * Templated wrapper for the OpenDRIVE geometry class.
+     * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_geometry
      */
-    class Geometry : public OpenDriveWrapper<geometry> {
+    class Geometry : public OpenDriveWrapperWithCoordinate<geometry> {
     public:
 
         /**
@@ -25,7 +26,12 @@ namespace opendrive {
         /**
          * @constructor
          */
-        explicit Geometry(const geometry &openDriveObject);;
+        explicit Geometry(const geometry &openDriveObject);
+
+        /**
+         * @destructor
+         */
+        ~Geometry() override = default;
 
         /**
          * Specific interpolation functions per primitive.
@@ -33,9 +39,31 @@ namespace opendrive {
         template<typename S>
         Point interpolatePrimitive(double s);
 
-        double getS() const override;
+        /**
+         * @get The start [x, y] coordinate of the geometry, i.e. the offset of the geometry.
+         */
+        Point getStart() const;
 
-        Point interpolate(double s, double t) override;
+        /**
+         * Interpolates the [x, y] point of the start of the geometry, i.e. at s == 0.
+         */
+        Point interpolateStart();
+
+        /**
+         * Interpolates the [x, y] point of the end of the geometry, i.e. at s == length.
+         */
+        Point interpolateEnd();
+
+        /**
+         * Interpolates the [x, y] point at the given s coordinate along the geometry.
+         * @param s s-coordinate of start position
+         */
+        Point interpolate(double s);
+
+        /**
+         * @get The length of the geometry.
+         */
+        double getLength() const;
     };
 
 }

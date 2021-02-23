@@ -14,17 +14,17 @@ namespace opendrive {
 
     /**
      * Templated wrapper for the OpenDRIVE classes from the parser.
-     * @tparam S The parser type of the OpenDRIVE object.
+     * @tparam T The parser type of the OpenDRIVE object.
      */
-    template<class S>
+    template<class T>
     class OpenDriveWrapper {
 
-    protected:
+    public:
 
         /**
          * A Pointer to the original parsing result.
          */
-        std::shared_ptr<S> openDriveObject;
+        std::shared_ptr<T> openDriveObject;
 
     public:
 
@@ -36,36 +36,52 @@ namespace opendrive {
         /**
          * @constructor
          */
-        explicit OpenDriveWrapper(const S &openDriveObject);
+        explicit OpenDriveWrapper(const T &openDriveObject);
+
+        /**
+         * @destructor
+         */
+        virtual ~OpenDriveWrapper() = default;
 
         /**
          * @get
          */
-        const std::shared_ptr<S> &getOpenDriveObject() const;
+        const std::shared_ptr<T> &getOpenDriveObject() const;
 
         /**
          * @get true if the object is valid, i.e. there exists an underlying parser object, false else.
          */
         bool isValid() const;
-
-        /**
-         * @operator true if the id of the underlying parser object is equal to the given id, false else.
-         */
-        virtual bool operator==(const std::string &id);
-
-        /**
-         * The interpolation function used to find the world coordinates of an object.
-         * @param s The position along the reference line.
-         * @param t The offset from the reference line.
-         */
-        virtual Point interpolate(double s, double t) = 0;
-
-        /**
-         * @get
-         */
-        virtual double getS() const;
     };
 
+
+    /**
+     * Templated wrapper for the OpenDRIVE classes from the parser for objects with a s coordinate.
+     * @tparam T The parser type of the OpenDRIVE object.
+     */
+    template<class T>
+    class OpenDriveWrapperWithCoordinate : public OpenDriveWrapper<T> {
+    public:
+        /**
+         * @constructor
+         */
+        explicit OpenDriveWrapperWithCoordinate() = default;
+
+        /**
+         * @constructor
+         */
+        explicit OpenDriveWrapperWithCoordinate(const T &openDriveObject);
+
+        /**
+         * @destructor
+         */
+        virtual ~OpenDriveWrapperWithCoordinate() = default;
+
+        /**
+         * @get s-coordinate of start position.
+         */
+        virtual double getSCoordinate() const;
+    };
 }
 
 

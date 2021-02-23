@@ -3,6 +3,7 @@
 //
 
 #include "Road.hpp"
+#include <string>
 
 namespace opendrive {
 
@@ -33,23 +34,12 @@ namespace opendrive {
     }
 
     const Object &Road::getObject(const std::string &id) const {
-        auto iterator = std::find_if(
-                objects.begin(),
-                objects.end(),
-                [&id](const std::pair<std::string, Object> &entry) {
-                    return std::strcmp(entry.second.getOpenDriveObject()->id()->c_str(), id.c_str()) == 0;
-                }
-        );
-        return iterator->second;
-    }
-
-    Road &Road::empty() {
-        static Road instance;
-        return instance;
-    }
-
-    Point Road::interpolate(double s, double t) {
-        return {0, 0};
+        for (const auto &entry : objects) {
+            if (std::strcmp(entry.second.getOpenDriveObject()->id()->c_str(), id.c_str()) == 0) {
+                return objects.at(entry.first);
+            }
+        }
+        return throwObjectNotFound(id);
     }
 
     const std::map<double, Geometry> &Road::getPlanView() const {
@@ -57,17 +47,33 @@ namespace opendrive {
     }
 
     const Geometry &Road::getGeometry(double s) const {
-        auto iterator = std::find_if(
-                planView.begin(),
-                planView.end(),
-                [&s](const std::pair<double, Geometry> &entry) {
-                    return entry.second.getS() > s;
-                }
-        );
-        return (--iterator)->second;
+        if (s < 0) {
+            return throwGeometryNotFound(s);
+        }
+        double previous = 0;
+        for (const auto &entry : planView) {
+            double getS = entry.second.getSCoordinate();
+            if (getS > s) {
+                break;
+            }
+            previous = getS;
+        }
+        const Geometry &geometry = planView.at(previous);
+        if (s > geometry.getSCoordinate() + geometry.getLength()) {
+            return throwGeometryNotFound(s);
+        }
+        return geometry;
     }
 
     double Road::getLength() const {
         return openDriveObject->length().get();
+    }
+
+    const Geometry &Road::throwGeometryNotFound(double s) {
+        throw std::invalid_argument(std::to_string(s) + " is not on the road.");
+    }
+
+    const Object &Road::throwObjectNotFound(const std::string &id) {
+        throw std::invalid_argument("There exists no object " + id + ".");
     }
 }

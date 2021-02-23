@@ -12,7 +12,7 @@ namespace opendrive {
     namespace tests {
 
         /**
-         * Common setup for the HD Map tests.
+         * Common setup for the tests on the mock HD map.
          */
         class HDMapTests : public ::testing::Test {
         protected:
@@ -35,7 +35,7 @@ namespace opendrive {
             /**
              * The test road.
              */
-            std::shared_ptr<Road> _road;
+            Road road;
 
             /**
              * @destructor

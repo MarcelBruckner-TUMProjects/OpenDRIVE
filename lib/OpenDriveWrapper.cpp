@@ -13,10 +13,10 @@ namespace opendrive {
     class OpenDriveWrapper<road>;
 
     template
-    class OpenDriveWrapper<object>;
+    class OpenDriveWrapperWithCoordinate<object>;
 
     template
-    class OpenDriveWrapper<geometry>;
+    class OpenDriveWrapperWithCoordinate<geometry>;
 
     template<class S>
     OpenDriveWrapper<S>::OpenDriveWrapper(const S &openDriveObject) :openDriveObject(
@@ -33,11 +33,13 @@ namespace opendrive {
         return openDriveObject;
     }
 
-    template<class S>
-    bool OpenDriveWrapper<S>::operator==(const std::string &id) { return false; }
+    template<class T>
+    OpenDriveWrapperWithCoordinate<T>::OpenDriveWrapperWithCoordinate(const T &openDriveObject) :
+            OpenDriveWrapper<T>(openDriveObject) {
+    }
 
-    template<class S>
-    double OpenDriveWrapper<S>::getS() const {
-        return 0;
+    template<class T>
+    double OpenDriveWrapperWithCoordinate<T>::getSCoordinate() const {
+        return OpenDriveWrapper<T>::getOpenDriveObject()->s().get();
     }
 }

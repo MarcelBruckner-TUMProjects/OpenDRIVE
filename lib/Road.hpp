@@ -30,12 +30,12 @@ namespace opendrive {
         std::map<double, Geometry> planView;
 
         /**
-         * @set
+         * @set Converts the parser objects to Object objects.
          */
         void setObjects();
 
         /**
-         * @set
+         * @set Converts the parser geometries to Geometry objects.
          */
         void setGeometries();
 
@@ -52,6 +52,11 @@ namespace opendrive {
         explicit Road(const class road &openDriveRoad);
 
         /**
+         * @destructor
+         */
+        ~Road() override = default;
+
+        /**
          * @get
          */
         const std::map<std::string, Object> &getObjects() const;
@@ -62,12 +67,16 @@ namespace opendrive {
         const std::map<double, Geometry> &getPlanView() const;
 
         /**
-         * @get
+         * @get Tries to find an object with the given id along the road.
+         *
+         * @throws invalid_argument if no object with the given id is found.
          */
         const Object &getObject(const std::string &id) const;
 
         /**
-         * @get
+         * @get Tries to find the geometry including the given s coordinate along the road.
+         *
+         * @throws invalid_argument if the s coordinate is negative or outside if the road.
          */
         const Geometry &getGeometry(double s) const;
 
@@ -77,13 +86,19 @@ namespace opendrive {
         double getLength() const;
 
         /**
-         * @singleton
+         * @operator true if the id of the road is equal to the given id, false else.
          */
-        static Road &empty();
+        bool operator==(const std::string &roadId);
 
-        bool operator==(const std::string &roadId) override;
+        /**
+         * @throws invalid_argument describing that no geometry including the given s coordinate could be found.
+         */
+        static const Geometry &throwGeometryNotFound(double s);
 
-        Point interpolate(double s, double t) override;
+        /**
+         * @throws invalid_argument describing that no object with the given id could be found.
+         */
+        static const Object &throwObjectNotFound(const std::string &id);
     };
 }
 

@@ -21,20 +21,12 @@ namespace opendrive {
         if (iterator != roads.end()) {
             return iterator->second;
         }
-        return Road::empty();
+        throw std::invalid_argument("Could not find a road with the id " + id);
     }
 
     void HDMap::setRoads() {
         for (const auto &openDriveRoad : getOpenDriveObject()->road()) {
             roads.emplace(openDriveRoad.id().get(), Road(openDriveRoad));
         }
-    }
-
-    bool HDMap::operator==(const std::string &roadId) {
-        return false;
-    }
-
-    Point HDMap::interpolate(double s, double t) {
-        return {0, 0};
     }
 }

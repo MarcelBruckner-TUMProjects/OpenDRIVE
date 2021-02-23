@@ -7,7 +7,7 @@
 
 namespace opendrive {
 
-    Geometry::Geometry(const geometry &openDriveObject) : OpenDriveWrapper<geometry>(openDriveObject) {}
+    Geometry::Geometry(const geometry &openDriveObject) : OpenDriveWrapperWithCoordinate<geometry>(openDriveObject) {}
 
     template<>
     Point Geometry::interpolatePrimitive<line>(double s) {
@@ -36,20 +36,35 @@ namespace opendrive {
         return {u, v};
     }
 
-    Point Geometry::interpolate(double s, double t) {
+    Point Geometry::interpolate(double s) {
+        double primitiveS = s - getSCoordinate();
+
         Point result{0, 0};
         if (openDriveObject->line().present()) {
-            result = interpolatePrimitive<line>(s);
+            result = interpolatePrimitive<line>(primitiveS);
         } else if (openDriveObject->paramPoly3().present()) {
-            result = interpolatePrimitive<paramPoly3>(s);
+            result = interpolatePrimitive<paramPoly3>(primitiveS);
         }
 
-        result.rotate(openDriveObject->hdg().get());
-        result += {openDriveObject->x().get(), openDriveObject->y().get()};
+        result = result.rotate(openDriveObject->hdg().get());
+        Point offset = getStart();
+        result += offset;
         return result;
     }
 
-    double Geometry::getS() const {
-        return openDriveObject->s().get();
+    Point Geometry::getStart() const {
+        return {openDriveObject->x().get(), openDriveObject->y().get()};
+    }
+
+    double Geometry::getLength() const {
+        return openDriveObject->length().get();
+    }
+
+    Point Geometry::interpolateStart() {
+        return interpolate(getSCoordinate());
+    }
+
+    Point Geometry::interpolateEnd() {
+        return interpolate(getSCoordinate() + getLength());
     }
 }
