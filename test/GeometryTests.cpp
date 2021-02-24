@@ -20,10 +20,8 @@ namespace opendrive {
             /**
              * Asserts that the interpolation for the start and end of a parametric cubic curve works as expected, i.e.
              * that the interpolated end point is the start of the next geometry.
-             *
-             * @param s The s-coordinate of start position.
              */
-            void assertParamPoly3StartAndEnd(const Geometry &paramPoly3Geometry) {
+            void assertStartAndEnd(const Geometry &paramPoly3Geometry) {
                 Vector expected = paramPoly3Geometry.getStart();
                 auto distance = expected.distance(paramPoly3Geometry.interpolateStart());
                 EXPECT_NEAR(distance, 0, maxDifference);
@@ -36,10 +34,8 @@ namespace opendrive {
             /**
              * Asserts that the calculation of the reference s tangent is correct.
              * Calculates the tangent at the end of the geometry and the start of the next one and asserts that they are near equal.
-             *
-             * @param s The s-coordinate of start position.
              */
-            void assertParamPoly3Tangent(const Geometry &geometry, const Geometry &nextGeometry) {
+            static void assertTangent(const Geometry &geometry, const Geometry &nextGeometry) {
                 Vector endTangent = geometry.calculateReferenceTangent(geometry.getEndSCoordinate());
                 Vector nextStartTangent = nextGeometry.calculateReferenceTangent(nextGeometry.getSCoordinate());
 
@@ -49,8 +45,6 @@ namespace opendrive {
             /**
              * Asserts that the calculation of the reference t normal is correct.
              * Calculates the normal at 1 meter steps along the geometry and checks if the dot product of the normal and tangent is 0.
-             *
-             * @param s The s-coordinate of start position.
              */
             void assertTangentAndNormalOrthogonal(const Geometry &geometry) {
                 Vector tangent, normal;
@@ -130,7 +124,7 @@ namespace opendrive {
          */
         TEST_F(GeometryTests, testInterpolateParamPoly3) {
             for (const auto &s : roadHighwayExitSouth.getGeometryStartCoordinates(true)) {
-                assertParamPoly3StartAndEnd(roadHighwayNorth.getGeometry(s));
+                assertStartAndEnd(roadHighwayNorth.getGeometry(s));
             }
         }
 
@@ -142,7 +136,7 @@ namespace opendrive {
             for (const auto &s : roadHighwayExitSouth.getGeometryStartCoordinates(true)) {
                 auto geometry = roadHighwayExitSouth.getGeometry(s);
                 auto nextGeometry = roadHighwayExitSouth.getGeometry(geometry.getEndSCoordinate() + 0.5);
-                assertParamPoly3Tangent(geometry, nextGeometry);
+                assertTangent(geometry, nextGeometry);
             }
         }
 

@@ -9,14 +9,18 @@ project.
 # Dependencies
 
 Install these on your system:
+
 - [Code Synthesis](https://www.codesynthesis.com/products/xsd/download.xhtml)
-- [Xerces-C++](https://xerces.apache.org/xerces-c/download.cgi)
+- [Xerces-context++](https://xerces.apache.org/xerces-c/download.cgi)
 
 Automatically built by CMake:
+
 - [GoogleTest](https://github.com/google/googletest.git)
 
 # Setup
 
-Before running any code you have to download the OpenDRIVE V1.4 standard by VIRES Simulationstechnologie GmbH and use the XSD schema to generate C++ data bindings.
+Before running any code you have to download the OpenDRIVE V1.4 standard by VIRES Simulationstechnologie GmbH and use
+the XSD schema to generate context++ data bindings.
 
-To make this process easier there is the `bootstrap.sh` script. Run it and follow the instructions to download and generate the standard.
+To make this process easier there is the `bootstrap.sh` script. Run it and follow the instructions to download and
+generate the standard.

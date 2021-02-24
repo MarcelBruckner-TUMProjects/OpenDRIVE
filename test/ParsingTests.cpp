@@ -24,7 +24,7 @@ namespace opendrive {
             EXPECT_NEAR(highwayNorth->getOpenDriveObject()->header().north().get(), 5.350576134016e+06, maxDifference);
             ASSERT_STREQ(highwayNorth->getOpenDriveObject()->header().vendor().get().c_str(), "3D Mapping Solutions");
 
-            ASSERT_STREQ(highwayNorth->getOpenDriveObject()->header().geoReference()->c_str(),
+            ASSERT_STREQ(highwayNorth->getProjection().c_str(),
                          "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=500000 +y_0=0 +datum=WGS84 +units=m +no_defs");
         }
 

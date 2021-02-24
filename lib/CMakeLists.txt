@@ -1,13 +1,9 @@
 ########################################################################################################################
 ### Library ###
 ########################################################################################################################
+find_package(PROJ)
 
 add_subdirectory(standard)
-
-find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-
-find_package(PROJ)
 
 add_library(libOpenDRIVE
         HDMap.cpp
@@ -16,6 +12,7 @@ add_library(libOpenDRIVE
         OpenDriveWrapper.cpp
         Geometry.cpp
         Vector.cpp
+        Projector.cpp
         )
 
 target_include_directories(libOpenDRIVE
@@ -24,7 +21,7 @@ target_include_directories(libOpenDRIVE
         )
 
 target_link_libraries(libOpenDRIVE
-        ${Boost_LIBRARIES}
-        ${PROJ_LIBRARIES}
         libOpenDRIVEStandard
+        ${PROJ_LIBRARIES}
         )
+

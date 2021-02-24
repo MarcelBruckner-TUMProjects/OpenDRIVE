@@ -29,4 +29,8 @@ namespace opendrive {
             roads.emplace(openDriveRoad.id().get(), Road(openDriveRoad));
         }
     }
+
+    std::string HDMap::getProjection() const {
+        return getOpenDriveObject()->header().geoReference()->c_str();
+    }
 }

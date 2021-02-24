@@ -3,6 +3,8 @@
 //
 
 #include "Vector.hpp"
+#include <sstream>
+#include <iomanip>
 
 namespace opendrive {
 
@@ -72,4 +74,29 @@ namespace opendrive {
     double Vector::length() const {
         return std::sqrt(dot(*this));
     }
+
+    double Vector::getX() const {
+        return x;
+    }
+
+    double Vector::getY() const {
+        return y;
+    }
+
+    double Vector::getZ() const {
+        return z;
+    }
+
+    std::string Vector::formatXY(int precision, bool scientific) const {
+        std::ostringstream streamObj;
+        streamObj << std::setprecision(precision);
+        if (scientific) {
+            streamObj << std::scientific;
+        }
+
+        streamObj << x;
+        streamObj << ",";
+        streamObj << y;
+        return streamObj.str();
+    };
 }

@@ -48,6 +48,7 @@ add_executable(Tests
         ParsingTests.cpp
         RoadTests.cpp
         GeometryTests.cpp
+        ProjectorTests.cpp
         )
 target_link_libraries(Tests PUBLIC libOpenDRIVE gtest_main)
 target_include_directories(Tests PUBLIC tests "${PROJECT_BINARY_DIR}")

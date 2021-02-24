@@ -79,6 +79,8 @@ namespace opendrive {
          */
         friend std::ostream &operator<<(std::ostream &os, const Vector &other);
 
+        std::string formatXY(int precision = 52, bool scientific = false) const;
+
         /**
          * Normalizes the vector to a length of 1.
          */
@@ -98,6 +100,12 @@ namespace opendrive {
          * Calculates the length of the vector.
          */
         double length() const;
+
+        double getX() const;
+
+        double getY() const;
+
+        double getZ() const;
     };
 }
 

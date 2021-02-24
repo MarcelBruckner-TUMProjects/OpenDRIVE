@@ -10,8 +10,6 @@
 #include <vector>
 #include <map>
 
-#include "proj.h"
-
 #include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
 
 #include "Road.hpp"
@@ -59,6 +57,8 @@ namespace opendrive {
          * @throws invalid_argument if no road with the given id is found.
          */
         const Road &getRoad(const std::string &id) const;
+
+        std::string getProjection() const;
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

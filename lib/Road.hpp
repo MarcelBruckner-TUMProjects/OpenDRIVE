@@ -101,6 +101,7 @@ namespace opendrive {
         static const Object &throwObjectNotFound(const std::string &id);
 
         std::vector<double> getGeometryStartCoordinates(bool omitLastElement = false) const;
+
     };
 }
 
