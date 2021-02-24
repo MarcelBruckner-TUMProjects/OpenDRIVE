@@ -99,6 +99,8 @@ namespace opendrive {
          * @throws invalid_argument describing that no object with the given id could be found.
          */
         static const Object &throwObjectNotFound(const std::string &id);
+
+        std::vector<double> getGeometryStartCoordinates(bool omitLastElement = false) const;
     };
 }
 

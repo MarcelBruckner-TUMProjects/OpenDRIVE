@@ -46,6 +46,20 @@ namespace opendrive {
         return planView;
     }
 
+    std::vector<double> Road::getGeometryStartCoordinates(bool omitLastElement) const {
+        std::vector<double> result;
+
+        int i = 0;
+        for (const auto &entry : planView) {
+            if (omitLastElement && i++ >= planView.size() - 1) {
+                break;
+            }
+            result.emplace_back(entry.first);
+        }
+
+        return result;
+    }
+
     const Geometry &Road::getGeometry(double s) const {
         if (s < 0) {
             return throwGeometryNotFound(s);

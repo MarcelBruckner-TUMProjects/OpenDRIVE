@@ -39,11 +39,8 @@ namespace opendrive {
              *
              * @param s The s-coordinate of start position.
              */
-            void assertParamPoly3Tangent(const Geometry &paramPoly3Geometry) {
-                auto nextGeometry = roadHighwayNorth.getGeometry(paramPoly3Geometry.getEndSCoordinate() + 0.5);
-
-                Vector endTangent = paramPoly3Geometry.calculateReferenceTangent(
-                        paramPoly3Geometry.getEndSCoordinate());
+            void assertParamPoly3Tangent(const Geometry &geometry, const Geometry &nextGeometry) {
+                Vector endTangent = geometry.calculateReferenceTangent(geometry.getEndSCoordinate());
                 Vector nextStartTangent = nextGeometry.calculateReferenceTangent(nextGeometry.getSCoordinate());
 
                 EXPECT_NEAR(endTangent.distance(nextStartTangent), 0, 1e-12);
@@ -132,9 +129,9 @@ namespace opendrive {
          * Tests that the parametric cubic curve interpolation works as expected.
          */
         TEST_F(GeometryTests, testInterpolateParamPoly3) {
-            assertParamPoly3StartAndEnd(roadHighwayNorth.getGeometry(0));
-            assertParamPoly3StartAndEnd(roadHighwayNorth.getGeometry(2.874078777576e+02));
-            assertParamPoly3StartAndEnd(roadHighwayNorth.getGeometry(8.622236665343e+02));
+            for (const auto &s : roadHighwayExitSouth.getGeometryStartCoordinates(true)) {
+                assertParamPoly3StartAndEnd(roadHighwayNorth.getGeometry(s));
+            }
         }
 
 
@@ -142,18 +139,20 @@ namespace opendrive {
          * Tests that calculated s tangent of the parametric cubic curve primitive is correct.
          */
         TEST_F(GeometryTests, testCalculateParamPoly3ReferenceTangentS) {
-            assertParamPoly3Tangent(roadHighwayNorth.getGeometry(0));
-            assertParamPoly3Tangent(roadHighwayNorth.getGeometry(2.874078777576e+02));
-            assertParamPoly3Tangent(roadHighwayNorth.getGeometry(8.622236665343e+02));
+            for (const auto &s : roadHighwayExitSouth.getGeometryStartCoordinates(true)) {
+                auto geometry = roadHighwayExitSouth.getGeometry(s);
+                auto nextGeometry = roadHighwayExitSouth.getGeometry(geometry.getEndSCoordinate() + 0.5);
+                assertParamPoly3Tangent(geometry, nextGeometry);
+            }
         }
 
         /**
          * Tests that calculated t normal of the parametric cubic curve primitive is correct.
          */
         TEST_F(GeometryTests, testCalculateParamPoly3ReferenceNormal) {
-            assertTangentAndNormalOrthogonal(roadHighwayNorth.getGeometry(0));
-            assertTangentAndNormalOrthogonal(roadHighwayNorth.getGeometry(2.874078777576e+02));
-            assertTangentAndNormalOrthogonal(roadHighwayNorth.getGeometry(8.622236665343e+02));
+            for (const auto &s : roadHighwayExitSouth.getGeometryStartCoordinates(true)) {
+                assertTangentAndNormalOrthogonal(roadHighwayExitSouth.getGeometry(s));
+            }
         }
     }// namespace tests
 }// namespace opendrive
