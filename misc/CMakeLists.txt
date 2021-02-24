@@ -6,6 +6,7 @@ set(IMAGES
 file(COPY ${IMAGES} DESTINATION ./)
 
 set(OPENDRIVE
-        map_snippet.xodr
+        highway_north.xodr
+        highway_exit_south.xodr
         )
 file(COPY ${OPENDRIVE} DESTINATION ./)

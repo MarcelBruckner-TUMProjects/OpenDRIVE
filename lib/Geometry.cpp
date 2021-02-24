@@ -10,12 +10,12 @@ namespace opendrive {
     Geometry::Geometry(const geometry &openDriveObject) : OpenDriveWrapperWithCoordinate<geometry>(openDriveObject) {}
 
     template<>
-    Vector Geometry::interpolatePrimitive<line>(double s) {
+    Vector Geometry::interpolatePrimitive<line>(double s) const {
         return {s, 0};
     }
 
     template<>
-    Vector Geometry::interpolatePrimitive<paramPoly3>(double s) {
+    Vector Geometry::interpolatePrimitive<paramPoly3>(double s) const {
         auto primitive = openDriveObject->paramPoly3().get();
 
         double p = s;
@@ -35,14 +35,14 @@ namespace opendrive {
         return {u, v};
     }
 
-    Vector Geometry::interpolate(double s) {
+    Vector Geometry::interpolate(double s) const {
         Vector result = getUVCoordinate(s);
         result = result.rotateXY(openDriveObject->hdg().get());
         result += getStart();
         return result;
     }
 
-    Vector Geometry::getUVCoordinate(double s) {
+    Vector Geometry::getUVCoordinate(double s) const {
         double localS = getGetLocalS(s);
         if (openDriveObject->line().present()) {
             return interpolatePrimitive<line>(localS);
@@ -62,11 +62,11 @@ namespace opendrive {
         return openDriveObject->length().get();
     }
 
-    Vector Geometry::interpolateStart() {
+    Vector Geometry::interpolateStart() const {
         return interpolate(getSCoordinate());
     }
 
-    Vector Geometry::interpolateEnd() {
+    Vector Geometry::interpolateEnd() const {
         return interpolate(getSCoordinate() + getLength());
     }
 

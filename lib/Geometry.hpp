@@ -23,7 +23,7 @@ namespace opendrive {
          * @param s The s-coordinate of interest.
          */
         template<typename S>
-        Vector interpolatePrimitive(double s);
+        Vector interpolatePrimitive(double s) const;
 
         /**
          * Specific calculation functions for the s tangent per primitive.
@@ -47,7 +47,7 @@ namespace opendrive {
          *
          * @param s The s-coordinate of interest.
          */
-        Vector getUVCoordinate(double s);
+        Vector getUVCoordinate(double s) const;
 
     public:
 
@@ -74,18 +74,18 @@ namespace opendrive {
         /**
          * Interpolates the [x, y] point of the start of the geometry, i.e. at s == 0.
          */
-        Vector interpolateStart();
+        Vector interpolateStart() const;
 
         /**
          * Interpolates the [x, y] point of the end of the geometry, i.e. at s == length.
          */
-        Vector interpolateEnd();
+        Vector interpolateEnd() const;
 
         /**
          * Interpolates the [x, y] point at the given s coordinate along the geometry.
          * @param s s-coordinate of start position
          */
-        Vector interpolate(double s);
+        Vector interpolate(double s) const;
 
         /**
          * Calculates the s tangent vector of the reference line.

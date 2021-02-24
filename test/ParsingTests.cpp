@@ -21,10 +21,10 @@ namespace opendrive {
          * Tests parsing the HD map header.
          */
         TEST_F(ParsingTests, testParsingHeader) {
-            EXPECT_NEAR(hdMap->getOpenDriveObject()->header().north().get(), 5.350576134016e+06, maxDifference);
-            ASSERT_STREQ(hdMap->getOpenDriveObject()->header().vendor().get().c_str(), "3D Mapping Solutions");
+            EXPECT_NEAR(highwayNorth->getOpenDriveObject()->header().north().get(), 5.350576134016e+06, maxDifference);
+            ASSERT_STREQ(highwayNorth->getOpenDriveObject()->header().vendor().get().c_str(), "3D Mapping Solutions");
 
-            ASSERT_STREQ(hdMap->getOpenDriveObject()->header().geoReference()->c_str(),
+            ASSERT_STREQ(highwayNorth->getOpenDriveObject()->header().geoReference()->c_str(),
                          "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=500000 +y_0=0 +datum=WGS84 +units=m +no_defs");
         }
 
@@ -32,18 +32,18 @@ namespace opendrive {
          * Tests parsing the test road basic attributes.
          */
         TEST_F(ParsingTests, testParsingRoadAttributes) {
-            ASSERT_STREQ(road.getOpenDriveObject()->name()->c_str(), "");
-            ASSERT_STREQ(road.getOpenDriveObject()->junction()->c_str(), "-1");
-            ASSERT_STREQ(road.getOpenDriveObject()->id()->c_str(), id);
-            EXPECT_NEAR(road.getOpenDriveObject()->length().get(), 1.724447338294e+03, maxDifference);
+            ASSERT_STREQ(roadHighwayNorth.getOpenDriveObject()->name()->c_str(), "");
+            ASSERT_STREQ(roadHighwayNorth.getOpenDriveObject()->junction()->c_str(), "-1");
+            ASSERT_STREQ(roadHighwayNorth.getOpenDriveObject()->id()->c_str(), roadIdHighwayNorth);
+            EXPECT_NEAR(roadHighwayNorth.getOpenDriveObject()->length().get(), 1.724447338294e+03, maxDifference);
         }
 
         /**
          * Tests parsingthe test road type.
          */
         TEST_F(ParsingTests, testParsingType) {
-            auto type = road.getOpenDriveObject()->type()[0];
-            ASSERT_EQ(road.getOpenDriveObject()->type().size(), 1);
+            auto type = roadHighwayNorth.getOpenDriveObject()->type()[0];
+            ASSERT_EQ(roadHighwayNorth.getOpenDriveObject()->type().size(), 1);
 
             EXPECT_NEAR(type.s().get(), 0.0, maxDifference);
             ASSERT_STREQ(type.type().get().c_str(), "motorway");
@@ -53,7 +53,7 @@ namespace opendrive {
          * Tests parsing the test road plan view.
          */
         TEST_F(ParsingTests, testParsingPlanView) {
-            auto planView = road.getPlanView();
+            auto planView = roadHighwayNorth.getPlanView();
 
             ASSERT_EQ(planView.size(), 5);
 
@@ -75,7 +75,7 @@ namespace opendrive {
          * Tests parsing the test road elevation profile.
          */
         TEST_F(ParsingTests, testParsingElevationProfile) {
-            auto elevationProfile = road.getOpenDriveObject()->elevationProfile().get().elevation();
+            auto elevationProfile = roadHighwayNorth.getOpenDriveObject()->elevationProfile().get().elevation();
             ASSERT_EQ(elevationProfile.size(), 12);
 
             EXPECT_NEAR(elevationProfile[0].s().get(), 0.000000000000e+00, maxDifference);
@@ -90,7 +90,7 @@ namespace opendrive {
          * Tests parsing the test road lateral profile.
          */
         TEST_F(ParsingTests, testParsingLateralProfile) {
-            auto lateralProfile = road.getOpenDriveObject()->lateralProfile().get().superelevation();
+            auto lateralProfile = roadHighwayNorth.getOpenDriveObject()->lateralProfile().get().superelevation();
             ASSERT_EQ(lateralProfile.size(), 9);
 
             EXPECT_NEAR(lateralProfile[0].s().get(), 0.000000000000e+00, maxDifference);
@@ -105,11 +105,11 @@ namespace opendrive {
          * Tests parsing the test road objects.
          */
         TEST_F(ParsingTests, testParsingObjects) {
-            auto objects = road.getObjects();
+            auto objects = roadHighwayNorth.getObjects();
             ASSERT_EQ(objects.size(), 52);
 
             std::string id = "4007953";
-            auto testObject = road.getObject(id);
+            auto testObject = roadHighwayNorth.getObject(id);
 
             ASSERT_STREQ(testObject.getOpenDriveObject()->type()->c_str(), "pole");
             ASSERT_STREQ(testObject.getOpenDriveObject()->name()->c_str(), "permanentDelineator");

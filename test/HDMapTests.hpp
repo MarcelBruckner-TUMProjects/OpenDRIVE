@@ -18,24 +18,24 @@ namespace opendrive {
         protected:
 
             /**
-             * The HD map.
+             * The HD maps.
              */
-            std::shared_ptr<HDMap> hdMap;
+            std::shared_ptr<HDMap> highwayNorth, highwayExitSouth;
 
             /**
-             * The id of the test road.
+             * The id of the test roads.
              */
-            const char *id = "2311000";
+            const char *roadIdHighwayNorth = "2311000", *roadIdHighwayExitSouth = "1088000";
+
+            /**
+             * The test roads.
+             */
+            Road roadHighwayNorth, roadHighwayExitSouth;
 
             /**
              * The maximal difference after parsing.
              */
             double maxDifference = 1e-52;
-
-            /**
-             * The test road.
-             */
-            Road road;
 
             /**
              * @destructor
