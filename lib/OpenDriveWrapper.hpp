@@ -8,7 +8,7 @@
 #include <string>
 #include <memory>
 #include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
-#include "Point.hpp"
+#include "Vector.hpp"
 
 namespace opendrive {
 

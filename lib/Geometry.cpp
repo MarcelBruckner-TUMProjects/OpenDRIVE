@@ -3,19 +3,19 @@
 //
 
 #include "Geometry.hpp"
-#include "Point.hpp"
+#include "Vector.hpp"
 
 namespace opendrive {
 
     Geometry::Geometry(const geometry &openDriveObject) : OpenDriveWrapperWithCoordinate<geometry>(openDriveObject) {}
 
     template<>
-    Point Geometry::interpolatePrimitive<line>(double s) {
+    Vector Geometry::interpolatePrimitive<line>(double s) {
         return {s, 0};
     }
 
     template<>
-    Point Geometry::interpolatePrimitive<paramPoly3>(double s) {
+    Vector Geometry::interpolatePrimitive<paramPoly3>(double s) {
         auto primitive = openDriveObject->paramPoly3().get();
 
         double p = s;
@@ -35,23 +35,26 @@ namespace opendrive {
         return {u, v};
     }
 
-    Point Geometry::interpolate(double s) {
-        double primitiveS = s - getSCoordinate();
-
-        Point result{0, 0};
-        if (openDriveObject->line().present()) {
-            result = interpolatePrimitive<line>(primitiveS);
-        } else if (openDriveObject->paramPoly3().present()) {
-            result = interpolatePrimitive<paramPoly3>(primitiveS);
-        }
-
-        result = result.rotate(openDriveObject->hdg().get());
-        Point offset = getStart();
-        result += offset;
+    Vector Geometry::interpolate(double s) {
+        Vector result = getUVCoordinate(s);
+        result = result.rotateXY(openDriveObject->hdg().get());
+        result += getStart();
         return result;
     }
 
-    Point Geometry::getStart() const {
+    Vector Geometry::getUVCoordinate(double s) {
+        double localS = getGetLocalS(s);
+        if (openDriveObject->line().present()) {
+            return interpolatePrimitive<line>(localS);
+        } else if (openDriveObject->paramPoly3().present()) {
+            return interpolatePrimitive<paramPoly3>(localS);
+        }
+        throw std::invalid_argument("Interpolation function for this primitive not implemented.");
+    }
+
+    double Geometry::getGetLocalS(double s) const { return s - getSCoordinate(); }
+
+    Vector Geometry::getStart() const {
         return {openDriveObject->x().get(), openDriveObject->y().get()};
     }
 
@@ -59,11 +62,64 @@ namespace opendrive {
         return openDriveObject->length().get();
     }
 
-    Point Geometry::interpolateStart() {
+    Vector Geometry::interpolateStart() {
         return interpolate(getSCoordinate());
     }
 
-    Point Geometry::interpolateEnd() {
+    Vector Geometry::interpolateEnd() {
         return interpolate(getSCoordinate() + getLength());
+    }
+
+    double Geometry::getHeading() const {
+        return openDriveObject->hdg().get();
+    }
+
+    template<>
+    Vector Geometry::calculatePrimitiveReferenceTangent<paramPoly3>(double s) const {
+        auto primitive = openDriveObject->paramPoly3().get();
+
+        double p = s;
+        auto p2 = p * p;
+
+        auto du = primitive.bU().get() +
+                  2 * primitive.cU().get() * p +
+                  3 * primitive.dU().get() * p2;
+
+        auto dv = primitive.bV().get() +
+                  2 * primitive.cV().get() * p +
+                  3 * primitive.dV().get() * p2;
+
+        return {du, dv};
+    }
+
+    template<>
+    Vector Geometry::calculatePrimitiveReferenceTangent<line>(double s) const {
+        return {1, 0};
+    }
+
+    Vector Geometry::calculateReferenceTangent(double s) const {
+        double primitiveS = getGetLocalS(s);
+
+        Vector tangent;
+        if (openDriveObject->line().present()) {
+            tangent = calculatePrimitiveReferenceTangent<line>(primitiveS);
+        } else if (openDriveObject->paramPoly3().present()) {
+            tangent = calculatePrimitiveReferenceTangent<paramPoly3>(primitiveS);
+        } else {
+            throw std::invalid_argument("Interpolation function for this primitive not implemented.");
+        }
+
+        tangent = tangent.rotateXY(openDriveObject->hdg().get());
+        return tangent.normalize();
+    }
+
+    double Geometry::getEndSCoordinate() const {
+        return getSCoordinate() + getLength();
+    }
+
+    Vector Geometry::calculateReferenceNormal(double s) const {
+        Vector tangent = calculateReferenceTangent(s);
+        Vector up{0, 0, 1};
+        return up.cross(tangent);
     }
 }

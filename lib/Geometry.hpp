@@ -7,7 +7,7 @@
 
 #include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
 #include "OpenDriveWrapper.hpp"
-#include "Point.hpp"
+#include "Vector.hpp"
 
 namespace opendrive {
 
@@ -16,54 +16,106 @@ namespace opendrive {
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_geometry
      */
     class Geometry : public OpenDriveWrapperWithCoordinate<geometry> {
+    protected:
+        /**
+         * Specific interpolation functions per primitive.
+         *
+         * @param s The s-coordinate of interest.
+         */
+        template<typename S>
+        Vector interpolatePrimitive(double s);
+
+        /**
+         * Specific calculation functions for the s tangent per primitive.
+         *
+         * @param s The s-coordinate of interest.
+         */
+        template<typename S>
+        Vector calculatePrimitiveReferenceTangent(double s) const;
+
+        /**
+         * Calculates the local s coordinate.
+         *
+         * @param s The s-coordinate of interest.
+         * @return s - s_start
+         */
+        double getGetLocalS(double s) const;
+
+
+        /**
+         * Calculates the [u, v] coordinate of the primitive at coordinate s in the local reference frame.
+         *
+         * @param s The s-coordinate of interest.
+         */
+        Vector getUVCoordinate(double s);
+
     public:
 
         /**
-         * @constructor
-         */
+        * @constructor
+        */
         explicit Geometry() = default;
 
         /**
-         * @constructor
-         */
+        * @constructor
+        */
         explicit Geometry(const geometry &openDriveObject);
 
         /**
-         * @destructor
-         */
+        * @destructor
+        */
         ~Geometry() override = default;
-
-        /**
-         * Specific interpolation functions per primitive.
-         */
-        template<typename S>
-        Point interpolatePrimitive(double s);
 
         /**
          * @get The start [x, y] coordinate of the geometry, i.e. the offset of the geometry.
          */
-        Point getStart() const;
+        Vector getStart() const;
 
         /**
          * Interpolates the [x, y] point of the start of the geometry, i.e. at s == 0.
          */
-        Point interpolateStart();
+        Vector interpolateStart();
 
         /**
          * Interpolates the [x, y] point of the end of the geometry, i.e. at s == length.
          */
-        Point interpolateEnd();
+        Vector interpolateEnd();
 
         /**
          * Interpolates the [x, y] point at the given s coordinate along the geometry.
          * @param s s-coordinate of start position
          */
-        Point interpolate(double s);
+        Vector interpolate(double s);
+
+        /**
+         * Calculates the s tangent vector of the reference line.
+         *
+         * @param s s-coordinate of start position
+         */
+        Vector calculateReferenceTangent(double s) const;
+
+        /**
+         * Calculates the t normal vector of the reference line.
+         *
+         * @param s s-coordinate of start position
+         */
+        Vector calculateReferenceNormal(double s) const;
 
         /**
          * @get The length of the geometry.
          */
         double getLength() const;
+
+        /**
+         * @get The inertial heading in radians.
+         */
+        double getHeading() const;
+
+        /**
+         * Gets the ending s coordinate, i.e. the start + length.
+         * @return
+         */
+        double getEndSCoordinate() const;
     };
 
 }
