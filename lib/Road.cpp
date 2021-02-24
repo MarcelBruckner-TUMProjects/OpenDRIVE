@@ -13,8 +13,10 @@ namespace opendrive {
     }
 
     void Road::setObjects() {
-        for (const auto &object : openDriveObject->objects().get().object()) {
-            objects.emplace(object.id().get(), Object(object));
+        for (const auto &objectNode : openDriveObject->objects().get().object()) {
+            Object object = Object(objectNode);
+            object.setWorldPosition(interpolate(object.getSCoordinate(), object.getTCoordinate()));
+            objects.emplace(objectNode.id().get(), object);
         }
     }
 
@@ -91,5 +93,10 @@ namespace opendrive {
     const Object &Road::throwObjectNotFound(const std::string &id) {
         throw std::invalid_argument("There exists no object " + id + ".");
         return *new Object();
+    }
+
+    Vector Road::interpolate(double s, double t) const {
+        Geometry geometry = getGeometry(s);
+        return geometry.interpolate(s) + t * geometry.calculateReferenceNormal(s);
     }
 }

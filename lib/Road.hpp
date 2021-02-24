@@ -107,6 +107,12 @@ namespace opendrive {
          */
         std::vector<double> getGeometryStartCoordinates(bool omitLastElement = false) const;
 
+        /**
+         * Interpolates an object along the reference line and offsets it.
+         * @param s The s coordinate along the reference line.
+         * @param t The t offset normal to the reference line.
+         */
+        Vector interpolate(double s, double t = 0) const;
     };
 }
 

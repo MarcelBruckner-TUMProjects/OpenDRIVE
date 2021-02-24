@@ -46,21 +46,21 @@ namespace opendrive {
              * Asserts that the calculation of the reference t normal is correct.
              * Calculates the normal at 1 meter steps along the geometry and checks if the dot product of the normal and tangent is 0.
              */
-            void assertTangentAndNormalOrthogonal(const Geometry &geometry) {
+            static void assertTangentAndNormalOrthogonal(const Geometry &geometry) {
                 Vector tangent, normal;
                 tangent = geometry.calculateReferenceTangent(geometry.getSCoordinate());
                 normal = geometry.calculateReferenceNormal(geometry.getSCoordinate());
-                EXPECT_NEAR(tangent.dot(normal), 0, maxDifference);
+                EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
 
                 for (int ss = (int) geometry.getSCoordinate() + 1; ss < geometry.getEndSCoordinate(); ss++) {
                     tangent = geometry.calculateReferenceTangent(ss);
                     normal = geometry.calculateReferenceNormal(ss);
-                    EXPECT_NEAR(tangent.dot(normal), 0, maxDifference);
+                    EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
                 }
 
                 tangent = geometry.calculateReferenceTangent(geometry.getEndSCoordinate());
                 normal = geometry.calculateReferenceNormal(geometry.getEndSCoordinate());
-                EXPECT_NEAR(tangent.dot(normal), 0, maxDifference);
+                EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
             }
         };
 

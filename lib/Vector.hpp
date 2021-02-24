@@ -59,6 +59,16 @@ namespace opendrive {
         friend Vector operator+(const Vector &lhs, const Vector &rhs);
 
         /**
+         * Scalar multiplication.
+         */
+        friend Vector operator*(const Vector &vector, double s);
+
+        /**
+         * Scalar multiplication.
+         */
+        friend Vector operator*(double s, const Vector &vector);
+
+        /**
          * Elementwise subtracts the two points.
          */
         friend Vector operator-(const Vector &lhs, const Vector &rhs);

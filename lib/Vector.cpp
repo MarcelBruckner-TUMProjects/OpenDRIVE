@@ -47,7 +47,11 @@ namespace opendrive {
     }
 
     std::ostream &operator<<(std::ostream &os, const Vector &other) {
-        os << other.x << "," << other.y << "," << other.z;
+        std::ostringstream streamObj;
+        streamObj << std::setprecision(20);
+        streamObj << std::scientific;
+        streamObj << other.x << "," << other.y << "," << other.z;
+        os << streamObj.str();
         return os;
     }
 
@@ -98,5 +102,17 @@ namespace opendrive {
         streamObj << ",";
         streamObj << y;
         return streamObj.str();
-    };
+    }
+
+    Vector operator*(const Vector &vector, double s) {
+        return {
+                vector.x * s,
+                vector.y * s,
+                vector.z * s,
+        };
+    }
+
+    Vector operator*(double s, const Vector &vector) {
+        return vector * s;
+    }
 }

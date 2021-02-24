@@ -120,6 +120,6 @@ namespace opendrive {
     Vector Geometry::calculateReferenceNormal(double s) const {
         Vector tangent = calculateReferenceTangent(s);
         Vector up{0, 0, 1};
-        return up.cross(tangent);
+        return up.cross(tangent).normalize();
     }
 }

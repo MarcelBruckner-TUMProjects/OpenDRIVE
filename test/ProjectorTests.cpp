@@ -86,7 +86,7 @@ namespace opendrive {
 
 
         /**
-         * Tests that the line interpolation works as expected.
+         * Tests the creation of the google map links works.
          */
         TEST_F(ProjectorTests, testCreateGoogleLinks) {
             Vector projected;
