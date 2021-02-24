@@ -14,4 +14,6 @@ int main(int argc, char **argv) {
         auto projected = projector.project(roadHighwayExitSouth.getGeometry(s).getStart());
         std::cout << opendrive::Projector::toGoogleMapsLink(projected) << std::endl;
     }
+
+    return 0;
 }

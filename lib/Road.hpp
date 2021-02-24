@@ -100,6 +100,11 @@ namespace opendrive {
          */
         static const Object &throwObjectNotFound(const std::string &id);
 
+        /**
+         * Gets the s coordinates of the geometries.
+         *
+         * @param omitLastElement Flag if the last element should be omitted.
+         */
         std::vector<double> getGeometryStartCoordinates(bool omitLastElement = false) const;
 
     };

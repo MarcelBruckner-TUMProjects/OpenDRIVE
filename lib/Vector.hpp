@@ -101,10 +101,19 @@ namespace opendrive {
          */
         double length() const;
 
+        /**
+         * @get
+         */
         double getX() const;
 
+        /**
+         * @get
+         */
         double getY() const;
 
+        /**
+         * @get
+         */
         double getZ() const;
     };
 }

@@ -58,6 +58,9 @@ namespace opendrive {
          */
         const Road &getRoad(const std::string &id) const;
 
+        /**
+         * @get The PROJ projection string from the header.
+         */
         std::string getProjection() const;
     };
 }

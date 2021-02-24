@@ -16,12 +16,12 @@ namespace opendrive {
             throw std::invalid_argument("Couldn't create projection");
         }
 
-        PJ *P_for_GIS = proj_normalize_for_visualization(context, projection);
-        if (nullptr == P_for_GIS) {
+        PJ *normalizedProjection = proj_normalize_for_visualization(context, projection);
+        if (nullptr == normalizedProjection) {
             throw std::invalid_argument("Couldn't create projection");
         }
         proj_destroy(projection);
-        projection = P_for_GIS;
+        projection = normalizedProjection;
     }
 
     Projector::~Projector() {
