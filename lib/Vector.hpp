@@ -79,6 +79,12 @@ namespace opendrive {
          */
         friend std::ostream &operator<<(std::ostream &os, const Vector &other);
 
+        /**
+         * Formats the [x, y] part of the vector to be printable at the given precision.
+         *
+         * @param precision The number of digits to print each element.
+         * @param scientific Flag to use the scientific notation.
+         */
         std::string formatXY(int precision = 52, bool scientific = false) const;
 
         /**
