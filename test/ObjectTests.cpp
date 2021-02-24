@@ -105,5 +105,21 @@ namespace opendrive {
                 EXPECT_NEAR(position.distance(expected[i++]), 0, maxDifference);
             }
         }
+
+
+        /**
+         * Tests that filtering the landmarks gives the correct objects.
+         */
+        TEST_F(ObjectTests, testFilterRelevantLandmarks) {
+            const char *type = "pole";
+            const char *name = "permanentDelineator";
+            auto landmarks = roadHighwayExitSouth.getObjects(type, name);
+            ASSERT_EQ(landmarks.size(), 35);
+
+            for (const auto &entry : landmarks) {
+                ASSERT_STREQ(entry.second.getType().c_str(), type);
+                ASSERT_STREQ(entry.second.getName().c_str(), name);
+            }
+        }
     }// namespace tests
 }// namespace opendrive

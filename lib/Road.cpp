@@ -99,4 +99,15 @@ namespace opendrive {
         Geometry geometry = getGeometry(s);
         return geometry.interpolate(s) + t * geometry.calculateReferenceNormal(s);
     }
+
+    std::map<std::string, Object> Road::getObjects(const std::string &type, const std::string &name) const {
+        std::map<std::string, Object> filtered;
+        for (const auto &entry : objects) {
+            if (std::strcmp(entry.second.getType().c_str(), type.c_str()) == 0 &&
+                std::strcmp(entry.second.getName().c_str(), name.c_str()) == 0) {
+                filtered.emplace(entry.first, entry.second);
+            }
+        }
+        return filtered;
+    }
 }

@@ -62,6 +62,11 @@ namespace opendrive {
         const std::map<std::string, Object> &getObjects() const;
 
         /**
+         * @get Filters the objects by the given type and name.
+         */
+        std::map<std::string, Object> getObjects(const std::string &type, const std::string &name) const;
+
+        /**
          * @get
          */
         const std::map<double, Geometry> &getPlanView() const;
