@@ -113,7 +113,7 @@ namespace opendrive {
         TEST_F(ObjectTests, testFilterRelevantLandmarks) {
             const char *type = "pole";
             const char *name = "permanentDelineator";
-            auto landmarks = roadHighwayExitSouth.getObjects(type, name);
+            auto landmarks = roadHighwayExitSouth.filterObjects(type, name);
             ASSERT_EQ(landmarks.size(), 35);
 
             for (const auto &entry : landmarks) {

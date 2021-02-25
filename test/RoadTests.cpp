@@ -21,7 +21,7 @@ namespace opendrive {
              * Asserts that for the given object the expected s coordinate is retrieved.
              */
             void assertCorrectGeometryForObject(const std::string &objectId, double expected) {
-                Object object = roadHighwayNorth.getObject(objectId);
+                Object object = roadHighwayNorth.getElement<Object>(objectId);
                 EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(object.getSCoordinate()).getSCoordinate(), expected,
                             maxDifference);
             }
@@ -97,10 +97,10 @@ namespace opendrive {
          * Tests that searching for an invalid object throws an error.
          */
         TEST_F(RoadTests, testErrorThrownOnInvalidObject) {
-            EXPECT_THROW(roadHighwayNorth.getObject("-32324"), std::invalid_argument);
-            EXPECT_THROW(roadHighwayNorth.getObject("fdsdsf"), std::invalid_argument);
-            EXPECT_THROW(roadHighwayNorth.getObject("foo"), std::invalid_argument);
-            EXPECT_THROW(roadHighwayNorth.getObject("bar"), std::invalid_argument);
+            EXPECT_THROW(roadHighwayNorth.getElement<Object>("-32324"), std::invalid_argument);
+            EXPECT_THROW(roadHighwayNorth.getElement<Object>("fdsdsf"), std::invalid_argument);
+            EXPECT_THROW(roadHighwayNorth.getElement<Object>("foo"), std::invalid_argument);
+            EXPECT_THROW(roadHighwayNorth.getElement<Object>("bar"), std::invalid_argument);
         }
     }// namespace tests
 }// namespace opendrive

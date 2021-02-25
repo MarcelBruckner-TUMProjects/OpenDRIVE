@@ -53,7 +53,8 @@ namespace opendrive {
         return std::strcmp(roadId.c_str(), openDriveObject->id()->c_str());
     }
 
-    const Object &Road::getObject(const std::string &id) const {
+    template<>
+    const Object &Road::getElement<Object>(const std::string &id) const {
         for (const auto &entry : objects) {
             if (std::strcmp(entry.second.getOpenDriveObject()->id()->c_str(), id.c_str()) == 0) {
                 return objects.at(entry.first);
@@ -147,7 +148,7 @@ namespace opendrive {
         return geometry.interpolate(s) + t * geometry.calculateReferenceNormal(s) + Vector{0, 0, 1} * height;
     }
 
-    std::map<std::string, Object> Road::getObjects(const std::string &type, const std::string &name) const {
+    std::map<std::string, Object> Road::filterObjects(const std::string &type, const std::string &name) const {
         std::map<std::string, Object> filtered;
         for (const auto &entry : objects) {
             if (std::strcmp(entry.second.getType().c_str(), type.c_str()) == 0 &&

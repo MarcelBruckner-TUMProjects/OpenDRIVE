@@ -117,13 +117,6 @@ namespace opendrive {
         const std::map<double, SuperElevation> &getLateralProfile() const;
 
         /**
-         * @get Tries to find an object with the given id along the road.
-         *
-         * @throws invalid_argument if no object with the given id is found.
-         */
-        const Object &getObject(const std::string &id) const;
-
-        /**
          * @get
          */
         const std::map<std::string, Object> &getObjects() const;
@@ -131,7 +124,7 @@ namespace opendrive {
         /**
          * @get Filters the objects by the given type and name.
          */
-        std::map<std::string, Object> getObjects(const std::string &type, const std::string &name) const;
+        std::map<std::string, Object> filterObjects(const std::string &type, const std::string &name) const;
 
         /**
          * @get Tries to find the element including the given s coordinate along the road.
@@ -140,6 +133,14 @@ namespace opendrive {
          */
         template<typename T>
         const T &getElement(double s) const;
+
+        /**
+         * @get Tries to find an element with the given id along the road.
+         *
+         * @throws invalid_argument if no object with the given id is found.
+         */
+        template<typename T>
+        const T &getElement(const std::string &id) const;
 
         /**
          * Gets the s coordinates of the requested elements.

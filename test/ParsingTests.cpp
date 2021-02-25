@@ -109,7 +109,7 @@ namespace opendrive {
             ASSERT_EQ(objects.size(), 52);
 
             std::string id = "4007953";
-            auto testObject = roadHighwayNorth.getObject(id);
+            auto testObject = roadHighwayNorth.getElement<Object>(id);
 
             ASSERT_STREQ(testObject.getOpenDriveObject()->type()->c_str(), "pole");
             ASSERT_STREQ(testObject.getOpenDriveObject()->name()->c_str(), "permanentDelineator");
