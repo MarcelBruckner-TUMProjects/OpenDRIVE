@@ -78,8 +78,8 @@ namespace opendrive {
             };
 
             int i = 0;
-            for (const auto &s : roadHighwayExitSouth.getGeometryStartCoordinates()) {
-                projected = projector->project(roadHighwayExitSouth.getGeometry(s).getStart());
+            for (const auto &s : roadHighwayExitSouth.getStartCoordinates<Geometry>()) {
+                projected = projector->project(roadHighwayExitSouth.getElement<Geometry>(s).getStart());
                 EXPECT_NEAR(projected.distance(expected[i++]), 0, maxDifference);
             }
         }
@@ -133,8 +133,8 @@ namespace opendrive {
             };
 
             int i = 0;
-            for (const auto &s : roadHighwayExitSouth.getGeometryStartCoordinates()) {
-                projected = projector->project(roadHighwayExitSouth.getGeometry(s).getStart());
+            for (const auto &s : roadHighwayExitSouth.getStartCoordinates<Geometry>()) {
+                projected = projector->project(roadHighwayExitSouth.getElement<Geometry>(s).getStart());
                 ASSERT_STREQ(Projector::toGoogleMapsLink(projected).c_str(), expected[i++].c_str());
             }
         }

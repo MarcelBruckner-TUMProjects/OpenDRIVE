@@ -7,13 +7,8 @@
 
 namespace opendrive {
 
-    Road::Road(const road &openDriveRoad) : OpenDriveWrapper<road>(openDriveRoad) {
-        setGeometries();
-        setElevations();
-        setObjects();
-    }
-
-    void Road::setObjects() {
+    template<>
+    void Road::set<Object>() {
         for (const auto &objectNode : openDriveObject->objects().get().object()) {
             Object object = Object(objectNode);
             object.setWorldPosition(interpolate(object.getSCoordinate(), object.getTCoordinate()));
@@ -21,17 +16,32 @@ namespace opendrive {
         }
     }
 
-    void Road::setGeometries() {
+    template<>
+    void Road::set<Geometry>() {
         for (const auto &geometryNode : openDriveObject->planView().geometry()) {
             planView.emplace(geometryNode.s().get(), Geometry(geometryNode));
         }
     }
 
-    void Road::setElevations() {
+    template<>
+    void Road::set<Elevation>() {
         for (const auto &elevationNode : openDriveObject->elevationProfile().get().elevation()) {
-            Elevation elevation = Elevation(elevationNode);
-            elevationProfile.emplace(elevationNode.s().get(), elevation);
+            elevationProfile.emplace(elevationNode.s().get(), Elevation(elevationNode));
         }
+    }
+
+    template<>
+    void Road::set<SuperElevation>() {
+        for (const auto &superElevationNode : openDriveObject->lateralProfile().get().superelevation()) {
+            lateralProfile.emplace(superElevationNode.s().get(), SuperElevation(superElevationNode));
+        }
+    }
+
+    Road::Road(const road &openDriveRoad) : OpenDriveWrapper<road>(openDriveRoad) {
+        set<Geometry>();
+        set<Elevation>();
+        set<SuperElevation>();
+        set<Object>();
     }
 
     const std::map<std::string, Object> &Road::getObjects() const {
@@ -71,12 +81,19 @@ namespace opendrive {
         return result;
     }
 
-    std::vector<double> Road::getGeometryStartCoordinates(bool omitLastElement) const {
+    template<>
+    std::vector<double> Road::getStartCoordinates<Geometry>(bool omitLastElement) const {
         return getStartCoordinates(planView, omitLastElement);
     }
 
-    std::vector<double> Road::getElevationStartCoordinates(bool omitLastElement) const {
+    template<>
+    std::vector<double> Road::getStartCoordinates<Elevation>(bool omitLastElement) const {
         return getStartCoordinates(elevationProfile, omitLastElement);
+    }
+
+    template<>
+    std::vector<double> Road::getStartCoordinates<SuperElevation>(bool omitLastElement) const {
+        return getStartCoordinates(lateralProfile, omitLastElement);
     }
 
     template<typename T>
@@ -96,7 +113,8 @@ namespace opendrive {
         return geometry;
     }
 
-    const Geometry &Road::getGeometry(double s) const {
+    template<>
+    const Geometry &Road::getElement<Geometry>(double s) const {
         const auto &geometry = getElement<Geometry>(planView, s);
         if (s > geometry.getSCoordinate() + geometry.getLength()) {
             return throwNotOnRoad<Geometry>(s);
@@ -104,8 +122,14 @@ namespace opendrive {
         return geometry;
     }
 
-    const Elevation &Road::getElevation(double s) const {
+    template<>
+    const Elevation &Road::getElement<Elevation>(double s) const {
         return getElement<Elevation>(elevationProfile, s);
+    }
+
+    template<>
+    const SuperElevation &Road::getElement<SuperElevation>(double s) const {
+        return getElement<SuperElevation>(lateralProfile, s);
     }
 
     double Road::getLength() const {
@@ -118,9 +142,9 @@ namespace opendrive {
     }
 
     Vector Road::interpolate(double s, double t) const {
-        Geometry geometry = getGeometry(s);
-        auto height = getElevation(s).interpolate(s);
-        return geometry.interpolate(s) + t * geometry.calculateReferenceNormal(s) + height;
+        Geometry geometry = getElement<Geometry>(s);
+        auto height = getElement<Elevation>(s).interpolate(s);
+        return geometry.interpolate(s) + t * geometry.calculateReferenceNormal(s) + Vector{0, 0, 1} * height;
     }
 
     std::map<std::string, Object> Road::getObjects(const std::string &type, const std::string &name) const {
@@ -143,4 +167,9 @@ namespace opendrive {
     const std::map<double, Elevation> &Road::getElevationProfile() const {
         return elevationProfile;
     }
+
+    const std::map<double, SuperElevation> &Road::getLateralProfile() const {
+        return lateralProfile;
+    }
+
 }

@@ -1,5 +1,6 @@
 #include "Projector.hpp"
 #include "HDMap.hpp"
+#include "Geometry.hpp"
 
 /**
  * An example executable to print some google maps links for the geometries and objects along a road.
@@ -14,8 +15,8 @@ int main(int argc, char **argv) {
     std::cout << "Geometry start positions" << std::endl;
     std::cout << "****************************************************************************" << std::endl;
 
-    for (const auto &s: roadHighwayExitSouth.getGeometryStartCoordinates()) {
-        auto projected = projector.project(roadHighwayExitSouth.getGeometry(s).getStart());
+    for (const auto &s: roadHighwayExitSouth.getStartCoordinates<opendrive::Geometry>()) {
+        auto projected = projector.project(roadHighwayExitSouth.getElement<opendrive::Geometry>(s).getStart());
         std::cout << opendrive::Projector::toGoogleMapsLink(projected) << std::endl;
     }
 

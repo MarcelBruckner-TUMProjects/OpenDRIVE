@@ -13,10 +13,48 @@
 namespace opendrive {
 
     /**
-     * Wrapper for the OpenDRIVE geometry class.
+     * Base wrapper for the OpenDRIVE (super-) elevation class.
+     *
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_methods_of_elevation
      */
-    class Elevation : public OpenDriveWrapperWithCoordinate<elevation> {
+    template<class T>
+    class ElevationBase : public OpenDriveWrapperWithCoordinate<T> {
+    public:
+        /**
+         * @constructor
+         */
+        explicit ElevationBase() = default;
+
+        /**
+         * @constructor
+         */
+        explicit ElevationBase(const T &openDriveObject);
+
+        /**
+         * @destructor
+         */
+        ~ElevationBase() override = default;
+
+        /**
+         * Interpolates the height at the s coordinate.
+         *
+         * @param s The s-coordinate of interest.
+         */
+        double interpolate(double s) const;
+
+        /**
+         * Interpolates the height at the beginning of the elevation.
+         *
+         * @param s The s-coordinate of interest.
+         */
+        double interpolateStart() const;
+    };
+
+    /**
+     * Wrapper for the OpenDRIVE elevation class.
+     * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_methods_of_elevation
+     */
+    class Elevation : public ElevationBase<elevation> {
     public:
         /**
          * @constructor
@@ -31,22 +69,32 @@ namespace opendrive {
         /**
          * @destructor
          */
-        virtual ~Elevation() = default;
-
-        /**
-         * Interpolates the height at the s coordinate.
-         *
-         * @param s The s-coordinate of interest.
-         */
-        Vector interpolate(double s) const;
-
-        /**
-         * Interpolates the height at the beginning of the elevation.
-         *
-         * @param s The s-coordinate of interest.
-         */
-        Vector interpolateStart() const;
+        ~Elevation() override = default;
     };
+
+    /**
+     * Wrapper for the OpenDRIVE super elevation class.
+     * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_methods_of_elevation
+     */
+    class SuperElevation : public ElevationBase<superelevation> {
+    public:
+        /**
+         * @constructor
+         */
+        explicit SuperElevation() = default;
+
+        /**
+         * @constructor
+         */
+        explicit SuperElevation(const superelevation &openDriveObject);
+
+        /**
+         * @destructor
+         */
+        ~SuperElevation() override = default;
+    };
+
+
 }
 
 #endif //OPENDRIVE_ELEVATION_HPP

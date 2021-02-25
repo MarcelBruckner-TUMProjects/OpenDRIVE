@@ -22,7 +22,8 @@ namespace opendrive {
              */
             void assertCorrectGeometryForObject(const std::string &objectId, double expected) {
                 Object object = roadHighwayNorth.getObject(objectId);
-                EXPECT_NEAR(roadHighwayNorth.getGeometry(object.getSCoordinate()).getSCoordinate(), expected, maxDifference);
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(object.getSCoordinate()).getSCoordinate(), expected,
+                            maxDifference);
             }
         };
 
@@ -35,22 +36,22 @@ namespace opendrive {
 
             expected = 0;
             for (int i = (int) expected; i < 2.874078777576e+02; i++) {
-                EXPECT_NEAR(roadHighwayNorth.getGeometry(i).getSCoordinate(), expected, maxDifference);
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).getSCoordinate(), expected, maxDifference);
             }
 
             expected = 2.874078777576e+02;
             for (int i = (int) expected + 1; i < 8.622236665343e+02; i++) {
-                EXPECT_NEAR(roadHighwayNorth.getGeometry(i).getSCoordinate(), expected, maxDifference);
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).getSCoordinate(), expected, maxDifference);
             }
 
             expected = 8.622236665343e+02;
             for (int i = (int) expected + 1; i < 1.437039521207e+03; i++) {
-                EXPECT_NEAR(roadHighwayNorth.getGeometry(i).getSCoordinate(), expected, maxDifference);
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).getSCoordinate(), expected, maxDifference);
             }
 
             expected = 1.437039521207e+03;
             for (int i = (int) expected + 1; i < roadHighwayNorth.getLength(); i++) {
-                EXPECT_NEAR(roadHighwayNorth.getGeometry(i).getSCoordinate(), expected, maxDifference);
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).getSCoordinate(), expected, maxDifference);
             }
         }
 
@@ -59,10 +60,10 @@ namespace opendrive {
          * Tests that searching for an invalid s coordinate throws an error.
          */
         TEST_F(RoadTests, testErrorThrownOnInvalidGeometry) {
-            EXPECT_THROW(roadHighwayNorth.getGeometry(-32324), std::invalid_argument);
-            EXPECT_THROW(roadHighwayNorth.getGeometry(-1), std::invalid_argument);
-            EXPECT_THROW(roadHighwayNorth.getGeometry(65453), std::invalid_argument);
-            EXPECT_THROW(roadHighwayNorth.getGeometry(56435634), std::invalid_argument);
+            EXPECT_THROW(roadHighwayNorth.getElement<Geometry>(-32324), std::invalid_argument);
+            EXPECT_THROW(roadHighwayNorth.getElement<Geometry>(-1), std::invalid_argument);
+            EXPECT_THROW(roadHighwayNorth.getElement<Geometry>(65453), std::invalid_argument);
+            EXPECT_THROW(roadHighwayNorth.getElement<Geometry>(56435634), std::invalid_argument);
         }
 
         /**

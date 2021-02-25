@@ -21,6 +21,9 @@ namespace opendrive {
     template
     class OpenDriveWrapperWithCoordinate<elevation>;
 
+    template
+    class OpenDriveWrapperWithCoordinate<superelevation>;
+
     template<class S>
     OpenDriveWrapper<S>::OpenDriveWrapper(const S &openDriveObject) :openDriveObject(
             std::make_shared<S>(openDriveObject)) {
