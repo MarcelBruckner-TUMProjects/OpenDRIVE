@@ -10,24 +10,31 @@
 #include "Object.hpp"
 #include "OpenDriveWrapper.hpp"
 #include "Geometry.hpp"
+#include "Elevation.hpp"
 
 namespace opendrive {
 
     /**
      * A wrapper for the OpenDRIVE road class.
+     * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_roads
      */
     class Road : public OpenDriveWrapper<road> {
 
     protected:
         /**
-         * The list of objects along the road.
+         * The objects along the road.
          */
         std::map<std::string, Object> objects;
 
         /**
-         * The list of planView defining the road.
+         * The planView consisting of the road geometries.
          */
         std::map<double, Geometry> planView;
+
+        /**
+         * The elevationProfile consisting of the road elevations.
+         */
+        std::map<double, Elevation> elevationProfile;
 
         /**
          * @set Converts the parser objects to Object objects.
@@ -38,6 +45,11 @@ namespace opendrive {
          * @set Converts the parser geometries to Geometry objects.
          */
         void setGeometries();
+
+        /**
+         * @set Converts the parser elevations to Elevation objects.
+         */
+        void setElevations();
 
     public:
 
@@ -72,6 +84,11 @@ namespace opendrive {
         const std::map<double, Geometry> &getPlanView() const;
 
         /**
+         * @get
+         */
+        const std::map<double, Elevation> &getElevationProfile() const;
+
+        /**
          * @get Tries to find an object with the given id along the road.
          *
          * @throws invalid_argument if no object with the given id is found.
@@ -79,11 +96,36 @@ namespace opendrive {
         const Object &getObject(const std::string &id) const;
 
         /**
+         * @throws invalid_argument describing that no object with the given id could be found.
+         */
+        static const Object &throwObjectNotFound(const std::string &id);
+
+        /**
+         * @get Tries to find the element including the given s coordinate along the road.
+         *
+         * @throws invalid_argument if the s coordinate is negative.
+         */
+        template<typename T>
+        const T &getElement(const std::map<double, T> &map, double s) const;
+
+        /**
+         * @throws invalid_argument describing that no element containing the given s coordinate could be found.
+         */
+        const Geometry &throwNotOnRoad(double s) const;
+
+        /**
          * @get Tries to find the geometry including the given s coordinate along the road.
          *
          * @throws invalid_argument if the s coordinate is negative or outside if the road.
          */
         const Geometry &getGeometry(double s) const;
+
+        /**
+         * @get Tries to find the elevation including the given s coordinate along the road.
+         *
+         * @throws invalid_argument if the s coordinate is negative.
+         */
+        const Elevation &getElevation(double s) const;
 
         /**
          * @get
@@ -98,12 +140,23 @@ namespace opendrive {
         /**
          * @throws invalid_argument describing that no geometry including the given s coordinate could be found.
          */
-        static const Geometry &throwGeometryNotFound(double s);
+        template<typename T>
+        const T &throwNotOnRoad(double s) const;
 
         /**
-         * @throws invalid_argument describing that no object with the given id could be found.
+         * Interpolates an object along the reference line and offsets it.
+         * @param s The s coordinate along the reference line.
+         * @param t The t offset normal to the reference line.
          */
-        static const Object &throwObjectNotFound(const std::string &id);
+        Vector interpolate(double s, double t = 0) const;
+
+        /**
+         * Gets the s coordinates of the elements in the map.
+         *
+         * @param omitLastElement Flag if the last element should be omitted.
+         */
+        template<typename T>
+        std::vector<double> getStartCoordinates(std::map<double, T> map, bool omitLastElement) const;
 
         /**
          * Gets the s coordinates of the geometries.
@@ -113,11 +166,11 @@ namespace opendrive {
         std::vector<double> getGeometryStartCoordinates(bool omitLastElement = false) const;
 
         /**
-         * Interpolates an object along the reference line and offsets it.
-         * @param s The s coordinate along the reference line.
-         * @param t The t offset normal to the reference line.
+         * Gets the s coordinates of the elevations.
+         *
+         * @param omitLastElement Flag if the last element should be omitted.
          */
-        Vector interpolate(double s, double t = 0) const;
+        std::vector<double> getElevationStartCoordinates(bool omitLastElement) const;
     };
 }
 

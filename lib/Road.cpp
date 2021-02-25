@@ -9,6 +9,7 @@ namespace opendrive {
 
     Road::Road(const road &openDriveRoad) : OpenDriveWrapper<road>(openDriveRoad) {
         setGeometries();
+        setElevations();
         setObjects();
     }
 
@@ -21,8 +22,15 @@ namespace opendrive {
     }
 
     void Road::setGeometries() {
-        for (const auto &geometry : openDriveObject->planView().geometry()) {
-            planView.emplace(geometry.s().get(), Geometry(geometry));
+        for (const auto &geometryNode : openDriveObject->planView().geometry()) {
+            planView.emplace(geometryNode.s().get(), Geometry(geometryNode));
+        }
+    }
+
+    void Road::setElevations() {
+        for (const auto &elevationNode : openDriveObject->elevationProfile().get().elevation()) {
+            Elevation elevation = Elevation(elevationNode);
+            elevationProfile.emplace(elevationNode.s().get(), elevation);
         }
     }
 
@@ -48,12 +56,13 @@ namespace opendrive {
         return planView;
     }
 
-    std::vector<double> Road::getGeometryStartCoordinates(bool omitLastElement) const {
+    template<typename T>
+    std::vector<double> Road::getStartCoordinates(std::map<double, T> map, bool omitLastElement) const {
         std::vector<double> result;
 
         int i = 0;
-        for (const auto &entry : planView) {
-            if (omitLastElement && i++ >= planView.size() - 1) {
+        for (const auto &entry : map) {
+            if (omitLastElement && i++ >= map.size() - 1) {
                 break;
             }
             result.emplace_back(entry.first);
@@ -62,32 +71,45 @@ namespace opendrive {
         return result;
     }
 
-    const Geometry &Road::getGeometry(double s) const {
+    std::vector<double> Road::getGeometryStartCoordinates(bool omitLastElement) const {
+        return getStartCoordinates(planView, omitLastElement);
+    }
+
+    std::vector<double> Road::getElevationStartCoordinates(bool omitLastElement) const {
+        return getStartCoordinates(elevationProfile, omitLastElement);
+    }
+
+    template<typename T>
+    const T &Road::getElement(const std::map<double, T> &map, double s) const {
         if (s < 0) {
-            return throwGeometryNotFound(s);
+            return throwNotOnRoad<T>(s);
         }
         double previous = 0;
-        for (const auto &entry : planView) {
+        for (const auto &entry : map) {
             double getS = entry.second.getSCoordinate();
             if (getS > s) {
                 break;
             }
             previous = getS;
         }
-        const Geometry &geometry = planView.at(previous);
+        const T &geometry = map.at(previous);
+        return geometry;
+    }
+
+    const Geometry &Road::getGeometry(double s) const {
+        const auto &geometry = getElement<Geometry>(planView, s);
         if (s > geometry.getSCoordinate() + geometry.getLength()) {
-            return throwGeometryNotFound(s);
+            return throwNotOnRoad<Geometry>(s);
         }
         return geometry;
     }
 
-    double Road::getLength() const {
-        return openDriveObject->length().get();
+    const Elevation &Road::getElevation(double s) const {
+        return getElement<Elevation>(elevationProfile, s);
     }
 
-    const Geometry &Road::throwGeometryNotFound(double s) {
-        throw std::invalid_argument(std::to_string(s) + " is not on the road.");
-        return *new Geometry();
+    double Road::getLength() const {
+        return openDriveObject->length().get();
     }
 
     const Object &Road::throwObjectNotFound(const std::string &id) {
@@ -97,7 +119,8 @@ namespace opendrive {
 
     Vector Road::interpolate(double s, double t) const {
         Geometry geometry = getGeometry(s);
-        return geometry.interpolate(s) + t * geometry.calculateReferenceNormal(s);
+        auto height = getElevation(s).interpolate(s);
+        return geometry.interpolate(s) + t * geometry.calculateReferenceNormal(s) + height;
     }
 
     std::map<std::string, Object> Road::getObjects(const std::string &type, const std::string &name) const {
@@ -109,5 +132,15 @@ namespace opendrive {
             }
         }
         return filtered;
+    }
+
+    template<typename T>
+    const T &Road::throwNotOnRoad(double s) const {
+        throw std::invalid_argument(std::to_string(s) + " is not on the road.");
+        return *new T();
+    }
+
+    const std::map<double, Elevation> &Road::getElevationProfile() const {
+        return elevationProfile;
     }
 }

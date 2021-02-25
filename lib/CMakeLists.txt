@@ -13,6 +13,7 @@ add_library(libOpenDRIVE
         Geometry.cpp
         Vector.cpp
         Projector.cpp
+        Elevation.cpp
         )
 
 target_include_directories(libOpenDRIVE
