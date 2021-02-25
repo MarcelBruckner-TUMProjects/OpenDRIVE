@@ -171,8 +171,8 @@ namespace opendrive {
         Geometry geometry = getElement<Geometry>(s);
         auto height = getElement<Elevation>(s).interpolate(s);
 
-        Vector tangent = geometry.calculateReferenceTangent(s);
-        Vector normal = geometry.calculateReferenceNormal(s);
+        Vector tangent = geometry.calculateTangent(s);
+        Vector normal = geometry.calculateNormal(s);
 
         double roll = getElement<SuperElevation>(s).interpolate(s);
         normal = normal.rotate(tangent, roll).normalized();

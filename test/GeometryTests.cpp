@@ -37,8 +37,8 @@ namespace opendrive {
              * Calculates the tangent at the end of the geometry and the start of the next one and asserts that they are near equal.
              */
             static void assertTangent(const Geometry &geometry, const Geometry &nextGeometry) {
-                Vector endTangent = geometry.calculateReferenceTangent(geometry.getEndSCoordinate());
-                Vector nextStartTangent = nextGeometry.calculateReferenceTangent(nextGeometry.getSCoordinate());
+                Vector endTangent = geometry.calculateTangent(geometry.getEndSCoordinate());
+                Vector nextStartTangent = nextGeometry.calculateTangent(nextGeometry.getSCoordinate());
 
                 EXPECT_NEAR(endTangent.distance(nextStartTangent), 0, 1e-12);
             }
@@ -49,18 +49,18 @@ namespace opendrive {
              */
             static void assertTangentAndNormalOrthogonal(const Geometry &geometry) {
                 Vector tangent, normal;
-                tangent = geometry.calculateReferenceTangent(geometry.getSCoordinate());
-                normal = geometry.calculateReferenceNormal(geometry.getSCoordinate());
+                tangent = geometry.calculateTangent(geometry.getSCoordinate());
+                normal = geometry.calculateNormal(geometry.getSCoordinate());
                 EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
 
                 for (int ss = (int) geometry.getSCoordinate() + 1; ss < geometry.getEndSCoordinate(); ss++) {
-                    tangent = geometry.calculateReferenceTangent(ss);
-                    normal = geometry.calculateReferenceNormal(ss);
+                    tangent = geometry.calculateTangent(ss);
+                    normal = geometry.calculateNormal(ss);
                     EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
                 }
 
-                tangent = geometry.calculateReferenceTangent(geometry.getEndSCoordinate());
-                normal = geometry.calculateReferenceNormal(geometry.getEndSCoordinate());
+                tangent = geometry.calculateTangent(geometry.getEndSCoordinate());
+                normal = geometry.calculateNormal(geometry.getEndSCoordinate());
                 EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
             }
         };
@@ -92,16 +92,16 @@ namespace opendrive {
             lineGeometry = roadHighwayNorth.getElement<Geometry>(s);
 
             Vector tangent;
-            tangent = lineGeometry.calculateReferenceTangent(lineGeometry.getSCoordinate());
+            tangent = lineGeometry.calculateTangent(lineGeometry.getSCoordinate());
             Vector expected{std::cos(lineGeometry.getHeading()), std::sin(lineGeometry.getHeading())};
             EXPECT_NEAR(tangent.distance(expected), 0, maxDifference);
 
 
-            tangent = lineGeometry.calculateReferenceTangent(
+            tangent = lineGeometry.calculateTangent(
                     lineGeometry.getSCoordinate() + 0.5 * lineGeometry.getLength());
             EXPECT_NEAR(tangent.distance(expected), 0, maxDifference);
 
-            tangent = lineGeometry.calculateReferenceTangent(lineGeometry.getEndSCoordinate());
+            tangent = lineGeometry.calculateTangent(lineGeometry.getEndSCoordinate());
             EXPECT_NEAR(tangent.distance(expected), 0, maxDifference);
         }
 
@@ -116,7 +116,7 @@ namespace opendrive {
 
             Geometry lineGeometry = roadHighwayNorth.getElement<Geometry>(s);
             Vector expected{-std::sin(lineGeometry.getHeading()), std::cos(lineGeometry.getHeading())};
-            const Vector &normal = lineGeometry.calculateReferenceNormal(lineGeometry.getSCoordinate());
+            const Vector &normal = lineGeometry.calculateNormal(lineGeometry.getSCoordinate());
             EXPECT_NEAR(normal.distance(expected), 0, maxDifference);
         }
 

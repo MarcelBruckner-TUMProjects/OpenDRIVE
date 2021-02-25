@@ -92,14 +92,14 @@ namespace opendrive {
          *
          * @param s s-coordinate of start position
          */
-        Vector calculateReferenceTangent(double s) const;
+        Vector calculateTangent(double s) const;
 
         /**
          * Calculates the t normal vector of the reference line.
          *
          * @param s s-coordinate of start position
          */
-        Vector calculateReferenceNormal(double s) const;
+        Vector calculateNormal(double s) const;
 
         /**
          * @get The length of the geometry.

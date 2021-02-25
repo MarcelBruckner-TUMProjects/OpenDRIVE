@@ -97,7 +97,7 @@ namespace opendrive {
         return {1, 0};
     }
 
-    Vector Geometry::calculateReferenceTangent(double s) const {
+    Vector Geometry::calculateTangent(double s) const {
         double primitiveS = getGetLocalS(s);
 
         Vector tangent;
@@ -117,8 +117,8 @@ namespace opendrive {
         return getSCoordinate() + getLength();
     }
 
-    Vector Geometry::calculateReferenceNormal(double s) const {
-        Vector tangent = calculateReferenceTangent(s);
+    Vector Geometry::calculateNormal(double s) const {
+        Vector tangent = calculateTangent(s);
         Vector up{0, 0, 1};
         return up.cross(tangent).normalize();
     }
