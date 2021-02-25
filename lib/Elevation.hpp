@@ -29,6 +29,11 @@ namespace opendrive {
         explicit Elevation(const elevation &openDriveObject);
 
         /**
+         * @destructor
+         */
+        virtual ~Elevation() = default;
+
+        /**
          * Interpolates the height at the s coordinate.
          *
          * @param s The s-coordinate of interest.

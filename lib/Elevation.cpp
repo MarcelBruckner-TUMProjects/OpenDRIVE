@@ -24,4 +24,5 @@ namespace opendrive {
     Vector Elevation::interpolateStart() const {
         return interpolate(getSCoordinate());
     }
+
 }
