@@ -34,12 +34,7 @@ namespace opendrive {
     }
 
     Vector Vector::rotateXY(double angle) const {
-        auto sin = std::sin(angle);
-        auto cos = std::cos(angle);
-        return {
-                x * cos - y * sin,
-                x * sin + y * cos
-        };
+        return rotate({0, 0, 1}, angle);
     }
 
     double Vector::distance(const Vector &rhs) const {
@@ -53,6 +48,12 @@ namespace opendrive {
         streamObj << other.x << "," << other.y << "," << other.z;
         os << streamObj.str();
         return os;
+    }
+
+
+    Vector Vector::normalized() {
+        Vector n = *this;
+        return n.normalize();
     }
 
     Vector &Vector::normalize() {
@@ -114,5 +115,13 @@ namespace opendrive {
 
     Vector operator*(double s, const Vector &vector) {
         return vector * s;
+    }
+
+    Vector Vector::rotate(Vector axis, double angle) const {
+        auto normalizedAxis = axis.normalized();
+        auto scale = *this * std::cos(angle);
+        auto skew = (normalizedAxis.cross(*this)) * std::sin(angle);
+        auto rescale = normalizedAxis * (normalizedAxis.dot(*this)) * (1 - std::cos(angle));
+        return scale + skew + rescale;
     }
 }

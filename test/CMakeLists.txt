@@ -51,6 +51,7 @@ add_executable(Tests
         ProjectorTests.cpp
         ObjectTests.cpp
         ElevationTests.cpp
+        VectorTests.cpp
         )
 target_link_libraries(Tests PUBLIC libOpenDRIVE gtest_main)
 target_include_directories(Tests PUBLIC tests "${PROJECT_BINARY_DIR}")

@@ -63,7 +63,6 @@ namespace opendrive {
             }
         }
 
-
         /**
          * Tests that searching for an invalid s coordinate throws an error.
          */

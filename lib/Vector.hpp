@@ -74,8 +74,20 @@ namespace opendrive {
         friend Vector operator-(const Vector &lhs, const Vector &rhs);
 
         /**
+         * Rotates the vector around the given axis using the Rodriguez formula.
+         * https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+         *
+         * @param axis The rotation axis.
+         * @param angle The rotation angle in radians.
+         *
+         * @return The rotated vector.
+         */
+        Vector rotate(Vector axis, double angle) const;
+
+        /**
          * Rotates the point around the z-axis for the given angle.
-         * @param angle The angle in rad.
+         *
+         * @param angle The angle in radians.
          */
         Vector rotateXY(double angle) const;
 
@@ -101,6 +113,11 @@ namespace opendrive {
          * Normalizes the vector to a length of 1.
          */
         Vector &normalize();
+
+        /**
+         * @return A normalized copy of the vector with a length of 1.
+         */
+        Vector normalized();
 
         /**
          * Calculates the cross product of the two vectors.
@@ -131,6 +148,7 @@ namespace opendrive {
          * @get
          */
         double getZ() const;
+
     };
 }
 

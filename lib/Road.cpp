@@ -142,12 +142,6 @@ namespace opendrive {
         return *new Object();
     }
 
-    Vector Road::interpolate(double s, double t) const {
-        Geometry geometry = getElement<Geometry>(s);
-        auto height = getElement<Elevation>(s).interpolate(s);
-        return geometry.interpolate(s) + t * geometry.calculateReferenceNormal(s) + Vector{0, 0, 1} * height;
-    }
-
     std::map<std::string, Object> Road::filterObjects(const std::string &type, const std::string &name) const {
         std::map<std::string, Object> filtered;
         for (const auto &entry : objects) {
@@ -171,6 +165,19 @@ namespace opendrive {
 
     const std::map<double, SuperElevation> &Road::getLateralProfile() const {
         return lateralProfile;
+    }
+
+    Vector Road::interpolate(double s, double t) const {
+        Geometry geometry = getElement<Geometry>(s);
+        auto height = getElement<Elevation>(s).interpolate(s);
+
+        Vector tangent = geometry.calculateReferenceTangent(s);
+        Vector normal = geometry.calculateReferenceNormal(s);
+
+        double roll = getElement<SuperElevation>(s).interpolate(s);
+        normal = normal.rotate(tangent, roll).normalized();
+
+        return geometry.interpolate(s) + t * normal + Vector{0, 0, 1} * height;
     }
 
 }
