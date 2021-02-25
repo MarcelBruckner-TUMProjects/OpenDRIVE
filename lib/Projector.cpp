@@ -35,7 +35,7 @@ namespace opendrive {
         a = proj_coord(vector.getX(), vector.getY(), vector.getZ(), 0);
         b = proj_trans(projection, PJ_FWD, a);
 
-        return {b.lp.phi, b.lp.lam, 0};
+        return {b.lp.phi, b.lp.lam, vector.getZ()};
     }
 
     std::string Projector::toGoogleMapsLink(const Vector &vector) {

@@ -26,6 +26,9 @@ namespace opendrive {
             auto ss = roadHighwayExitSouth.getElevationStartCoordinates(false);
             auto elevationProfile = roadHighwayExitSouth.getElevationProfile();
 
+            EXPECT_NEAR(roadHighwayExitSouth.getElevation(0).interpolateStart().getZ(),
+                        roadHighwayExitSouth.getElevation(0).getOpenDriveObject()->a().get(), maxDifference);
+
             for (int i = 1; i < ss.size(); i++) {
                 auto previousEndHeight = roadHighwayExitSouth.getElevation(ss[i - 1]).interpolate(ss[i]);
                 auto startHeight = roadHighwayExitSouth.getElevation(ss[i]).interpolateStart();
