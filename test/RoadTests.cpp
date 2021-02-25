@@ -27,6 +27,14 @@ namespace opendrive {
             }
         };
 
+
+        /**
+         * Tests finding the correct geometry for a given s value.
+         */
+        TEST_F(RoadTests, testRoadEqualsId) {
+            ASSERT_EQ(roadHighwayExitSouth == roadIdHighwayExitSouth, true);
+        }
+
         /**
          * Tests finding the correct geometry for a given s value.
          */

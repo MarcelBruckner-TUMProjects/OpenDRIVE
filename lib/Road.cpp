@@ -50,7 +50,7 @@ namespace opendrive {
 
 
     bool Road::operator==(const std::string &roadId) {
-        return std::strcmp(roadId.c_str(), openDriveObject->id()->c_str());
+        return std::strcmp(roadId.c_str(), openDriveObject->id()->c_str()) == 0;
     }
 
     template<>
