@@ -30,7 +30,11 @@ namespace opendrive {
         }
     }
 
-    std::string HDMap::getProjection() const {
+    std::string HDMap::getGeoReference() const {
         return getOpenDriveObject()->header().geoReference()->c_str();
+    }
+
+    const std::map<std::string, Road> &HDMap::getRoads() const {
+        return roads;
     }
 }

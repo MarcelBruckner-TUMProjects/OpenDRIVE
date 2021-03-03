@@ -61,7 +61,12 @@ namespace opendrive {
         /**
          * @get The PROJ projection string from the header.
          */
-        std::string getProjection() const;
+        std::string getGeoReference() const;
+
+        /**
+         * @get
+         */
+        const std::map<std::string, Road> &getRoads() const;
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

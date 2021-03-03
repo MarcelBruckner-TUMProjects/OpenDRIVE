@@ -93,8 +93,6 @@ namespace opendrive {
          */
         ~SuperElevation() override = default;
     };
-
-
 }
 
 #endif //OPENDRIVE_ELEVATION_HPP

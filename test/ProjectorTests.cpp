@@ -24,7 +24,7 @@ namespace opendrive {
         protected:
             void SetUp() override {
                 HDMapTests::SetUp();
-                projector = std::make_shared<Projector>(highwayExitSouth->getProjection());
+                projector = std::make_shared<Projector>(highwayExitSouth->getGeoReference());
             }
 
         protected:

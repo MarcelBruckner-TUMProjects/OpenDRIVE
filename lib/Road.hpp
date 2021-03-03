@@ -74,6 +74,12 @@ namespace opendrive {
         template<typename T>
         const T &getElement(const std::map<double, T> &map, double s) const;
 
+        /**
+         * @get Calculates the world positions of the element.
+         */
+        template<typename T>
+        Vector getWorldPosition(const T &object) const;
+
     public:
 
         /**
@@ -100,6 +106,16 @@ namespace opendrive {
          * @get
          */
         double getLength() const;
+
+        /**
+         * @get
+         */
+        std::string getId() const;
+
+        /**
+         * @get
+         */
+        std::string getName() const;
 
         /**
          * @get
@@ -143,13 +159,29 @@ namespace opendrive {
         const T &getElement(const std::string &id) const;
 
         /**
+         * @get Tries to find the world position of an element with the given id along the road.
+         *
+         * @throws invalid_argument if no object with the given id is found.
+         */
+        template<typename T>
+        Vector getWorldPosition(const std::string &id) const;
+
+        /**
+         * @get Tries to find the world positions of the element including the given s coordinate along the road.
+         *
+         * @throws invalid_argument if the s coordinate is negative.
+         */
+        template<typename T>
+        Vector getWorldPosition(double s) const;
+
+
+        /**
          * Gets the s coordinates of the requested elements.
          *
          * @param omitLastElement Flag if the last element should be omitted.
          */
         template<typename T>
         std::vector<double> getStartCoordinates(bool omitLastElement = false) const;
-
 
         /**
          * Interpolates an object along the reference line and offsets it.
@@ -158,6 +190,7 @@ namespace opendrive {
          * @param t The t offset normal to the reference line.
          */
         Vector interpolate(double s, double t = 0) const;
+
     };
 }
 

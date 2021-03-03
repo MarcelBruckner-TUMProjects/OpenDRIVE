@@ -44,8 +44,9 @@ namespace opendrive {
             auto ss = roadHighwayExitSouth.getStartCoordinates<SuperElevation>(false);
             auto elevationProfile = roadHighwayExitSouth.getLateralProfile();
 
-            EXPECT_NEAR(roadHighwayExitSouth.getElement<Elevation>(0).interpolateStart(),
-                        roadHighwayExitSouth.getElement<Elevation>(0).getOpenDriveObject()->a().get(), maxDifference);
+            EXPECT_NEAR(roadHighwayExitSouth.getElement<SuperElevation>(0).interpolateStart(),
+                        roadHighwayExitSouth.getElement<SuperElevation>(0).getOpenDriveObject()->a().get(),
+                        maxDifference);
 
             for (int i = 1; i < ss.size(); i++) {
                 auto previousEndRoll = roadHighwayExitSouth.getElement<SuperElevation>(ss[i - 1]).interpolate(ss[i]);

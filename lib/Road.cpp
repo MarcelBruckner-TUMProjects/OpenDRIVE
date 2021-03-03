@@ -5,14 +5,18 @@
 #include "Road.hpp"
 #include <string>
 
+#include <iomanip>
+
 namespace opendrive {
+
+#pragma region Setters
 
     template<>
     void Road::set<Object>() {
-        for (const auto &objectNode : openDriveObject->objects().get().object()) {
-            Object object = Object(objectNode);
-            object.setWorldPosition(interpolate(object.getSCoordinate(), object.getTCoordinate()));
-            objects.emplace(objectNode.id().get(), object);
+        if (openDriveObject->objects().present()) {
+            for (const auto &objectNode : openDriveObject->objects().get().object()) {
+                objects.emplace(objectNode.id().get(), Object(objectNode));
+            }
         }
     }
 
@@ -37,6 +41,10 @@ namespace opendrive {
         }
     }
 
+#pragma endregion Setters
+
+#pragma region ObjectOrientedFunctions
+
     Road::Road(const road &openDriveRoad) : OpenDriveWrapper<road>(openDriveRoad) {
         set<Geometry>();
         set<Elevation>();
@@ -44,13 +52,53 @@ namespace opendrive {
         set<Object>();
     }
 
+    bool Road::operator==(const std::string &roadId) {
+        return std::strcmp(roadId.c_str(), openDriveObject->id()->c_str()) == 0;
+    }
+
+#pragma endregion ObjectOrientedFunctions
+
+#pragma region PlainGetters
+
+    double Road::getLength() const {
+        return openDriveObject->length().get();
+    }
+
     const std::map<std::string, Object> &Road::getObjects() const {
         return objects;
     }
 
+    const std::map<double, Geometry> &Road::getPlanView() const {
+        return planView;
+    }
 
-    bool Road::operator==(const std::string &roadId) {
-        return std::strcmp(roadId.c_str(), openDriveObject->id()->c_str()) == 0;
+    const std::map<double, Elevation> &Road::getElevationProfile() const {
+        return elevationProfile;
+    }
+
+    const std::map<double, SuperElevation> &Road::getLateralProfile() const {
+        return lateralProfile;
+    }
+
+#pragma endregion PlainGetters
+
+#pragma region TemplateGetters
+
+    template<typename T>
+    const T &Road::getElement(const std::map<double, T> &map, double s) const {
+        if (s < 0) {
+            return throwNotOnRoad<T>(s);
+        }
+        double previous = 0;
+        for (const auto &entry : map) {
+            double getS = entry.second.getSCoordinate();
+            if (getS > s) {
+                break;
+            }
+            previous = getS;
+        }
+        const T &geometry = map.at(previous);
+        return geometry;
     }
 
     template<>
@@ -61,10 +109,6 @@ namespace opendrive {
             }
         }
         return throwObjectNotFound(id);
-    }
-
-    const std::map<double, Geometry> &Road::getPlanView() const {
-        return planView;
     }
 
     template<typename T>
@@ -97,23 +141,6 @@ namespace opendrive {
         return getStartCoordinates(lateralProfile, omitLastElement);
     }
 
-    template<typename T>
-    const T &Road::getElement(const std::map<double, T> &map, double s) const {
-        if (s < 0) {
-            return throwNotOnRoad<T>(s);
-        }
-        double previous = 0;
-        for (const auto &entry : map) {
-            double getS = entry.second.getSCoordinate();
-            if (getS > s) {
-                break;
-            }
-            previous = getS;
-        }
-        const T &geometry = map.at(previous);
-        return geometry;
-    }
-
     template<>
     const Geometry &Road::getElement<Geometry>(double s) const {
         const auto &geometry = getElement<Geometry>(planView, s);
@@ -133,14 +160,24 @@ namespace opendrive {
         return getElement<SuperElevation>(lateralProfile, s);
     }
 
-    double Road::getLength() const {
-        return openDriveObject->length().get();
+#pragma endregion TemplateGetters
+
+#pragma region Exceptions
+
+    template<typename T>
+    const T &Road::throwNotOnRoad(double s) const {
+        throw std::invalid_argument(std::to_string(s) + " is not on the road.");
+        return *new T();
     }
 
     const Object &Road::throwObjectNotFound(const std::string &id) {
         throw std::invalid_argument("There exists no object " + id + ".");
         return *new Object();
     }
+
+#pragma endregion Exceptions
+
+#pragma region Other
 
     std::map<std::string, Object> Road::filterObjects(const std::string &type, const std::string &name) const {
         std::map<std::string, Object> filtered;
@@ -153,19 +190,10 @@ namespace opendrive {
         return filtered;
     }
 
-    template<typename T>
-    const T &Road::throwNotOnRoad(double s) const {
-        throw std::invalid_argument(std::to_string(s) + " is not on the road.");
-        return *new T();
-    }
+#pragma endregion Other
 
-    const std::map<double, Elevation> &Road::getElevationProfile() const {
-        return elevationProfile;
-    }
+#pragma region Calculations
 
-    const std::map<double, SuperElevation> &Road::getLateralProfile() const {
-        return lateralProfile;
-    }
 
     Vector Road::interpolate(double s, double t) const {
         Geometry geometry = getElement<Geometry>(s);
@@ -179,5 +207,32 @@ namespace opendrive {
 
         return geometry.interpolate(s) + t * normal + Vector{0, 0, 1} * height;
     }
+
+    template<>
+    Vector Road::getWorldPosition<Object>(const std::string &id) const {
+        auto object = getElement<Object>(id);
+        return interpolate(object.getSCoordinate(), object.getTCoordinate());
+    }
+
+    template<typename T>
+    Vector Road::getWorldPosition(const T &object) const {
+        return interpolate(object.getSCoordinate());
+    }
+
+    template<>
+    Vector Road::getWorldPosition<Geometry>(double s) const {
+        return getWorldPosition(getElement<Geometry>(s));
+    }
+
+    std::string Road::getName() const {
+        return openDriveObject->name()->c_str();
+    }
+
+    std::string Road::getId() const {
+        return openDriveObject->id()->c_str();
+    }
+
+
+#pragma endregion Calculations
 
 }

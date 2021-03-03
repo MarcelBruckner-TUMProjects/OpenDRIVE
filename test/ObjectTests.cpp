@@ -101,7 +101,7 @@ namespace opendrive {
 
             int i = 0;
             for (const auto &entry : roadHighwayExitSouth.getObjects()) {
-                auto position = entry.second.getWorldPosition();
+                auto position = roadHighwayExitSouth.getWorldPosition<Object>(entry.first);
 //                std::cout << "{" << position << "}," << std::endl;
                 EXPECT_NEAR(position.distance(expected[i++]), 0, maxDifference);
             }

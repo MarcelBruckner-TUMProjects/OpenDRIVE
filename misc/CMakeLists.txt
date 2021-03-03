@@ -10,3 +10,8 @@ set(OPENDRIVE
         highway_exit_south.xodr
         )
 file(COPY ${OPENDRIVE} DESTINATION ./)
+
+set(TESTDATA
+        test.csv
+        )
+file(COPY ${TESTDATA} DESTINATION ./)

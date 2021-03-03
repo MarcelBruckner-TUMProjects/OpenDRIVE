@@ -8,16 +8,8 @@
 namespace opendrive {
     Object::Object(const object &openDriveObject) : OpenDriveWrapperWithCoordinate<object>(openDriveObject) {}
 
-    void Object::setWorldPosition(const Vector &_worldPosition) {
-        worldPosition = _worldPosition;
-    }
-
     double Object::getTCoordinate() const {
         return openDriveObject->t().get();
-    }
-
-    const Vector &Object::getWorldPosition() const {
-        return worldPosition;
     }
 
     std::string Object::getType() const {
@@ -26,6 +18,10 @@ namespace opendrive {
 
     std::string Object::getName() const {
         return openDriveObject->name()->c_str();
+    }
+
+    std::string Object::getId() const {
+        return openDriveObject->id()->c_str();
     }
 
     std::ostream &operator<<(std::ostream &os, const Object &other) {

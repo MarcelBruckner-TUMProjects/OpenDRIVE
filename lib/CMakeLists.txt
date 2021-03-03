@@ -14,6 +14,7 @@ add_library(libOpenDRIVE
         Vector.cpp
         Projector.cpp
         Elevation.cpp
+        Formatter.hpp
         )
 
 target_include_directories(libOpenDRIVE
