@@ -67,6 +67,8 @@ namespace opendrive {
          * @get
          */
         const std::map<std::string, Road> &getRoads() const;
+
+        const std::string &getFilename() const;
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

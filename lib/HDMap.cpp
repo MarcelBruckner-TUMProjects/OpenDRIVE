@@ -37,4 +37,8 @@ namespace opendrive {
     const std::map<std::string, Road> &HDMap::getRoads() const {
         return roads;
     }
+
+    const std::string &HDMap::getFilename() const {
+        return filename;
+    }
 }

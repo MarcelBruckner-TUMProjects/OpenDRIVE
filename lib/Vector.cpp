@@ -5,31 +5,32 @@
 #include "Vector.hpp"
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
 namespace opendrive {
 
-    Vector::Vector(double x, double y, double z) : x(x), y(y), z(z) {}
+    Vector::Vector(double x, double y, double z) : elements({x, y, z}) {}
 
     Vector operator+(const Vector &lhs, const Vector &rhs) {
         return {
-                lhs.x + rhs.x,
-                lhs.y + rhs.y,
-                lhs.z + rhs.z
+                lhs.elements[0] + rhs.elements[0],
+                lhs.elements[1] + rhs.elements[1],
+                lhs.elements[2] + rhs.elements[2]
         };
     }
 
     Vector operator-(const Vector &lhs, const Vector &rhs) {
         return {
-                lhs.x - rhs.x,
-                lhs.y - rhs.y,
-                lhs.z - rhs.z
+                lhs.elements[0] - rhs.elements[0],
+                lhs.elements[1] - rhs.elements[1],
+                lhs.elements[2] - rhs.elements[2]
         };
     }
 
     Vector &Vector::operator+=(const Vector &rhs) {
-        x += rhs.x;
-        y += rhs.y;
-        z += rhs.z;
+        elements[0] += rhs.elements[0];
+        elements[1] += rhs.elements[1];
+        elements[2] += rhs.elements[2];
         return *this;
     }
 
@@ -45,7 +46,7 @@ namespace opendrive {
         std::ostringstream streamObj;
         streamObj << std::setprecision(20);
         streamObj << std::scientific;
-        streamObj << other.x << "," << other.y << "," << other.z;
+        streamObj << other.elements[0] << "," << other.elements[1] << "," << other.elements[2];
         os << streamObj.str();
         return os;
     }
@@ -58,22 +59,22 @@ namespace opendrive {
 
     Vector &Vector::normalize() {
         double l = length();
-        x /= l;
-        y /= l;
-        z /= l;
+        elements[0] /= l;
+        elements[1] /= l;
+        elements[2] /= l;
         return *this;
     }
 
     Vector Vector::cross(const Vector &other) const {
         return {
-                y * other.z - z * other.y,
-                z * other.x - x * other.z,
-                x * other.y - y * other.x
+                elements[1] * other.elements[2] - elements[2] * other.elements[1],
+                elements[2] * other.elements[0] - elements[0] * other.elements[2],
+                elements[0] * other.elements[1] - elements[1] * other.elements[0]
         };
     }
 
     double Vector::dot(const Vector &other) const {
-        return x * other.x + y * other.y + z * other.z;
+        return elements[0] * other.elements[0] + elements[1] * other.elements[1] + elements[2] * other.elements[2];
     }
 
     double Vector::length() const {
@@ -81,15 +82,15 @@ namespace opendrive {
     }
 
     double Vector::getX() const {
-        return x;
+        return elements[0];
     }
 
     double Vector::getY() const {
-        return y;
+        return elements[1];
     }
 
     double Vector::getZ() const {
-        return z;
+        return elements[2];
     }
 
     std::string Vector::formatXY(int precision, bool scientific) const {
@@ -99,17 +100,17 @@ namespace opendrive {
             streamObj << std::scientific;
         }
 
-        streamObj << x;
+        streamObj << elements[0];
         streamObj << ",";
-        streamObj << y;
+        streamObj << elements[1];
         return streamObj.str();
     }
 
     Vector operator*(const Vector &vector, double s) {
         return {
-                vector.x * s,
-                vector.y * s,
-                vector.z * s,
+                vector.elements[0] * s,
+                vector.elements[1] * s,
+                vector.elements[2] * s,
         };
     }
 
@@ -123,5 +124,9 @@ namespace opendrive {
         auto skew = (normalizedAxis.cross(*this)) * std::sin(angle);
         auto rescale = normalizedAxis * (normalizedAxis.dot(*this)) * (1 - std::cos(angle));
         return scale + skew + rescale;
+    }
+
+    const std::vector<double> &Vector::getElements() const {
+        return elements;
     }
 }

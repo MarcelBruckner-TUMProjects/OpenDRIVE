@@ -6,15 +6,18 @@
 namespace po = boost::program_options;
 
 /**
- *
+ * Standalone mode for the converter.
  */
 int main(int argc, char **argv) {
+    bool csv = false;
+
     // Declare the supported options.
     po::options_description desc("Usage");
     desc.add_options()
             ("help,h", "produce help message")
             ("input,i", po::value<std::string>(), "The input file. Must be *.xodr and in the OpenDRIVE V1.4 standard.")
-            ("output,o", po::value<std::string>(), "The output file.");
+            ("output,o", po::value<std::string>(), "The output file.")
+            ("csv,c", po::bool_switch(&csv), "Use CSV as output format. (Default is YAML)");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -42,5 +45,9 @@ int main(int argc, char **argv) {
     auto output = vm["output"].as<std::string>();
 
     auto hdMap = opendrive::HDMap(input);
-    opendrive::WriteToFile(output, hdMap);
+    if (csv) {
+        opendrive::WriteToFile(output + ".csv", opendrive::ObjectsToCSV(hdMap));
+    } else {
+        opendrive::WriteToFile(output + ".yaml", opendrive::ObjectsToYAML(hdMap));
+    }
 }

@@ -12,6 +12,7 @@ set(OPENDRIVE
 file(COPY ${OPENDRIVE} DESTINATION ./)
 
 set(TESTDATA
-        test.csv
+        objects.csv
+        objects.yaml
         )
 file(COPY ${TESTDATA} DESTINATION ./)

@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 namespace opendrive {
 
@@ -17,19 +18,9 @@ namespace opendrive {
     private:
 
         /**
-         * The x coordinate.
+         * The elements of the vector.
          */
-        double x = 0;
-
-        /**
-         * The y coordinate.
-         */
-        double y = 0;
-
-        /**
-         * The z coordinate.
-         */
-        double z = 0;
+        std::vector<double> elements;
 
     public:
 
@@ -149,6 +140,7 @@ namespace opendrive {
          */
         double getZ() const;
 
+        const std::vector<double> &getElements() const;
     };
 }
 

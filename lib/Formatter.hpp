@@ -14,10 +14,16 @@
 #include "HDMap.hpp"
 #include "Road.hpp"
 #include "Projector.hpp"
+#include "yaml-cpp/yaml.h"
 
 namespace opendrive {
 
-
+    /**
+     * Writes the given content to the given file.
+     *
+     * @param filename The filename of the output file.
+     * @param content The content that is written.
+     */
     void WriteToFile(const std::string &filename, const std::string &content) {
         std::ofstream file;
         file.open(filename);
@@ -25,6 +31,61 @@ namespace opendrive {
         file.close();
     }
 
+    /**
+     * Converts the objects in the HD map to the YAML format.
+     *
+     * @param map The HD map.
+     *
+     * @return A string in the YAML format representing the objects.
+     */
+    std::string ObjectsToYAML(const HDMap &map) {
+        Projector projector = Projector(map.getGeoReference());
+
+        YAML::Emitter yaml;
+        yaml << YAML::BeginMap;
+        yaml << YAML::Key << "mapFilename" << YAML::Value << map.getFilename();
+        yaml << YAML::Key << "geoReference" << YAML::Value << map.getGeoReference();
+        yaml << YAML::Key << "objects" << YAML::Value;
+
+        yaml << YAML::BeginSeq;
+        for (const auto &roadEntry : map.getRoads()) {
+            auto road = roadEntry.second;
+
+            for (const auto &objectEntry : road.getObjects()) {
+                auto object = objectEntry.second;
+
+                yaml << YAML::BeginMap;
+
+                yaml << YAML::Key << "id" << YAML::Value << object.getId();
+                yaml << YAML::Key << "type" << YAML::Value << object.getType();
+                yaml << YAML::Key << "name" << YAML::Value << object.getName();
+
+                auto worldPosition = road.getWorldPosition<Object>(object.getId());
+                yaml << YAML::Key << "position" << YAML::Value << YAML::Flow << worldPosition.getElements();
+
+                yaml << YAML::Key << "pixels" << YAML::Value;
+                yaml << YAML::BeginSeq << YAML::EndSeq;
+
+                yaml << YAML::Key << "googleMaps" << YAML::Value
+                     << Projector::toGoogleMapsLink(projector.project(worldPosition));
+
+                yaml << YAML::EndMap;
+
+            }
+        }
+        assert(yaml.good());
+        yaml << YAML::EndSeq;
+        yaml << YAML::EndMap;
+        return yaml.c_str();
+    }
+
+    /**
+     * Converts the objects in the HD map to the CSV format.
+     *
+     * @param map The HD map.
+     *
+     * @return A string in the CSV format representing the objects.
+     */
     std::string ObjectsToCSV(const HDMap &map) {
         Projector projector = Projector(map.getGeoReference());
         std::string geoReference = "\"" + map.getGeoReference() + "\"";
@@ -39,7 +100,6 @@ namespace opendrive {
             auto road = roadEntry.second;
 
             for (const auto &objectEntry : road.getObjects()) {
-//                for (const auto &objectEntry : road.filterObjects("pole", "permanentDelineator")) {
                 auto object = objectEntry.second;
 
                 ss << road.getName() << ",";
