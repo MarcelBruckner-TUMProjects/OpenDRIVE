@@ -1,18 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(IMAGES
-        )
-
-file(COPY ${IMAGES} DESTINATION ./)
-
-set(OPENDRIVE
-        highway_north.xodr
-        highway_exit_south.xodr
-        )
-file(COPY ${OPENDRIVE} DESTINATION ./)
-
-set(TESTDATA
-        objects.csv
-        objects.yaml
-        )
-file(COPY ${TESTDATA} DESTINATION ./)
+configure_file(objects.yaml objects.yaml COPYONLY)
+configure_file(highway_exit_south.xodr highway_exit_south.xodr COPYONLY)
+configure_file(highway_north.xodr highway_north.xodr COPYONLY)

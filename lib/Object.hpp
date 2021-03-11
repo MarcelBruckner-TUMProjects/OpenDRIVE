@@ -35,10 +35,15 @@ namespace opendrive {
          */
         ~Object() override = default;
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "bugprone-virtual-near-miss"
+
         /**
          * @get The t-coordinate of object’s origin.
          */
         double getTCoordinate() const;
+
+#pragma clang diagnostic pop
 
         /**
          * @get Type of object.
@@ -55,10 +60,56 @@ namespace opendrive {
          */
         std::string getId() const;
 
+
         /**
          * @operator
          */
         friend std::ostream &operator<<(std::ostream &os, const Object &other);
+
+        /**
+         * @get
+         */
+        double getHeight() const;
+
+        /**
+         * @get Height of the object’s bounding box. @height is defined in the local coordinate system u/v along the z-axis.
+         */
+        double getHeading() const;
+
+        /**
+         * @get Validity of object along s-axis (0.0 for point object)
+         */
+        double getValidLength() const;
+
+        /**
+         * @get "" = valid in positive s-direction, "-" = valid in negative s-direction,+ "none" = valid in both directions+ (does not affect the heading).
+         */
+        std::string getOrientation() const;
+
+        /**
+         * @get Pitch angle relative to the x/y-plane
+         */
+        double getPitch() const;
+
+        /**
+         * @get Roll angle relative to the x/y-plane
+         */
+        double getRoll() const;
+
+        /**
+         * @get Length of the object’s bounding box, alternative to @radius. @length is defined in the local coordinate system u/v along the v-axis.
+         */
+        double getLength() const;
+
+        /**
+         * @get Width of the angular object’s bounding box, alternative to @radius. @width is defined in the local coordinate system u/v along the u-axis.
+         */
+        double getWidth() const;
+
+        /**
+         * @get Radius of the circular object’s bounding box, alternative to @length and @width. @radius is defined in the local coordinate system u/v".
+         */
+        double getRadius() const;
     };
 }
 

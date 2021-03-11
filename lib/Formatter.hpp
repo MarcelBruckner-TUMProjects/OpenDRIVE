@@ -56,15 +56,21 @@ namespace opendrive {
 
                 yaml << YAML::BeginMap;
 
-                yaml << YAML::Key << "id" << YAML::Value << object.getId();
                 yaml << YAML::Key << "type" << YAML::Value << object.getType();
+                yaml << YAML::Key << "validLength" << YAML::Value << object.getValidLength();
+                yaml << YAML::Key << "orientation" << YAML::Value << object.getOrientation();
+                yaml << YAML::Key << "hdg" << YAML::Value << object.getHeading();
                 yaml << YAML::Key << "name" << YAML::Value << object.getName();
+                yaml << YAML::Key << "pitch" << YAML::Value << object.getPitch();
+                yaml << YAML::Key << "id" << YAML::Value << object.getId();
+                yaml << YAML::Key << "roll" << YAML::Value << object.getRoll();
+                yaml << YAML::Key << "height" << YAML::Value << object.getHeight();
+                yaml << YAML::Key << "length" << YAML::Value << object.getLength();
+                yaml << YAML::Key << "width" << YAML::Value << object.getWidth();
+                yaml << YAML::Key << "radius" << YAML::Value << object.getRadius();
 
                 auto worldPosition = road.getWorldPosition<Object>(object.getId());
                 yaml << YAML::Key << "position" << YAML::Value << YAML::Flow << worldPosition.getElements();
-
-                yaml << YAML::Key << "pixels" << YAML::Value;
-                yaml << YAML::BeginSeq << YAML::EndSeq;
 
                 yaml << YAML::Key << "googleMaps" << YAML::Value
                      << Projector::toGoogleMapsLink(projector.project(worldPosition));

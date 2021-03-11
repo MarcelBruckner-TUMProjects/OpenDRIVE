@@ -53,26 +53,26 @@ namespace opendrive {
             ASSERT_EQ(expected["objects"].IsSequence(), expected["objects"].IsSequence());
 
             for (const auto &object : actual["objects"]) {
-                ASSERT_EQ(object["id"].IsScalar(), true);
+                ASSERT_EQ(object["id"].IsDefined(), true);
                 ASSERT_EQ(object["type"].IsDefined(), true);
                 ASSERT_EQ(object["name"].IsDefined(), true);
 
-                ASSERT_EQ(object["position"].IsSequence(), true);
+                ASSERT_EQ(object["validLength"].IsScalar(), true);
+                ASSERT_EQ(object["hdg"].IsScalar(), true);
+                ASSERT_EQ(object["pitch"].IsScalar(), true);
+                ASSERT_EQ(object["roll"].IsScalar(), true);
+                ASSERT_EQ(object["height"].IsScalar(), true);
+                ASSERT_EQ(object["length"].IsScalar(), true);
+                ASSERT_EQ(object["width"].IsScalar(), true);
+                ASSERT_EQ(object["radius"].IsScalar(), true);
 
+                ASSERT_EQ(object["position"].IsSequence(), true);
                 int i = 0;
                 for (const auto &element : object["position"]) {
                     ASSERT_EQ(element.IsScalar(), true);
                     i++;
                 }
                 ASSERT_EQ(i, 3);
-
-                ASSERT_EQ(object["pixels"].IsSequence(), true);
-                i = 0;
-                for (const auto &element : object["pixels"]) {
-                    ASSERT_EQ(element.IsSequence(), true);
-                    i++;
-                }
-                ASSERT_EQ(i, 0);
 
                 ASSERT_EQ(object["googleMaps"].IsDefined(), true);
             }
