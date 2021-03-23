@@ -36,5 +36,5 @@ cmake --build . -j8
 ```
 
 # Known errors
-The parser fails if there is the `xmlns` attribute set. 
+The parser fails if there is the `xmlns` attribute set.  
 Workaround: Change `<OpenDRIVE xmlns="http://www.opendrive.org">` to `<OpenDRIVE>`
