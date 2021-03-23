@@ -24,3 +24,11 @@ the XSD schema to generate context++ data bindings.
 
 To make this process easier there is the `bootstrap.sh` script. Run it and follow the instructions to download and
 generate the standard.
+
+# Run
+```shell
+mkdir build && cd build
+cmake ..
+cmake --build . -j8
+./standalone -h
+```
