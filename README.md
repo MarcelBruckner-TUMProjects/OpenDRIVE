@@ -12,10 +12,12 @@ Install these on your system:
 
 - [Code Synthesis](https://www.codesynthesis.com/products/xsd/download.xhtml)
 - [Xerces-context++](https://xerces.apache.org/xerces-c/download.cgi)
+- [PROJ](https://proj.org/)
 
 Automatically built by CMake:
 
 - [GoogleTest](https://github.com/google/googletest.git)
+- [YAML-CPP](https://github.com/jbeder/yaml-cpp)
 
 # Setup
 
@@ -24,3 +26,15 @@ the XSD schema to generate context++ data bindings.
 
 To make this process easier there is the `bootstrap.sh` script. Run it and follow the instructions to download and
 generate the standard.
+
+# Run
+```shell
+mkdir build && cd build
+cmake ..
+cmake --build . -j8
+./standalone/Converter -h
+```
+
+# Known errors
+The parser fails if there is the `xmlns` attribute set.  
+Workaround: Change `<OpenDRIVE xmlns="http://www.opendrive.org">` to `<OpenDRIVE>`
