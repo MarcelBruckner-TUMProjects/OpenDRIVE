@@ -31,13 +31,19 @@ namespace opendrive {
     public:
 
         /**
+         * The proj projection string for the long lat coordinate system.
+         */
+        static const std::string LONG_LAT_PROJECTION;
+
+        /**
          * @constructor
          *
          * @param projectionString Projection string adhering to the PROJ rules.
          *
          * @see https://proj.org/usage/quickstart.html
          */
-        explicit Projector(const std::string &projectionString);
+        explicit Projector(const std::string &fromProjection,
+                           const std::string &toProjection = LONG_LAT_PROJECTION);
 
         /**
          * @destructor
@@ -50,7 +56,7 @@ namespace opendrive {
          * @param vector The vector in the original coordinate frame that gets projected.
          * @return  The projected [longitude, latitude] coordinate.
          */
-        Vector project(const Vector &vector) const;
+        Vector project(const Vector &vector, PJ_DIRECTION direction = PJ_FWD) const;
 
         /**
          * Generates a google maps link for easy viewing of the [longitude, latitude] coordinate.

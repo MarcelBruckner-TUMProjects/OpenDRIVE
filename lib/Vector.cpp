@@ -93,16 +93,19 @@ namespace opendrive {
         return elements[2];
     }
 
-    std::string Vector::formatXY(int precision, bool scientific) const {
+    std::string Vector::format(int precision, bool scientific, std::vector<int> indices) const {
         std::ostringstream streamObj;
         streamObj << std::setprecision(precision);
         if (scientific) {
             streamObj << std::scientific;
         }
 
-        streamObj << elements[0];
-        streamObj << ",";
-        streamObj << elements[1];
+        for (int i = 0; i < indices.size() - 1; i++) {
+            streamObj << elements[indices[i]];
+            streamObj << ",";
+        }
+        streamObj << elements[indices[indices.size() - 1]];
+
         return streamObj.str();
     }
 

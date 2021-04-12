@@ -98,7 +98,8 @@ namespace opendrive {
          * @param precision The number of digits to print each element.
          * @param scientific Flag to use the scientific notation.
          */
-        std::string formatXY(int precision = 52, bool scientific = false) const;
+        std::string format(int precision = 52, bool scientific = false, std::vector<int> indices = {0, 1}) const;
+
 
         /**
          * Normalizes the vector to a length of 1.
@@ -140,7 +141,11 @@ namespace opendrive {
          */
         double getZ() const;
 
+        /**
+         * @get
+         */
         const std::vector<double> &getElements() const;
+
     };
 }
 

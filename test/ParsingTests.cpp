@@ -123,5 +123,6 @@ namespace opendrive {
             EXPECT_NEAR(testObject.getOpenDriveObject()->height().get(), 7.705e-01, maxDifference);
             EXPECT_NEAR(testObject.getOpenDriveObject()->hdg().get(), 0.0000e+00, maxDifference);
         }
+
     }// namespace tests
 }// namespace opendrive
