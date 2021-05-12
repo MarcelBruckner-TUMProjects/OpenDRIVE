@@ -63,20 +63,20 @@ ctest --verbose
 
 # Dependencies
 
-Install these on your system:
-
-- [Code Synthesis](https://www.codesynthesis.com/products/xsd/download.xhtml)
-- [Xerces-context++](https://xerces.apache.org/xerces-c/download.cgi)
-- [PROJ](https://proj.org/)
-
-To facilitate the setup of the dependencies you can run the installation script `extern/dependencies.sh`.
+| Dependency | Usage | Installation | Required | 
+| ---------- | ----------- | ------------ | -------- |
+| [Xerces-context++](https://xerces.apache.org/xerces-c/) | C++ XML Parser | `sudo apt install libxerces-c-dev` | Yes |
+| [Code Synthesis](https://www.codesynthesis.com/products/xsd) | XML Data Binding for C++ | `sudo apt install xsdcxx` | Yes |
+| [PROJ](https://proj.org/) | Coordinate transformations and projections | `sudo apt-get install proj-bin` | Yes |
 
 ## Internal Dependencies
 
 These dependencies are pulled by CMake when the project is built. You `do not` have to install them manually.
 
-- [GoogleTest](https://github.com/google/googletest) `# Only built if compiling with -DWITH_TESTS=ON`
-- [YAML-CPP](https://github.com/jbeder/yaml-cpp.git)
+| Dependency | Usage | Required | 
+| ---------- | ----------- | -------- |
+| [YAML-CPP](https://github.com/jbeder/yaml-cpp.git) | YAML parser for objects and pixels | Yes |
+| [GoogleTest](https://github.com/google/googletest) | Google unit testing framework | `-DWITH_TESTS=ON` |
 
 ***
 
