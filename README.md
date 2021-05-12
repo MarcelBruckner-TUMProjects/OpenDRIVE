@@ -20,7 +20,7 @@ the OpenDRIVE HD maps that are used within the project.
 Before running any code you have to download the OpenDRIVE V1.4 standard by _VIRES Simulationstechnologie GmbH_ and use
 the XSD schema to generate c++ data bindings.
 
-To make this process easier there is the `bootstrap.sh` script in `extern/standard`.  
+To make this process easier there is the `extern/standard/bootstrap.sh` script.  
 You have to run it from within the `extern/standard` directory and follow the instructions to download and generate the
 data bindings.
 
