@@ -14,5 +14,7 @@ target_include_directories(OpenDRIVEStandard
         )
 target_link_libraries(OpenDRIVEStandard XercesC::XercesC)
 
-add_subdirectory(googletest)
+if (WITH_TESTS)
+    add_subdirectory(googletest)
+endif ()
 add_subdirectory(yaml-cpp)

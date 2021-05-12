@@ -6,8 +6,10 @@ cmake_minimum_required(VERSION 3.10)
 project(OpenDRIVE C CXX)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
+option(WITH_TESTS "Compile with tests." OFF)
+
 ########################################################################################################################
-### Standalone App ###
+### External Dependencies ###
 ########################################################################################################################
 add_subdirectory(extern)
 
@@ -34,5 +36,7 @@ add_subdirectory(misc)
 ########################################################################################################################
 ### Testing ###
 ########################################################################################################################
-enable_testing()
-add_subdirectory(test)
+if (WITH_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif ()

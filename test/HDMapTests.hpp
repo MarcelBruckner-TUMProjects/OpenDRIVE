@@ -30,7 +30,7 @@ namespace opendrive {
             /**
              * The test roads.
              */
-            Road roadHighwayNorth, roadHighwayExitSouth, roadHighwayCenter;
+            Road roadHighwayNorth, roadHighwayExitSouth;
 
             /**
              * The maximal difference after parsing.
