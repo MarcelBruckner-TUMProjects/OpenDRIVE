@@ -6,7 +6,7 @@
 #define OPENDRIVE_HDMAPTESTS_HPP
 
 #include "gtest/gtest.h"
-#include "HDMap.hpp"
+#include "OpenDRIVE/HDMap.hpp"
 
 namespace opendrive {
     namespace tests {

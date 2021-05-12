@@ -1,28 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 
 ########################################################################################################################
-### Packages ###
+### Includes ###
 ########################################################################################################################
 
-include_directories(${PROJECT_SOURCE_DIR}/extern)
+find_package(Boost 1.40 COMPONENTS program_options REQUIRED)
+
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 ########################################################################################################################
-### TESTING ###
+### STANDALONE ###
 ########################################################################################################################
-add_executable(Tests
-        HDMapTests.cpp
-        ParsingTests.cpp
-        RoadTests.cpp
-        GeometryTests.cpp
-        ProjectorTests.cpp
-        ObjectTests.cpp
-        ElevationTests.cpp
-        VectorTests.cpp
-        FormatterTests.cpp
-        )
-target_link_libraries(Tests PUBLIC OpenDRIVE-lib gtest_main yaml-cpp)
-target_include_directories(Tests PUBLIC tests "${PROJECT_BINARY_DIR}")
+add_executable(Converter Converter.cpp)
+target_link_libraries(Converter PUBLIC OpenDRIVE-lib Boost::program_options)
+target_include_directories(Converter PUBLIC "${PROJECT_BINARY_DIR}")
 
-include_directories(../misc/)
-add_test(AllTests Tests)

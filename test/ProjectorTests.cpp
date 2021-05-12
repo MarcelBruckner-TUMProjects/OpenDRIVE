@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
 #include "HDMapTests.hpp"
-#include "Projector.hpp"
-#include "Projector.hpp"
+#include "OpenDRIVE/Projector.hpp"
+#include "OpenDRIVE/Projector.hpp"
 
 namespace opendrive {
     namespace tests {
@@ -13,7 +13,7 @@ namespace opendrive {
         class ProjectorTests : public HDMapTests {
         protected:
 
-            std::shared_ptr<Projector> projector;
+            std::shared_ptr<LongLatProjector> projector;
 
         public:
             /**
@@ -24,7 +24,7 @@ namespace opendrive {
         protected:
             void SetUp() override {
                 HDMapTests::SetUp();
-                projector = std::make_shared<Projector>(highwayExitSouth->getGeoReference());
+                projector = std::make_shared<LongLatProjector>(highwayExitSouth->getGeoReference());
             }
 
         protected:
@@ -135,7 +135,7 @@ namespace opendrive {
             int i = 0;
             for (const auto &s : roadHighwayExitSouth.getStartCoordinates<Geometry>()) {
                 projected = projector->project(roadHighwayExitSouth.getElement<Geometry>(s).getStart());
-                ASSERT_STREQ(Projector::toGoogleMapsLink(projected).c_str(), expected[i++].c_str());
+                ASSERT_STREQ(LongLatProjector::toGoogleMapsLink(projected).c_str(), expected[i++].c_str());
             }
         }
     }// namespace tests

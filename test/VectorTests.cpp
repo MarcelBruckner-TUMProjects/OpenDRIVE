@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "Vector.hpp"
+#include "OpenDRIVE/Vector.hpp"
 
 
 namespace opendrive {

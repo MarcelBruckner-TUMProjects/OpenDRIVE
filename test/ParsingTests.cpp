@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "HDMap.hpp"
+#include "OpenDRIVE/HDMap.hpp"
 #include "HDMapTests.hpp"
 
 namespace opendrive {

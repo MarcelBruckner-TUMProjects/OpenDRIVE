@@ -1,7 +1,8 @@
 #include "gtest/gtest.h"
 
 #include "HDMapTests.hpp"
-#include "Formatter.hpp"
+#include "OpenDRIVE/Formatter.hpp"
+#include "yaml-cpp/yaml.h"
 
 namespace opendrive {
     namespace tests {
@@ -19,25 +20,6 @@ namespace opendrive {
         protected:
 
         };
-
-        /**
-         * Tests formatting the objects to CSV.
-         */
-        TEST_F(ConverterTests, testToCSV) {
-            std::string csv = opendrive::ObjectsToCSV(*highwayExitSouth);
-
-            std::stringstream expected;
-            std::ifstream expectedDataFile("../misc/objects.csv");
-            std::string line;
-            if (expectedDataFile.is_open()) {
-                while (getline(expectedDataFile, line)) {
-                    expected << line << '\n';
-                }
-                expectedDataFile.close();
-            }
-
-            ASSERT_STREQ(expected.str().c_str(), csv.c_str());
-        }
 
         /**
          * Tests formatting the objects to YAML.
@@ -66,9 +48,16 @@ namespace opendrive {
                 ASSERT_EQ(object["width"].IsScalar(), true);
                 ASSERT_EQ(object["radius"].IsScalar(), true);
 
-                ASSERT_EQ(object["position"].IsSequence(), true);
+                ASSERT_EQ(object["utm_coord"].IsSequence(), true);
+                ASSERT_EQ(object["cartesian_coord"].IsSequence(), true);
                 int i = 0;
-                for (const auto &element : object["position"]) {
+                for (const auto &element : object["utm_coord"]) {
+                    ASSERT_EQ(element.IsScalar(), true);
+                    i++;
+                }
+                ASSERT_EQ(i, 3);
+                i = 0;
+                for (const auto &element : object["cartesian_coord"]) {
                     ASSERT_EQ(element.IsScalar(), true);
                     i++;
                 }
