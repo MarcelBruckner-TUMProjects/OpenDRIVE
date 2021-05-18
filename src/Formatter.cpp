@@ -6,11 +6,16 @@
 #include "yaml-cpp/yaml.h"
 
 namespace opendrive {
-    std::string ObjectsToYAML(const HDMap &map) {
+
+    std::string ObjectsToYAML(const HDMap &map, double longitude, double latitude) {
         LongLatProjector longLatProjector = LongLatProjector(map.getGeoReference());
-        CartesianProjector cartesianProjector = CartesianProjector(map.getGeoReference());
-        EqualAreaProjector equalAreaProjector = EqualAreaProjector(map.getGeoReference());
-        MollweideProjector mollweideProjector = MollweideProjector(map.getGeoReference());
+
+        Vector origin{latitude, longitude};
+        if (std::abs(latitude) <= 90. && std::abs(longitude) <= 180.) {
+            origin = longLatProjector.project(origin, PJ_INV);
+        } else {
+            origin = {0, 0};
+        }
 
         YAML::Emitter yaml;
         yaml << YAML::BeginMap;
@@ -32,16 +37,7 @@ namespace opendrive {
                 yaml << YAML::Key << "name" << YAML::Value << object.getName();
 
                 auto worldPosition = road.getWorldPosition<Object>(object.getId());
-                yaml << YAML::Key << "utm_coord" << YAML::Value << YAML::Flow << worldPosition.getElements();
-
-                yaml << YAML::Key << "cartesian_coord" << YAML::Value << YAML::Flow
-                     << cartesianProjector.project(worldPosition).getElements();
-
-                yaml << YAML::Key << "equal_area_coord" << YAML::Value << YAML::Flow
-                     << equalAreaProjector.project(worldPosition).getElements();
-
-                yaml << YAML::Key << "mollweide_coord" << YAML::Value << YAML::Flow
-                     << mollweideProjector.project(worldPosition).getElements();
+                yaml << YAML::Key << "utm_coord" << YAML::Value << YAML::Flow << (worldPosition - origin).getElements();
 
                 yaml << YAML::Key << "validLength" << YAML::Value << object.getValidLength();
                 yaml << YAML::Key << "orientation" << YAML::Value << object.getOrientation();

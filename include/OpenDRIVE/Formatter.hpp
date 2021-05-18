@@ -25,14 +25,17 @@ namespace opendrive {
      */
     void WriteToFile(const std::string &filename, const std::string &content);
 
+
     /**
      * Converts the objects in the HD map to the YAML format.
      *
      * @param map The HD map.
+     * @param longitude The longitude coordinate of the origin.
+     * @param latitude The latitude coordinate of the origin.
      *
      * @return A string in the YAML format representing the objects.
      */
-    std::string ObjectsToYAML(const HDMap &map);
+    std::string ObjectsToYAML(const HDMap &map, double longitude = -1e6, double latitude = -1e6);
 }
 
 

@@ -13,7 +13,7 @@
 namespace opendrive {
 
     /**
-     * A projector from a given PROJ projection to [longitude, latitude] coordinates.
+     * A projector from a given PROJ projection to another given PROJ projection.
      */
     class Projector {
     private:

@@ -15,6 +15,7 @@
 
 #include "Road.hpp"
 #include "Geometry.hpp"
+#include "Projector.hpp"
 
 namespace opendrive {
 
@@ -69,6 +70,9 @@ namespace opendrive {
          */
         const std::map<std::string, Road> &getRoads() const;
 
+        /**
+         * @get
+         */
         const std::string &getFilename() const;
     };
 }

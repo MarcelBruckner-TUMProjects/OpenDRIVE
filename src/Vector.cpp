@@ -34,6 +34,13 @@ namespace opendrive {
         return *this;
     }
 
+    Vector &Vector::operator-=(const Vector &rhs) {
+        elements[0] -= rhs.elements[0];
+        elements[1] -= rhs.elements[1];
+        elements[2] -= rhs.elements[2];
+        return *this;
+    }
+
     Vector Vector::rotateXY(double angle) const {
         return rotate({0, 0, 1}, angle);
     }

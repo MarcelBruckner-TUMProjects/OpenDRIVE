@@ -9,10 +9,10 @@
 #include "OpenDRIVE/HDMap.hpp"
 
 namespace opendrive {
-    HDMap::HDMap(std::string filename) : filename(std::move(filename)), OpenDriveWrapper<OpenDRIVE>(*OpenDRIVE_(
-            filename,
-            ::xml_schema::flags::dont_validate
-    )) {
+
+    HDMap::HDMap(std::string filename) :
+            filename(std::move(filename)),
+            OpenDriveWrapper<OpenDRIVE>(*OpenDRIVE_(filename, ::xml_schema::flags::dont_validate)) {
         setRoads();
     }
 

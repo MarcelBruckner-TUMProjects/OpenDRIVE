@@ -30,6 +30,19 @@ namespace opendrive {
         protected:
         };
 
+
+        /**
+         * Tests that the projection along the geometries produces correct long lat coordinates.
+         */
+        TEST_F(ProjectorTests, testSimpleForwardBackward) {
+            Vector coord{11.639188, 48.241606};
+            Vector projected = projector->project(coord, PJ_INV);
+            Vector result = projector->project(projected);
+
+            ASSERT_NEAR(result.getX(), coord.getX(), 1e-6);
+            ASSERT_NEAR(result.getY(), coord.getY(), 1e-6);
+        }
+
         /**
          * Tests that the projection along the geometries produces correct long lat coordinates.
          */

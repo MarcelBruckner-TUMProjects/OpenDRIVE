@@ -45,6 +45,11 @@ namespace opendrive {
         Vector &operator+=(const Vector &rhs);
 
         /**
+         * Elementwise subtracts the other point.
+         */
+        Vector &operator-=(const Vector &rhs);
+
+        /**
          * Elementwise adds the two points.
          */
         friend Vector operator+(const Vector &lhs, const Vector &rhs);

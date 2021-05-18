@@ -2,6 +2,7 @@
 #include "OpenDRIVE/Formatter.hpp"
 #include "boost/program_options.hpp"
 #include "boost/algorithm/string/predicate.hpp"
+#include <regex>
 
 namespace po = boost::program_options;
 
@@ -15,7 +16,10 @@ int main(int argc, char **argv) {
             ("input,i", po::value<std::string>(),
              "The input HD map file. Must be *.xodr and in the OpenDRIVE V1.4 standard.")
             ("output,o", po::value<std::string>()->default_value("<input>.yaml"),
-             "The output YAML file that contains the objects.");
+             "The output YAML file that contains the objects.")
+            ("long_lat_origin,l", po::value<std::string>()->default_value(""),
+             "The origin coordinate of the global reference frame in <longitude,latitude> format.");
+
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
@@ -40,6 +44,26 @@ int main(int argc, char **argv) {
         output = input + ".yaml";
     }
 
-    auto hdMap = opendrive::HDMap(input);
-    opendrive::WriteToFile(output + ".yaml", opendrive::ObjectsToYAML(hdMap));
+    opendrive::HDMap hdMap(input);
+    std::string long_lat_origin_str = vm["long_lat_origin"].as<std::string>();
+    std::string content;
+
+    if (long_lat_origin_str.empty()) {
+        content = opendrive::ObjectsToYAML(hdMap);
+    } else {
+        std::regex long_lat_regex(R"(-?(\d+)\.(\d+))");
+        auto words_begin = std::sregex_iterator(long_lat_origin_str.begin(), long_lat_origin_str.end(), long_lat_regex);
+        std::ptrdiff_t const match_count(std::distance(
+                std::sregex_iterator(long_lat_origin_str.begin(), long_lat_origin_str.end(), long_lat_regex),
+                std::sregex_iterator()));
+        if (match_count != 2) {
+            std::cout << "Please provide the coordinate origin in the format <longitude [N], latitude [E]>."
+                      << std::endl;
+        }
+        double longitude = std::strtod(words_begin->str().c_str(), nullptr);
+        double latitude = std::strtod((++words_begin)->str().c_str(), nullptr);
+
+        content = opendrive::ObjectsToYAML(hdMap, longitude, latitude);
+    }
+    opendrive::WriteToFile(output + ".yaml", content);
 }
