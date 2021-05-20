@@ -49,15 +49,8 @@ namespace opendrive {
                 ASSERT_EQ(object["radius"].IsScalar(), true);
 
                 ASSERT_EQ(object["utm_coord"].IsSequence(), true);
-                ASSERT_EQ(object["cartesian_coord"].IsSequence(), true);
                 int i = 0;
                 for (const auto &element : object["utm_coord"]) {
-                    ASSERT_EQ(element.IsScalar(), true);
-                    i++;
-                }
-                ASSERT_EQ(i, 3);
-                i = 0;
-                for (const auto &element : object["cartesian_coord"]) {
                     ASSERT_EQ(element.IsScalar(), true);
                     i++;
                 }
