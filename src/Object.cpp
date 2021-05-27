@@ -63,6 +63,10 @@ namespace opendrive {
         return openDriveObject->radius().get();
     }
 
+    double Object::getZOffset() const {
+        return openDriveObject->zOffset().get();
+    }
+
     std::ostream &operator<<(std::ostream &os, const Object &other) {
         os << "Type: " << other.getType() << ", ";
         os << "Name: " << other.getName();

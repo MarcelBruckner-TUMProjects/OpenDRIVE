@@ -211,7 +211,9 @@ namespace opendrive {
     template<>
     Vector Road::getWorldPosition<Object>(const std::string &id) const {
         auto object = getElement<Object>(id);
-        return interpolate(object.getSCoordinate(), object.getTCoordinate());
+        auto position = interpolate(object.getSCoordinate(), object.getTCoordinate());
+        auto zOffset = object.getZOffset();
+        return position + Vector{0, 0, zOffset};
     }
 
     template<typename T>

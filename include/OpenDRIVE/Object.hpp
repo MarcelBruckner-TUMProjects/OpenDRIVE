@@ -110,6 +110,11 @@ namespace opendrive {
          * @get Radius of the circular object’s bounding box, alternative to @length and @width. @radius is defined in the local coordinate system u/v".
          */
         double getRadius() const;
+
+        /**
+         * @get z-offset of object’s origin relative to the elevation of the reference line.
+         */
+        double getZOffset() const;
     };
 }
 

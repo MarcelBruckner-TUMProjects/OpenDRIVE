@@ -18,7 +18,9 @@ int main(int argc, char **argv) {
             ("output,o", po::value<std::string>()->default_value("<input>.yaml"),
              "The output YAML file that contains the objects.")
             ("long_lat_origin,l", po::value<std::string>()->default_value(""),
-             "The origin coordinate of the global reference frame in <longitude,latitude> format.");
+             "The origin coordinate of the global reference frame in <longitude,latitude> format.")
+            ("world_origin_id,w", po::value<std::string>()->default_value(""),
+             "The id of the object used as the origin of the world. Takes precedence over --long_lat_origin.");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -48,9 +50,11 @@ int main(int argc, char **argv) {
     std::string long_lat_origin_str = vm["long_lat_origin"].as<std::string>();
     std::string content;
 
-    if (long_lat_origin_str.empty()) {
-        content = opendrive::ObjectsToYAML(hdMap);
-    } else {
+    auto worldOriginID = vm["world_origin_id"].as<std::string>();
+
+    if (!worldOriginID.empty()) {
+        content = opendrive::ObjectsToYAML(hdMap, worldOriginID);
+    } else if (!long_lat_origin_str.empty()) {
         std::regex long_lat_regex(R"(-?(\d+)\.(\d+))");
         auto words_begin = std::sregex_iterator(long_lat_origin_str.begin(), long_lat_origin_str.end(), long_lat_regex);
         std::ptrdiff_t const match_count(std::distance(
@@ -64,6 +68,8 @@ int main(int argc, char **argv) {
         double latitude = std::strtod((++words_begin)->str().c_str(), nullptr);
 
         content = opendrive::ObjectsToYAML(hdMap, longitude, latitude);
+    } else {
+        content = opendrive::ObjectsToYAML(hdMap);
     }
     opendrive::WriteToFile(output + ".yaml", content);
 }
