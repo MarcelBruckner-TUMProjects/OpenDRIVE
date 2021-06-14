@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.17)
 find_package(XercesC REQUIRED)
 
 add_library(OpenDRIVEStandard
-        standard/OpenDRIVE_1.4H_Schema_Files.cxx
+        standard_1_4/OpenDRIVE_1.4H_Schema_Files.cxx
         )
 
-configure_file(standard/OpenDRIVE_1.4H_Schema_Files.xsd COPYONLY)
+configure_file(standard_1_4/OpenDRIVE_1.4H_Schema_Files.xsd COPYONLY)
 
 target_include_directories(OpenDRIVEStandard
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}

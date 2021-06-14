@@ -5,8 +5,13 @@ cmake_minimum_required(VERSION 3.10)
 ########################################################################################################################
 project(OpenDRIVE C CXX)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+include(CMakeDependentOption)
 
 option(WITH_TESTS "Compile with tests." OFF)
+
+option(OPENDRIVE_1_6 "Use version 1.6 of the OpenDrive standard." ON)
+
+configure_file(OpenDriveConfig.h.in OpenDriveConfig.h)
 
 ########################################################################################################################
 ### External Dependencies ###

@@ -5,7 +5,9 @@
 #ifndef OPENDRIVE_GEOMETRY_HPP
 #define OPENDRIVE_GEOMETRY_HPP
 
-#include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
+#ifndef OPENDRIVE_1_6
+#include "standard_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
+#endif
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "Vector.hpp"
 

@@ -11,7 +11,9 @@
 #include <map>
 
 
-#include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
+#ifndef OPENDRIVE_1_6
+#include "standard_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
+#endif
 
 #include "Road.hpp"
 #include "Geometry.hpp"
@@ -61,6 +63,13 @@ namespace opendrive {
         const Road &getRoad(const std::string &id) const;
 
         /**
+         * @get Tries to find an object with the given id in the OpenDRIVE HD map.
+         *
+         * @throws invalid_argument if no object with the given id is found.
+         */
+        const Object &getObject(const std::string &id) const;
+
+        /**
          * @get The PROJ projection string from the header.
          */
         std::string getGeoReference() const;
@@ -74,6 +83,9 @@ namespace opendrive {
          * @get
          */
         const std::string &getFilename() const;
+
+        template<typename T>
+        Vector getPosition(const std::string &id) const;
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

@@ -139,4 +139,5 @@ namespace opendrive {
     const std::vector<double> &Vector::getElements() const {
         return elements;
     }
+
 }

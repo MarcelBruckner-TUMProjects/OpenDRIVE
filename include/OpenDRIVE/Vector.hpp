@@ -35,6 +35,11 @@ namespace opendrive {
         Vector(double x, double y, double z = 0);
 
         /**
+         * @constructor
+         */
+        Vector(const Vector &other) = default;
+
+        /**
          * @destructor
          */
         virtual ~Vector() = default;

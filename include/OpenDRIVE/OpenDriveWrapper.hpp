@@ -7,7 +7,9 @@
 
 #include <string>
 #include <memory>
-#include "standard/OpenDRIVE_1.4H_Schema_Files.hxx"
+#ifndef OPENDRIVE_1_6
+#include "standard_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
+#endif
 #include "Vector.hpp"
 
 namespace opendrive {
