@@ -17,5 +17,15 @@ if [ ! -f $totalPath ]; then
 fi
 
 unzip $zipFileName
-xsdcxx cxx-tree --std c++11 --reserved-name access=parkingSpace_access --reserved-name link=lane_link --reserved-name signal=signals_signal deliverable/xsd_schema/*.xsd
-#xsdcxx cxx-tree --std c++11 OpenDRIVE_1.4H_Schema_Files.xsd
+cp deliverable/xsd_schema/*.xsd ./
+
+xsdcxx cxx-tree --std c++11 \
+  --reserved-name access=parkingSpace_access \
+  --reserved-name link=lane_link \
+  --reserved-name signal=signals_signal \
+  --reserved-name container=road_container \
+  --generate-serialization --generate-polymorphic \
+  --root-element-all \
+  *.xsd
+
+#  opendrive_16_core.xsd opendrive_16_railroad.xsd opendrive_16_junction.xsd opendrive_16_signal.xsd opendrive_16_road.xsd opendrive_16_lane.xsd opendrive_16_object.xsd

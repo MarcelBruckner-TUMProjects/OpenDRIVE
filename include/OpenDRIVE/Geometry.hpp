@@ -6,8 +6,19 @@
 #define OPENDRIVE_GEOMETRY_HPP
 
 #ifndef OPENDRIVE_1_6
+
 #include "standard_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
+
+#else
+#include "opendrive_16_core.hxx"
+#include "opendrive_16_junction.hxx"
+#include "opendrive_16_lane.hxx"
+#include "opendrive_16_object.hxx"
+#include "opendrive_16_railroad.hxx"
+#include "opendrive_16_road.hxx"
+#include "opendrive_16_signal.hxx"
 #endif
+
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "Vector.hpp"
 
