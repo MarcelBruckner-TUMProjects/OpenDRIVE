@@ -9,7 +9,7 @@
 
 #ifndef OPENDRIVE_1_6
 
-#include "standard_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
+#include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
 
 #else
 
