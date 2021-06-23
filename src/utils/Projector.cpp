@@ -2,7 +2,8 @@
 // Created by brucknem on 24.02.21.
 //
 
-#include "OpenDRIVE/Projector.hpp"
+#include "OpenDRIVE/utils/Projector.hpp"
+#include "OpenDRIVE/utils/LongLatProjector.hpp"
 #include <memory>
 
 namespace opendrive {
@@ -40,23 +41,4 @@ namespace opendrive {
     }
 
 
-    LongLatProjector::LongLatProjector(const std::string &fromProjection) : Projector(fromProjection,
-                                                                                      "+proj=longlat +datum=WGS84") {}
-
-
-    std::string LongLatProjector::toGoogleMapsLink(const Vector &vector) {
-        return "https://www.google.de/maps/place/" + vector.format(52, false, {1, 0});
-    }
-
-    CartesianProjector::CartesianProjector(const std::string &fromProjection) : Projector(fromProjection,
-                                                                                          "+proj=cart +ellps=GRS80") {}
-
-
-    EqualAreaProjector::EqualAreaProjector(const std::string &fromProjection) : Projector(fromProjection,
-                                                                                          "+proj=cea") {}
-
-    MollweideProjector::MollweideProjector(const std::string &fromProjection) : Projector(fromProjection,
-                                                                                          "+proj=moll") {
-
-    }
 }

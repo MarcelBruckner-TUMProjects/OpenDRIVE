@@ -1,5 +1,5 @@
 #include "OpenDRIVE/HDMap.hpp"
-#include "OpenDRIVE/Formatter.hpp"
+#include "OpenDRIVE/utils/Formatter.hpp"
 
 /**
  * An example executable to print some google maps links for the geometries and objects along a road.

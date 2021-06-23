@@ -3,7 +3,7 @@
 //
 
 #include "OpenDRIVE/Geometry.hpp"
-#include "OpenDRIVE/Vector.hpp"
+#include "OpenDRIVE/utils/Vector.hpp"
 
 namespace opendrive {
 

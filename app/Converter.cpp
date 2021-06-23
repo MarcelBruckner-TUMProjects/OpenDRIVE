@@ -1,5 +1,5 @@
 #include "OpenDRIVE/HDMap.hpp"
-#include "OpenDRIVE/Formatter.hpp"
+#include "OpenDRIVE/utils/Formatter.hpp"
 #include "boost/program_options.hpp"
 #include "boost/algorithm/string/predicate.hpp"
 #include <regex>

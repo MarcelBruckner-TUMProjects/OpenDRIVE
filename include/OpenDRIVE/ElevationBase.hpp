@@ -11,7 +11,7 @@
 #include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
 
 #include "OpenDriveWrapper.hpp"
-#include "CubicPolynom.hpp"
+#include "OpenDRIVE/utils/CubicPolynom.hpp"
 
 namespace opendrive {
 

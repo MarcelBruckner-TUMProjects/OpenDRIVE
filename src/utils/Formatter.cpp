@@ -2,8 +2,9 @@
 // Created by brucknem on 24.02.21.
 //
 
-#include "OpenDRIVE/Formatter.hpp"
+#include "OpenDRIVE/utils/Formatter.hpp"
 #include "yaml-cpp/yaml.h"
+#include "OpenDRIVE/utils/LongLatProjector.hpp"
 
 namespace opendrive {
 

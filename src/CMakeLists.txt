@@ -17,13 +17,14 @@ add_library(OpenDRIVE-lib
         Object.cpp
         OpenDriveWrapper.cpp
         Geometry.cpp
-        Vector.cpp
-        Projector.cpp
+        utils/Vector.cpp
+        utils/Projector.cpp
+        utils/LongLatProjector.cpp
         ElevationBase.cpp
         Elevation.cpp
         SuperElevation.cpp
-        Formatter.cpp
-        CubicPolynom.cpp
+        utils/Formatter.cpp
+        utils/CubicPolynom.cpp
         )
 
 target_include_directories(OpenDRIVE-lib

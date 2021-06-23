@@ -1,6 +1,7 @@
-#include "OpenDRIVE/Projector.hpp"
+#include "OpenDRIVE/utils/Projector.hpp"
 #include "OpenDRIVE/HDMap.hpp"
 #include "OpenDRIVE/Geometry.hpp"
+#include "OpenDRIVE/utils/LongLatProjector.hpp"
 
 /**
  * An example executable to print some google maps links for the geometries and objects along a road.

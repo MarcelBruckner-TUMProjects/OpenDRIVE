@@ -2,7 +2,7 @@
 // Created by brucknem on 22.02.21.
 //
 
-#include "OpenDRIVE/Vector.hpp"
+#include "OpenDRIVE/utils/Vector.hpp"
 #include <sstream>
 #include <iomanip>
 #include <vector>

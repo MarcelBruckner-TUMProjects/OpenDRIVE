@@ -1,9 +1,10 @@
-#include "OpenDRIVE/Projector.hpp"
+#include "OpenDRIVE/utils/Projector.hpp"
 #include "OpenDRIVE/HDMap.hpp"
 #include "OpenDRIVE/Geometry.hpp"
-#include "OpenDRIVE/Vector.hpp"
+#include "OpenDRIVE/utils/Vector.hpp"
 
 #include "boost/program_options.hpp"
+#include "OpenDRIVE/utils/LongLatProjector.hpp"
 
 void projectAndPrint(const opendrive::Projector &projector, const opendrive::Vector &position,
                      const opendrive::Vector &origin, const std::string &camera) {

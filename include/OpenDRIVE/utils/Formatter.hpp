@@ -11,8 +11,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "HDMap.hpp"
-#include "Road.hpp"
+#include "OpenDRIVE/HDMap.hpp"
+#include "OpenDRIVE/Road.hpp"
 #include "Projector.hpp"
 
 namespace opendrive {

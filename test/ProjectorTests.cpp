@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
 #include "HDMapTests.hpp"
-#include "OpenDRIVE/Projector.hpp"
-#include "OpenDRIVE/Projector.hpp"
+#include "OpenDRIVE/utils/Projector.hpp"
+#include "OpenDRIVE/utils/LongLatProjector.hpp"
 
 namespace opendrive {
     namespace tests {

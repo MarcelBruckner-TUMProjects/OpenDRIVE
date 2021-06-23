@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "HDMapTests.hpp"
-#include "OpenDRIVE/Formatter.hpp"
+#include "OpenDRIVE/utils/Formatter.hpp"
 #include "yaml-cpp/yaml.h"
 
 namespace opendrive {

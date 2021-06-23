@@ -2,7 +2,7 @@
 // Created by brucknem on 23.06.21.
 //
 
-#include "OpenDRIVE/CubicPolynom.hpp"
+#include "OpenDRIVE/utils/CubicPolynom.hpp"
 
 namespace opendrive {
 

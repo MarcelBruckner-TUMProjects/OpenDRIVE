@@ -8,8 +8,8 @@
 #include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
 
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
-#include "Vector.hpp"
-#include "CubicPolynom.hpp"
+#include "OpenDRIVE/utils/Vector.hpp"
+#include "OpenDRIVE/utils/CubicPolynom.hpp"
 
 namespace opendrive {
 
