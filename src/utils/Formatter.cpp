@@ -27,7 +27,7 @@ namespace opendrive {
     }
 
 
-    std::string ObjectsToYAML(const HDMap &map, const Vector &origin) {
+    std::string objectsToYAML(const HDMap &map, const Vector &origin) {
         LongLatProjector longLatProjector = LongLatProjector(map.getGeoReference());
 
         YAML::Emitter yaml;
@@ -78,7 +78,7 @@ namespace opendrive {
     }
 
     std::string objectsToYaml(const HDMap &map, const std::string &zOffsetId) {
-        return ObjectsToYAML(map, getWorldOriginById(map, zOffsetId));
+        return objectsToYAML(map, getWorldOriginById(map, zOffsetId));
     }
 
     std::string objectsToYAML(const HDMap &map, double longitude, double latitude) {
@@ -89,7 +89,7 @@ namespace opendrive {
         } else {
             origin = {0, 0};
         }
-        return ObjectsToYAML(map, origin);
+        return objectsToYAML(map, origin);
     }
 
     void writeToFile(const std::string &filename, const std::string &content) {
