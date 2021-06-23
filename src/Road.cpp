@@ -103,7 +103,7 @@ namespace opendrive {
         }
         double previous = 0;
         for (const auto &entry : map) {
-            double getS = entry.second.s;
+            double getS = entry.second.getS();
             if (getS > s) {
                 break;
             }
@@ -116,7 +116,7 @@ namespace opendrive {
     template<>
     const Object &Road::getElement<Object>(const std::string &id) const {
         for (const auto &entry : objects) {
-            if (entry.second.id == id) {
+            if (entry.second.getId() == id) {
                 return objects.at(entry.first);
             }
         }
@@ -179,8 +179,8 @@ namespace opendrive {
     std::map<std::string, Object> Road::filterObjects(const std::string &type, const std::string &name) const {
         std::map<std::string, Object> filtered;
         for (const auto &entry : objects) {
-            if (entry.second.type == type &&
-                entry.second.name == name) {
+            if (entry.second.getType() == type &&
+                entry.second.getName() == name) {
                 filtered.emplace(entry.first, entry.second);
             }
         }
@@ -208,19 +208,39 @@ namespace opendrive {
     template<>
     Vector Road::getWorldPosition<Object>(const std::string &id) const {
         auto object = getElement<Object>(id);
-        auto position = interpolate(object.s, object.t);
-        auto zOffset = object.zOffset;
+        auto position = interpolate(object.getS(), object.getT());
+        auto zOffset = object.getZOffset();
         return position + Vector{0, 0, zOffset};
     }
 
     template<typename T>
     Vector Road::getWorldPosition(const T &object) const {
-        return interpolate(object.s);
+        return interpolate(object.getS());
     }
 
     template<>
     Vector Road::getWorldPosition<Geometry>(double s) const {
         return getWorldPosition(getElement<Geometry>(s));
+    }
+
+    const std::string &Road::getId() const {
+        return id;
+    }
+
+    const std::string &Road::getName() const {
+        return name;
+    }
+
+    double Road::getLength() const {
+        return length;
+    }
+
+    const std::string &Road::getJunction() const {
+        return junction;
+    }
+
+    const std::map<double, std::string> &Road::getType() const {
+        return type;
     }
 
 

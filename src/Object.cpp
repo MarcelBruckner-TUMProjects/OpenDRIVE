@@ -34,4 +34,60 @@ namespace opendrive {
         return os;
     }
 
+    double Object::getT() const {
+        return t;
+    }
+
+    const std::string &Object::getType() const {
+        return type;
+    }
+
+    const std::string &Object::getName() const {
+        return name;
+    }
+
+    const std::string &Object::getId() const {
+        return id;
+    }
+
+    double Object::getHeight() const {
+        return height;
+    }
+
+    double Object::getHdg() const {
+        return hdg;
+    }
+
+    double Object::getValidLength() const {
+        return validLength;
+    }
+
+    const std::string &Object::getOrientation() const {
+        return orientation;
+    }
+
+    double Object::getPitch() const {
+        return pitch;
+    }
+
+    double Object::getRoll() const {
+        return roll;
+    }
+
+    double Object::getLength() const {
+        return length;
+    }
+
+    double Object::getWidth() const {
+        return width;
+    }
+
+    double Object::getRadius() const {
+        return radius;
+    }
+
+    double Object::getZOffset() const {
+        return zOffset;
+    }
+
 }

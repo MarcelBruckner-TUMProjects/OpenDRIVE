@@ -32,10 +32,10 @@ namespace opendrive {
          * Tests parsing the test road basic attributes.
          */
         TEST_F(ParsingTests, testParsingRoadAttributes) {
-            ASSERT_STREQ(roadHighwayNorth.name.c_str(), "");
-            ASSERT_STREQ(roadHighwayNorth.junction.c_str(), "-1");
-            ASSERT_STREQ(roadHighwayNorth.id.c_str(), roadIdHighwayNorth);
-            EXPECT_NEAR(roadHighwayNorth.length, 1.724447338294e+03, maxDifference);
+            ASSERT_STREQ(roadHighwayNorth.getName().c_str(), "");
+            ASSERT_STREQ(roadHighwayNorth.getJunction().c_str(), "-1");
+            ASSERT_STREQ(roadHighwayNorth.getId().c_str(), roadIdHighwayNorth);
+            EXPECT_NEAR(roadHighwayNorth.getLength(), 1.724447338294e+03, maxDifference);
         }
 
         /**
@@ -43,7 +43,7 @@ namespace opendrive {
          */
         TEST_F(ParsingTests, testParsingType) {
 //            auto type = roadHighwayNorth.type[0];
-            ASSERT_EQ(roadHighwayNorth.type.size(), 1);
+            ASSERT_EQ(roadHighwayNorth.getType().size(), 1);
 
 //            EXPECT_NEAR(type.first, 0.0, maxDifference);
 //            ASSERT_STREQ(type.second.c_str(), "motorway");
@@ -58,15 +58,15 @@ namespace opendrive {
             ASSERT_EQ(planView.size(), 5);
 
             auto geometry = planView[0];
-            EXPECT_NEAR(geometry.u.a, -0.000000000000e+00, maxDifference);
-            EXPECT_NEAR(geometry.u.b, 1.000000000000e+00, maxDifference);
-            EXPECT_NEAR(geometry.u.c, -2.864238929279e-11, maxDifference);
-            EXPECT_NEAR(geometry.u.d, 9.895389049440e-14, maxDifference);
+            EXPECT_NEAR(geometry.getU().a, -0.000000000000e+00, maxDifference);
+            EXPECT_NEAR(geometry.getU().b, 1.000000000000e+00, maxDifference);
+            EXPECT_NEAR(geometry.getU().c, -2.864238929279e-11, maxDifference);
+            EXPECT_NEAR(geometry.getU().d, 9.895389049440e-14, maxDifference);
 
-            EXPECT_NEAR(geometry.v.a, 0.000000000000e+00, maxDifference);
-            EXPECT_NEAR(geometry.v.b, 2.775557561563e-16, maxDifference);
-            EXPECT_NEAR(geometry.v.c, -1.284829717715e-07, maxDifference);
-            EXPECT_NEAR(geometry.v.d, 3.576738398807e-10, maxDifference);
+            EXPECT_NEAR(geometry.getV().a, 0.000000000000e+00, maxDifference);
+            EXPECT_NEAR(geometry.getV().b, 2.775557561563e-16, maxDifference);
+            EXPECT_NEAR(geometry.getV().c, -1.284829717715e-07, maxDifference);
+            EXPECT_NEAR(geometry.getV().d, 3.576738398807e-10, maxDifference);
 
 //            ASSERT_STREQ(geometry.pRange.c_str(), "arcLength");
         }
@@ -78,12 +78,12 @@ namespace opendrive {
             auto elevationProfile = roadHighwayNorth.getElevationProfile();
             ASSERT_EQ(elevationProfile.size(), 12);
 
-            EXPECT_NEAR(elevationProfile[0].s, 0.000000000000e+00, maxDifference);
+            EXPECT_NEAR(elevationProfile[0].getS(), 0.000000000000e+00, maxDifference);
 
-            EXPECT_NEAR(elevationProfile[0].paramPoly3.a, 5.299890546737e+02, maxDifference);
-            EXPECT_NEAR(elevationProfile[0].paramPoly3.b, 1.580599780197e-03, maxDifference);
-            EXPECT_NEAR(elevationProfile[0].paramPoly3.c, -1.160874186427e-05, maxDifference);
-            EXPECT_NEAR(elevationProfile[0].paramPoly3.d, 6.476066427343e-08, maxDifference);
+            EXPECT_NEAR(elevationProfile[0].getPolynom().a, 5.299890546737e+02, maxDifference);
+            EXPECT_NEAR(elevationProfile[0].getPolynom().b, 1.580599780197e-03, maxDifference);
+            EXPECT_NEAR(elevationProfile[0].getPolynom().c, -1.160874186427e-05, maxDifference);
+            EXPECT_NEAR(elevationProfile[0].getPolynom().d, 6.476066427343e-08, maxDifference);
         }
 
         /**
@@ -93,12 +93,12 @@ namespace opendrive {
             auto lateralProfile = roadHighwayNorth.getLateralProfile();
             ASSERT_EQ(lateralProfile.size(), 9);
 
-            EXPECT_NEAR(lateralProfile[0].s, 0.000000000000e+00, maxDifference);
+            EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
 
-            EXPECT_NEAR(lateralProfile[0].paramPoly3.a, 3.192305336358e-02, maxDifference);
-            EXPECT_NEAR(lateralProfile[0].paramPoly3.b, -7.543093979616e-05, maxDifference);
-            EXPECT_NEAR(lateralProfile[0].paramPoly3.c, -4.921087190205e-08, maxDifference);
-            EXPECT_NEAR(lateralProfile[0].paramPoly3.d, 1.391947694799e-09, maxDifference);
+            EXPECT_NEAR(lateralProfile[0].getPolynom().a, 3.192305336358e-02, maxDifference);
+            EXPECT_NEAR(lateralProfile[0].getPolynom().b, -7.543093979616e-05, maxDifference);
+            EXPECT_NEAR(lateralProfile[0].getPolynom().c, -4.921087190205e-08, maxDifference);
+            EXPECT_NEAR(lateralProfile[0].getPolynom().d, 1.391947694799e-09, maxDifference);
         }
 
         /**
@@ -111,17 +111,17 @@ namespace opendrive {
             std::string id = "4007953";
             auto testObject = roadHighwayNorth.getElement<Object>(id);
 
-            ASSERT_STREQ(testObject.type.c_str(), "pole");
-            ASSERT_STREQ(testObject.name.c_str(), "permanentDelineator");
-            ASSERT_STREQ(testObject.id.c_str(), "4007953");
-            EXPECT_NEAR(testObject.s, 1.0092e+02, maxDifference);
-            EXPECT_NEAR(testObject.t, -1.7770e+01, maxDifference);
-            EXPECT_NEAR(testObject.zOffset, -4.215e-01, maxDifference);
-            EXPECT_NEAR(testObject.validLength, 0.00, maxDifference);
-            ASSERT_STREQ(testObject.orientation.c_str(), "none");
-            EXPECT_NEAR(testObject.radius, 5.00e-02, maxDifference);
-            EXPECT_NEAR(testObject.height, 7.705e-01, maxDifference);
-            EXPECT_NEAR(testObject.hdg, 0.0000e+00, maxDifference);
+            ASSERT_STREQ(testObject.getType().c_str(), "pole");
+            ASSERT_STREQ(testObject.getName().c_str(), "permanentDelineator");
+            ASSERT_STREQ(testObject.getId().c_str(), "4007953");
+            EXPECT_NEAR(testObject.getS(), 1.0092e+02, maxDifference);
+            EXPECT_NEAR(testObject.getT(), -1.7770e+01, maxDifference);
+            EXPECT_NEAR(testObject.getZOffset(), -4.215e-01, maxDifference);
+            EXPECT_NEAR(testObject.getValidLength(), 0.00, maxDifference);
+            ASSERT_STREQ(testObject.getOrientation().c_str(), "none");
+            EXPECT_NEAR(testObject.getRadius(), 5.00e-02, maxDifference);
+            EXPECT_NEAR(testObject.getHeight(), 7.705e-01, maxDifference);
+            EXPECT_NEAR(testObject.getHdg(), 0.0000e+00, maxDifference);
         }
 
     }// namespace tests

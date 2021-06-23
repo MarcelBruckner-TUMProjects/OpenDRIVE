@@ -2,16 +2,16 @@
 // Created by brucknem on 23.06.21.
 //
 
-#ifndef OPENDRIVE_PARAMPOLY3_HPP
-#define OPENDRIVE_PARAMPOLY3_HPP
+#ifndef OPENDRIVE_CUBICPOLYNOM_HPP
+#define OPENDRIVE_CUBICPOLYNOM_HPP
 
 namespace opendrive {
-    struct ParamPoly3 {
+    struct CubicPolynom {
         double a, b, c, d;
 
-        ParamPoly3(double a, double b, double c, double d) : a(a), b(b), c(c), d(d) {}
+        CubicPolynom(double a, double b, double c, double d) : a(a), b(b), c(c), d(d) {}
 
-        ParamPoly3() : ParamPoly3(0, 0, 0, 0) {}
+        CubicPolynom() : CubicPolynom(0, 0, 0, 0) {}
 
         double operator()(double s) const {
             return a +
@@ -28,4 +28,4 @@ namespace opendrive {
     };
 }
 
-#endif //OPENDRIVE_PARAMPOLY3_HPP
+#endif //OPENDRIVE_CUBICPOLYNOM_HPP

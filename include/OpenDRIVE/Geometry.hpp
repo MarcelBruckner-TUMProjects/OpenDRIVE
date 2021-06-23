@@ -9,7 +9,7 @@
 
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "Vector.hpp"
-#include "ParamPoly3.hpp"
+#include "CubicPolynom.hpp"
 
 namespace opendrive {
 
@@ -18,7 +18,18 @@ namespace opendrive {
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_geometry
      */
     class Geometry : public OpenDriveWrapper {
+
+    private:
+        CubicPolynom u;
+        CubicPolynom v;
+
+        double heading;
+        double length;
+
+        Vector start;
+
     protected:
+
         /**
          * Specific interpolation functions per primitive.
          *
@@ -50,14 +61,6 @@ namespace opendrive {
         Vector getUVCoordinate(double s) const;
 
     public:
-
-        ParamPoly3 u;
-        ParamPoly3 v;
-
-        double heading;
-        double length;
-
-        Vector start;
 
         /**
         * @constructor
@@ -114,6 +117,14 @@ namespace opendrive {
          * @return
          */
         double getEndSCoordinate() const;
+
+        const CubicPolynom &getU() const;
+
+        const CubicPolynom &getV() const;
+
+        double getHeading() const;
+
+        double getLength() const;
     };
 
 }

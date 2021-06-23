@@ -8,18 +8,22 @@
 
 namespace opendrive {
 
-    double ElevationBase::interpolate(double _s) const {
-        double ds = _s - s;
+    double ElevationBase::interpolate(double ss) const {
+        double ds = ss - getS();
 
-        double elev = paramPoly3(ds);
+        double elev = polynom(ds);
         return elev;
     }
 
     double ElevationBase::interpolateStart() const {
-        return interpolate(s);
+        return interpolate(getS());
     }
 
     ElevationBase::ElevationBase(double s, double a, double b, double c, double d) : OpenDriveWrapper(s),
-                                                                                     paramPoly3({a, b, c, d}) {}
+                                                                                     polynom({a, b, c, d}) {}
+
+    const CubicPolynom &ElevationBase::getPolynom() const {
+        return polynom;
+    }
 
 }

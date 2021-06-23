@@ -38,7 +38,7 @@ namespace opendrive {
              */
             static void assertTangent(const Geometry &geometry, const Geometry &nextGeometry) {
                 Vector endTangent = geometry.calculateTangent(geometry.getEndSCoordinate());
-                Vector nextStartTangent = nextGeometry.calculateTangent(nextGeometry.s);
+                Vector nextStartTangent = nextGeometry.calculateTangent(nextGeometry.getS());
 
                 EXPECT_NEAR(endTangent.distance(nextStartTangent), 0, 1e-12);
             }
@@ -49,11 +49,11 @@ namespace opendrive {
              */
             static void assertTangentAndNormalOrthogonal(const Geometry &geometry) {
                 Vector tangent, normal;
-                tangent = geometry.calculateTangent(geometry.s);
-                normal = geometry.calculateNormal(geometry.s);
+                tangent = geometry.calculateTangent(geometry.getS());
+                normal = geometry.calculateNormal(geometry.getS());
                 EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
 
-                for (int ss = (int) geometry.s + 1; ss < geometry.getEndSCoordinate(); ss++) {
+                for (int ss = (int) geometry.getS() + 1; ss < geometry.getEndSCoordinate(); ss++) {
                     tangent = geometry.calculateTangent(ss);
                     normal = geometry.calculateNormal(ss);
                     EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);

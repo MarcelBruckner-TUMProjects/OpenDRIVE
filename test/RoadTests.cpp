@@ -22,7 +22,7 @@ namespace opendrive {
              */
             void assertCorrectGeometryForObject(const std::string &objectId, double expected) {
                 Object object = roadHighwayNorth.getElement<Object>(objectId);
-                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(object.s).s, expected,
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(object.getS()).getS(), expected,
                             maxDifference);
             }
         };
@@ -44,22 +44,22 @@ namespace opendrive {
 
             expected = 0;
             for (int i = (int) expected; i < 2.874078777576e+02; i++) {
-                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).s, expected, maxDifference);
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).getS(), expected, maxDifference);
             }
 
             expected = 2.874078777576e+02;
             for (int i = (int) expected + 1; i < 8.622236665343e+02; i++) {
-                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).s, expected, maxDifference);
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).getS(), expected, maxDifference);
             }
 
             expected = 8.622236665343e+02;
             for (int i = (int) expected + 1; i < 1.437039521207e+03; i++) {
-                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).s, expected, maxDifference);
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).getS(), expected, maxDifference);
             }
 
             expected = 1.437039521207e+03;
-            for (int i = (int) expected + 1; i < roadHighwayNorth.length; i++) {
-                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).s, expected, maxDifference);
+            for (int i = (int) expected + 1; i < roadHighwayNorth.getLength(); i++) {
+                EXPECT_NEAR(roadHighwayNorth.getElement<Geometry>(i).getS(), expected, maxDifference);
             }
         }
 

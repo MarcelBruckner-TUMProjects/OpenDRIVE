@@ -19,17 +19,6 @@ namespace opendrive {
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_objects
      */
     class Object : public OpenDriveWrapper {
-    public:
-
-        /**
-         * @constructor
-         */
-        explicit Object(const class object &openDriveObject);
-
-        /**
-         * @destructor
-         */
-        ~Object() override = default;
 
         /**
          *  The t-coordinate of object’s origin.
@@ -102,10 +91,49 @@ namespace opendrive {
          */
         double zOffset;
 
+    public:
+        /**
+         * @constructor
+         */
+        explicit Object(const class object &openDriveObject);
+
+        /**
+         * @destructor
+         */
+        ~Object() override = default;
+
         /**
          * @operator
          */
         friend std::ostream &operator<<(std::ostream &os, const Object &other);
+
+        double getT() const;
+
+        const std::string &getType() const;
+
+        const std::string &getName() const;
+
+        const std::string &getId() const;
+
+        double getHeight() const;
+
+        double getHdg() const;
+
+        double getValidLength() const;
+
+        const std::string &getOrientation() const;
+
+        double getPitch() const;
+
+        double getRoll() const;
+
+        double getLength() const;
+
+        double getWidth() const;
+
+        double getRadius() const;
+
+        double getZOffset() const;
     };
 }
 

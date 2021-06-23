@@ -43,14 +43,14 @@ namespace opendrive {
         return interpolatePrimitive(localS);
     }
 
-    double Geometry::getGetLocalS(double _s) const { return _s - s; }
+    double Geometry::getGetLocalS(double ss) const { return ss - getS(); }
 
     Vector Geometry::getStart() const {
         return start;
     }
 
     Vector Geometry::interpolateStart() const {
-        return interpolate(s);
+        return interpolate(getS());
     }
 
     Vector Geometry::interpolateEnd() const {
@@ -61,8 +61,8 @@ namespace opendrive {
         return {u[s], v[s]};
     }
 
-    Vector Geometry::calculateTangent(double _s) const {
-        double primitiveS = getGetLocalS(_s);
+    Vector Geometry::calculateTangent(double ss) const {
+        double primitiveS = getGetLocalS(ss);
 
         Vector tangent = calculatePrimitiveReferenceTangent(primitiveS);
         tangent = tangent.rotateXY(heading);
@@ -70,13 +70,29 @@ namespace opendrive {
     }
 
     double Geometry::getEndSCoordinate() const {
-        return s + length;
+        return getS() + length;
     }
 
     Vector Geometry::calculateNormal(double s) const {
         Vector tangent = calculateTangent(s);
         Vector up{0, 0, 1};
         return up.cross(tangent).normalize();
+    }
+
+    const CubicPolynom &Geometry::getU() const {
+        return u;
+    }
+
+    const CubicPolynom &Geometry::getV() const {
+        return v;
+    }
+
+    double Geometry::getHeading() const {
+        return heading;
+    }
+
+    double Geometry::getLength() const {
+        return length;
     }
 
 }

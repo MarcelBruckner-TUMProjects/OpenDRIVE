@@ -11,7 +11,7 @@
 #include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
 
 #include "OpenDriveWrapper.hpp"
-#include "ParamPoly3.hpp"
+#include "CubicPolynom.hpp"
 
 namespace opendrive {
 
@@ -21,8 +21,8 @@ namespace opendrive {
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_methods_of_elevation
      */
     class ElevationBase : public OpenDriveWrapper {
+        CubicPolynom polynom;
     public:
-        ParamPoly3 paramPoly3;
 
         /**
          * @constructor
@@ -52,6 +52,8 @@ namespace opendrive {
          * @param s The s-coordinate of interest.
          */
         double interpolateStart() const;
+
+        const CubicPolynom &getPolynom() const;
     };
 
 }

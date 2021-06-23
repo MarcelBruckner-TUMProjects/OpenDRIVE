@@ -121,8 +121,8 @@ namespace opendrive {
             ASSERT_EQ(landmarks.size(), 35);
 
             for (const auto &entry : landmarks) {
-                ASSERT_STREQ(entry.second.type.c_str(), type);
-                ASSERT_STREQ(entry.second.name.c_str(), name);
+                ASSERT_STREQ(entry.second.getType().c_str(), type);
+                ASSERT_STREQ(entry.second.getName().c_str(), name);
             }
         }
     }// namespace tests

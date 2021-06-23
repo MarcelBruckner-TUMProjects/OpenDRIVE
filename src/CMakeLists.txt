@@ -23,7 +23,7 @@ add_library(OpenDRIVE-lib
         Elevation.cpp
         SuperElevation.cpp
         Formatter.cpp
-        ParamPoly3.cpp
+        CubicPolynom.cpp
         )
 
 target_include_directories(OpenDRIVE-lib

@@ -9,4 +9,8 @@ namespace opendrive {
     OpenDriveWrapper::OpenDriveWrapper(double s) : s(s) {
 
     }
+
+    double OpenDriveWrapper::getS() const {
+        return s;
+    }
 }

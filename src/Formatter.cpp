@@ -17,8 +17,8 @@ namespace opendrive {
 
             for (const auto &objectEntry : road.getObjects()) {
                 auto object = objectEntry.second;
-                if (object.id == id) {
-                    return road.getWorldPosition<Object>(object.id);
+                if (object.getId() == id) {
+                    return road.getWorldPosition<Object>(object.getId());
                 }
             }
         }
@@ -44,23 +44,23 @@ namespace opendrive {
 
                 yaml << YAML::BeginMap;
 
-                yaml << YAML::Key << "id" << YAML::Value << object.id;
-                yaml << YAML::Key << "type" << YAML::Value << object.type;
-                yaml << YAML::Key << "name" << YAML::Value << object.name;
+                yaml << YAML::Key << "id" << YAML::Value << object.getId();
+                yaml << YAML::Key << "type" << YAML::Value << object.getType();
+                yaml << YAML::Key << "name" << YAML::Value << object.getName();
 
-                auto worldPosition = road.getWorldPosition<Object>(object.id);
+                auto worldPosition = road.getWorldPosition<Object>(object.getId());
                 yaml << YAML::Key << "utm_coord" << YAML::Value << YAML::Flow
                      << (worldPosition - origin).getElements();
 
-                yaml << YAML::Key << "validLength" << YAML::Value << object.validLength;
-                yaml << YAML::Key << "orientation" << YAML::Value << object.orientation;
-                yaml << YAML::Key << "hdg" << YAML::Value << object.hdg;
-                yaml << YAML::Key << "pitch" << YAML::Value << object.pitch;
-                yaml << YAML::Key << "roll" << YAML::Value << object.roll;
-                yaml << YAML::Key << "height" << YAML::Value << object.height;
-                yaml << YAML::Key << "length" << YAML::Value << object.length;
-                yaml << YAML::Key << "width" << YAML::Value << object.width;
-                yaml << YAML::Key << "radius" << YAML::Value << object.radius;
+                yaml << YAML::Key << "validLength" << YAML::Value << object.getValidLength();
+                yaml << YAML::Key << "orientation" << YAML::Value << object.getOrientation();
+                yaml << YAML::Key << "hdg" << YAML::Value << object.getHdg();
+                yaml << YAML::Key << "pitch" << YAML::Value << object.getPitch();
+                yaml << YAML::Key << "roll" << YAML::Value << object.getRoll();
+                yaml << YAML::Key << "height" << YAML::Value << object.getHeight();
+                yaml << YAML::Key << "length" << YAML::Value << object.getLength();
+                yaml << YAML::Key << "width" << YAML::Value << object.getWidth();
+                yaml << YAML::Key << "radius" << YAML::Value << object.getRadius();
 
 
                 yaml << YAML::Key << "googleMaps" << YAML::Value
