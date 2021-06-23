@@ -41,13 +41,14 @@ namespace opendrive {
          */
         void setRoads(const OpenDRIVE &openDriveObject);
 
-    public:
-
-        struct {
+        struct Header {
             std::string geoReference;
             std::string vendor;
             double north, south, east, west;
         } header;
+
+    public:
+
 
         /**
          * @constructor Reads and parses the given OpenDRIVE HD map.
@@ -91,6 +92,7 @@ namespace opendrive {
         template<typename T>
         Vector getPosition(const std::string &id) const;
 
+        const Header &getHeader() const;
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

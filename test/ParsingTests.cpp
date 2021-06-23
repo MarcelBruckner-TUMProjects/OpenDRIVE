@@ -21,8 +21,8 @@ namespace opendrive {
          * Tests parsing the HD map header.
          */
         TEST_F(ParsingTests, testParsingHeader) {
-            EXPECT_NEAR(highwayNorth->header.north, 5.350576134016e+06, maxDifference);
-            ASSERT_STREQ(highwayNorth->header.vendor.c_str(), "3D Mapping Solutions");
+            EXPECT_NEAR(highwayNorth->getHeader().north, 5.350576134016e+06, maxDifference);
+            ASSERT_STREQ(highwayNorth->getHeader().vendor.c_str(), "3D Mapping Solutions");
 
             ASSERT_STREQ(highwayNorth->getGeoReference().c_str(),
                          "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=500000 +y_0=0 +datum=WGS84 +units=m +no_defs");

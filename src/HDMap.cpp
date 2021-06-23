@@ -73,4 +73,8 @@ namespace opendrive {
     const std::string &HDMap::getFilename() const {
         return filename;
     }
+
+    const HDMap::Header &HDMap::getHeader() const {
+        return header;
+    }
 }

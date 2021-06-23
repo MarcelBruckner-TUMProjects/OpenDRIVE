@@ -34,6 +34,4 @@ namespace opendrive {
     };
 }
 
-#include "ElevationBase.hpp"
-
 #endif //OPENDRIVE_ELEVATION_HPP

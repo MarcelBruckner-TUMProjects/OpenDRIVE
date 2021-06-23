@@ -9,22 +9,13 @@ namespace opendrive {
     struct CubicPolynom {
         double a, b, c, d;
 
-        CubicPolynom(double a, double b, double c, double d) : a(a), b(b), c(c), d(d) {}
+        CubicPolynom(double a, double b, double c, double d);
 
-        CubicPolynom() : CubicPolynom(0, 0, 0, 0) {}
+        CubicPolynom();
 
-        double operator()(double s) const {
-            return a +
-                   b * s +
-                   c * s * s +
-                   d * s * s * s;
-        }
+        double operator()(double s) const;
 
-        double operator[](double s) const {
-            return b +
-                   2 * c * s +
-                   3 * d * s * s;
-        }
+        double operator[](double s) const;
     };
 }
 
