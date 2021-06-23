@@ -5,6 +5,7 @@
 #include "OpenDRIVE/Road.hpp"
 #include <string>
 #include <iomanip>
+#include <utility>
 
 namespace opendrive {
 
@@ -57,15 +58,17 @@ namespace opendrive {
         return result;
     }
 
-    Road::Road(const std::string &id, const std::string &name, double length, const std::string &junction,
-               const std::map<double, std::string> &type, const std::map<std::string, Object> &objects,
-               const std::map<double, Geometry> &planView, const std::map<double, Elevation> &elevationProfile,
-               const std::map<double, SuperElevation> &lateralProfile) : OpenDriveWrapper(0), id(id), name(name),
-                                                                         length(length),
-                                                                         junction(junction), type(type),
-                                                                         objects(objects), planView(planView),
-                                                                         elevationProfile(elevationProfile),
-                                                                         lateralProfile(lateralProfile) {}
+    Road::Road(std::string id, std::string name, double length, std::string junction,
+               std::map<double, std::string> type, std::map<std::string, Object> objects,
+               std::map<double, Geometry> planView, std::map<double, Elevation> elevationProfile,
+               std::map<double, SuperElevation> lateralProfile) : OpenDriveWrapper(0), id(std::move(id)),
+                                                                  name(std::move(name)),
+                                                                  length(length),
+                                                                  junction(std::move(junction)), type(std::move(type)),
+                                                                  objects(std::move(objects)),
+                                                                  planView(std::move(planView)),
+                                                                  elevationProfile(std::move(elevationProfile)),
+                                                                  lateralProfile(std::move(lateralProfile)) {}
 
     Road::Road(const class road &openDriveRoad) : Road(
             openDriveRoad.id()->c_str(),

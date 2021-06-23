@@ -1,1 +1,2 @@
+#cmakedefine OPENDRIVE_1_4
 #cmakedefine OPENDRIVE_1_6

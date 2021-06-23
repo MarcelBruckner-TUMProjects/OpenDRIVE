@@ -25,6 +25,7 @@ add_library(OpenDRIVE-lib
         SuperElevation.cpp
         utils/Formatter.cpp
         utils/CubicPolynom.cpp
+        HDMapFactory.cpp
         )
 
 target_include_directories(OpenDRIVE-lib
@@ -37,5 +38,6 @@ target_link_libraries(OpenDRIVE-lib
         OpenDRIVEStandard
         ${PROJ_LIBRARIES}
         yaml-cpp
+        tinyxml2
         )
 

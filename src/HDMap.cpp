@@ -10,11 +10,20 @@
 
 namespace opendrive {
 
-    HDMap::HDMap(const std::string &filename) :
-            filename(filename),
-            OpenDriveWrapper(0) {
-        auto openDriveObject = *OpenDRIVE_(filename, ::xml_schema::flags::dont_validate);
-        header = {
+    HDMap::HDMap(std::string filename, std::map<std::string, Road> roads, HDMap::Header header)
+            : OpenDriveWrapper(0), filename(std::move(filename)), roads(std::move(roads)), header(std::move(header)) {}
+
+
+    std::map<std::string, Road> extractRoads(const OpenDRIVE &openDriveObject) {
+        std::map<std::string, Road> roads;
+        for (const auto &openDriveRoad : openDriveObject.road()) {
+            roads.emplace(openDriveRoad.id().get(), Road(openDriveRoad));
+        }
+        return roads;
+    }
+
+    HDMap::Header extractHeader(const OpenDRIVE &openDriveObject) {
+        return HDMap::Header{
                 openDriveObject.header().geoReference()->c_str(),
                 openDriveObject.header().vendor()->c_str(),
                 openDriveObject.header().north().get(),
@@ -22,7 +31,12 @@ namespace opendrive {
                 openDriveObject.header().east().get(),
                 openDriveObject.header().west().get(),
         };
-        setRoads(openDriveObject);
+    }
+
+    HDMap::HDMap(const std::string &filename) : HDMap(
+            filename,
+            extractRoads(*OpenDRIVE_(filename, ::xml_schema::flags::dont_validate)),
+            extractHeader(*OpenDRIVE_(filename, ::xml_schema::flags::dont_validate))) {
     }
 
     const Road &HDMap::getRoad(const std::string &id) const {
@@ -56,11 +70,6 @@ namespace opendrive {
         throw std::invalid_argument("Could not find an object with the id " + id);
     }
 
-    void HDMap::setRoads(const OpenDRIVE &openDriveObject) {
-        for (const auto &openDriveRoad : openDriveObject.road()) {
-            roads.emplace(openDriveRoad.id().get(), Road(openDriveRoad));
-        }
-    }
 
     std::string HDMap::getGeoReference() const {
         return header.geoReference;

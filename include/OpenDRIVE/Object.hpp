@@ -99,9 +99,9 @@ namespace opendrive {
         /**
          * @constructor
          */
-        Object(double s, double t, const std::string &type, const std::string &name, const std::string &id,
+        Object(double s, double t, std::string type, std::string name, std::string id,
                double height,
-               double hdg, double validLength, const std::string &orientation, double pitch, double roll, double length,
+               double hdg, double validLength, std::string orientation, double pitch, double roll, double length,
                double width, double radius, double zOffset);
 
         /**

@@ -3,6 +3,7 @@
 #include "boost/program_options.hpp"
 #include "boost/algorithm/string/predicate.hpp"
 #include <regex>
+#include <OpenDRIVE/HDMapFactory.hpp>
 
 namespace po = boost::program_options;
 
@@ -46,7 +47,7 @@ int main(int argc, char **argv) {
         output = input + ".yaml";
     }
 
-    opendrive::HDMap hdMap(input);
+    opendrive::HDMap hdMap = opendrive::createHDMap(input);
     std::string long_lat_origin_str = vm["long_lat_origin"].as<std::string>();
     std::string content;
 

@@ -16,6 +16,7 @@
 #include "Road.hpp"
 #include "Geometry.hpp"
 #include "OpenDRIVE/utils/Projector.hpp"
+#include "tinyxml2.h"
 
 namespace opendrive {
 
@@ -36,10 +37,7 @@ namespace opendrive {
          */
         std::map<std::string, Road> roads;
 
-        /**
-         * @set Converts the parser roads to Road objects.
-         */
-        void setRoads(const OpenDRIVE &openDriveObject);
+    public:
 
         /**
          * The header of the map.
@@ -61,14 +59,16 @@ namespace opendrive {
             double north, south, east, west;
         } header;
 
-    public:
-
-
         /**
          * @constructor Reads and parses the given OpenDRIVE HD map.
          */
         explicit HDMap(const std::string &filename);
 
+
+        /**
+         * @constructor
+         */
+        HDMap(std::string filename, std::map<std::string, Road> roads, Header header);
 
         /**
          * @destructor
@@ -114,6 +114,7 @@ namespace opendrive {
          * @get
          */
         const Header &getHeader() const;
+
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

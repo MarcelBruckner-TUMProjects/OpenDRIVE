@@ -103,10 +103,10 @@ namespace opendrive {
         /**
          * @constructor
          */
-        Road(const std::string &id, const std::string &name, double length, const std::string &junction,
-             const std::map<double, std::string> &type, const std::map<std::string, Object> &objects,
-             const std::map<double, Geometry> &planView, const std::map<double, Elevation> &elevationProfile,
-             const std::map<double, SuperElevation> &lateralProfile);
+        Road(std::string id, std::string name, double length, std::string junction,
+             std::map<double, std::string> type, std::map<std::string, Object> objects,
+             std::map<double, Geometry> planView, std::map<double, Elevation> elevationProfile,
+             std::map<double, SuperElevation> lateralProfile);
 
         /**
          * @constructor

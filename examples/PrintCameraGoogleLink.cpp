@@ -1,3 +1,4 @@
+#include <OpenDRIVE/HDMapFactory.hpp>
 #include "OpenDRIVE/utils/Projector.hpp"
 #include "OpenDRIVE/HDMap.hpp"
 #include "OpenDRIVE/Geometry.hpp"
@@ -34,7 +35,7 @@ int main(int argc, char **argv) {
 
     auto map = variables_map["map"].as<std::string>();
 
-    auto hdMap = opendrive::HDMap(map);
+    auto hdMap = opendrive::createHDMap(map);
     auto projector = opendrive::LongLatProjector(hdMap.getGeoReference());
 
     auto origin = hdMap.getPosition<opendrive::Object>(variables_map["origin"].as<std::string>());
