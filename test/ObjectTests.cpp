@@ -81,8 +81,8 @@ namespace opendrive {
             };
 
             int i = 0;
-            for (const auto &entry : roadHighwayNorth.getObjects()) {
-                auto position = roadHighwayNorth.getWorldPosition<Object>(entry.first);
+            for (const auto &entry : roadTestMapOpendrive14.getObjects()) {
+                auto position = roadTestMapOpendrive14.getWorldPosition<Object>(entry.first);
 //                std::cout << "{" << position << "}," << std::endl;
                 EXPECT_NEAR(position.getX(), expected[i].getX(), maxDifference);
                 EXPECT_NEAR(position.getY(), expected[i].getY(), maxDifference);
@@ -133,13 +133,13 @@ namespace opendrive {
                     "https://www.google.de/maps/place/48.23179490138358715967115131206810474395751953125,11.634291644977398760829601087607443332672119140625"
             };
 
-            opendrive::LongLatProjector projector(highwayNorth->getGeoReference());
+            opendrive::LongLatProjector projector(testMapOpendrive14->getGeoReference());
 
             const char *type = "pole";
             const char *name = "permanentDelineator";
             int i = 0;
-            for (const auto &entry : roadHighwayNorth.filterObjects(type, name)) {
-                auto projected = projector.project(roadHighwayNorth.getWorldPosition<Object>(entry.first));
+            for (const auto &entry : roadTestMapOpendrive14.filterObjects(type, name)) {
+                auto projected = projector.project(roadTestMapOpendrive14.getWorldPosition<Object>(entry.first));
                 auto link = LongLatProjector::toGoogleMapsLink(projected);
 //                std::cout << "\"" << link << "\"," << std::endl;
                 ASSERT_STREQ(link.c_str(), expected[i].c_str());
@@ -154,7 +154,7 @@ namespace opendrive {
         TEST_F(ObjectTests, testFilterRelevantLandmarks) {
             const char *type = "pole";
             const char *name = "permanentDelineator";
-            auto landmarks = roadHighwayNorth.filterObjects(type, name);
+            auto landmarks = roadTestMapOpendrive14.filterObjects(type, name);
             ASSERT_EQ(landmarks.size(), 35);
 
             for (const auto &entry : landmarks) {

@@ -25,7 +25,7 @@ namespace opendrive {
          * Tests formatting the objects to YAML.
          */
         TEST_F(FormatterTests, testToYAML) {
-            const std::string &formattedYaml = opendrive::objectsToYaml(*highwayNorth);
+            const std::string &formattedYaml = opendrive::objectsToYaml(*testMapOpendrive14);
             YAML::Node actual = YAML::Load(formattedYaml);
             YAML::Node expected = YAML::LoadFile("../misc/objects.yaml");
 

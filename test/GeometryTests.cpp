@@ -26,7 +26,7 @@ namespace opendrive {
                 auto distance = expected.distance(paramPoly3Geometry.interpolateStart());
                 EXPECT_NEAR(distance, 0, maxDifference);
 
-                expected = roadHighwayNorth.getElement<Geometry>(
+                expected = roadTestMapOpendrive14.getElement<Geometry>(
                         paramPoly3Geometry.getEndSCoordinate() + 0.5).getStart();
                 auto actual = paramPoly3Geometry.interpolateEnd();
                 distance = expected.distance(actual);
@@ -70,8 +70,8 @@ namespace opendrive {
          * Tests that the parametric cubic curve interpolation works as expected.
          */
         TEST_F(GeometryTests, testInterpolateParamPoly3) {
-            for (const auto &s : roadHighwayNorth.getStartCoordinates<Geometry>(true)) {
-                auto geometry = roadHighwayNorth.getElement<Geometry>(s);
+            for (const auto &s : roadTestMapOpendrive14.getStartCoordinates<Geometry>(true)) {
+                auto geometry = roadTestMapOpendrive14.getElement<Geometry>(s);
                 assertStartAndEnd(geometry);
             }
         }
@@ -81,9 +81,9 @@ namespace opendrive {
          * Tests that calculated s tangent of the parametric cubic curve primitive is correct.
          */
         TEST_F(GeometryTests, testCalculateParamPoly3ReferenceTangentS) {
-            for (const auto &s : roadHighwayNorth.getStartCoordinates<Geometry>(true)) {
-                auto geometry = roadHighwayNorth.getElement<Geometry>(s);
-                auto nextGeometry = roadHighwayNorth.getElement<Geometry>(geometry.getEndSCoordinate() + 0.5);
+            for (const auto &s : roadTestMapOpendrive14.getStartCoordinates<Geometry>(true)) {
+                auto geometry = roadTestMapOpendrive14.getElement<Geometry>(s);
+                auto nextGeometry = roadTestMapOpendrive14.getElement<Geometry>(geometry.getEndSCoordinate() + 0.5);
                 assertTangent(geometry, nextGeometry);
             }
         }
@@ -92,8 +92,8 @@ namespace opendrive {
          * Tests that calculated t normal of the parametric cubic curve primitive is correct.
          */
         TEST_F(GeometryTests, testCalculateParamPoly3ReferenceNormal) {
-            for (const auto &s : roadHighwayNorth.getStartCoordinates<Geometry>(true)) {
-                assertTangentAndNormalOrthogonal(roadHighwayNorth.getElement<Geometry>(s));
+            for (const auto &s : roadTestMapOpendrive14.getStartCoordinates<Geometry>(true)) {
+                assertTangentAndNormalOrthogonal(roadTestMapOpendrive14.getElement<Geometry>(s));
             }
         }
     }// namespace tests

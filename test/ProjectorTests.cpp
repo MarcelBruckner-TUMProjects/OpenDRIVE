@@ -24,7 +24,7 @@ namespace opendrive {
         protected:
             void SetUp() override {
                 HDMapTests::SetUp();
-                projector = std::make_shared<LongLatProjector>(highwayNorth->getGeoReference());
+                projector = std::make_shared<LongLatProjector>(testMapOpendrive14->getGeoReference());
             }
 
         protected:
@@ -57,8 +57,8 @@ namespace opendrive {
             };
 
             int i = 0;
-            for (const auto &s : roadHighwayNorth.getStartCoordinates<Geometry>()) {
-                projected = projector->project(roadHighwayNorth.getElement<Geometry>(s).getStart());
+            for (const auto &s : roadTestMapOpendrive14.getStartCoordinates<Geometry>()) {
+                projected = projector->project(roadTestMapOpendrive14.getElement<Geometry>(s).getStart());
 //                std::cout << "{" << projected << "}," << std::endl;
                 EXPECT_NEAR(projected.distance(expected[i++]), 0, maxDifference);
             }
@@ -79,8 +79,8 @@ namespace opendrive {
             };
 
             int i = 0;
-            for (const auto &s : roadHighwayNorth.getStartCoordinates<Geometry>()) {
-                projected = projector->project(roadHighwayNorth.getElement<Geometry>(s).getStart());
+            for (const auto &s : roadTestMapOpendrive14.getStartCoordinates<Geometry>()) {
+                projected = projector->project(roadTestMapOpendrive14.getElement<Geometry>(s).getStart());
                 auto actual = LongLatProjector::toGoogleMapsLink(projected);
 //                std::cout << actual << std::endl;
                 ASSERT_STREQ(actual.c_str(), expected[i++].c_str());

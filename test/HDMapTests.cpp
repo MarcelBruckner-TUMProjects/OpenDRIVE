@@ -8,8 +8,9 @@
 namespace opendrive {
     namespace tests {
         void HDMapTests::SetUp() {
-            highwayNorth = std::make_shared<HDMap>(opendrive::createHDMap("../misc/highway_north.xodr"));
-            roadHighwayNorth = highwayNorth->getRoad(roadIdHighwayNorth);
+            testMapOpendrive14 = std::make_shared<HDMap>(
+                    opendrive::createHDMap("../misc/test_map_opendrive_1_4.xodr"));
+            roadTestMapOpendrive14 = testMapOpendrive14->getRoad(roadIdTestMapOpendrive14);
 
 //            highwayExitSouth = std::make_shared<HDMap>(
 //                    opendrive::createHDMap("../misc/highway_exit_south.xodr"));

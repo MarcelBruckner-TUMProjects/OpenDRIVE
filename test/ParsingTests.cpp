@@ -21,10 +21,10 @@ namespace opendrive {
          * Tests parsing the HD map header.
          */
         TEST_F(ParsingTests, testParsingHeader) {
-            EXPECT_NEAR(highwayNorth->getHeader().north, 5.350576134016e+06, maxDifference);
-            ASSERT_STREQ(highwayNorth->getHeader().vendor.c_str(), "3D Mapping Solutions");
+            EXPECT_NEAR(testMapOpendrive14->getHeader().north, 5.350576134016e+06, maxDifference);
+            ASSERT_STREQ(testMapOpendrive14->getHeader().vendor.c_str(), "3D Mapping Solutions");
 
-            ASSERT_STREQ(highwayNorth->getGeoReference().c_str(),
+            ASSERT_STREQ(testMapOpendrive14->getGeoReference().c_str(),
                          "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=500000 +y_0=0 +datum=WGS84 +units=m +no_defs");
         }
 
@@ -32,18 +32,18 @@ namespace opendrive {
          * Tests parsing the test road basic attributes.
          */
         TEST_F(ParsingTests, testParsingRoadAttributes) {
-            ASSERT_STREQ(roadHighwayNorth.getName().c_str(), "");
-            ASSERT_STREQ(roadHighwayNorth.getJunction().c_str(), "-1");
-            ASSERT_STREQ(roadHighwayNorth.getId().c_str(), roadIdHighwayNorth);
-            EXPECT_NEAR(roadHighwayNorth.getLength(), 1.724447338294e+03, maxDifference);
+            ASSERT_STREQ(roadTestMapOpendrive14.getName().c_str(), "");
+            ASSERT_STREQ(roadTestMapOpendrive14.getJunction().c_str(), "-1");
+            ASSERT_STREQ(roadTestMapOpendrive14.getId().c_str(), roadIdTestMapOpendrive14);
+            EXPECT_NEAR(roadTestMapOpendrive14.getLength(), 1.724447338294e+03, maxDifference);
         }
 
         /**
          * Tests parsingthe test road type.
          */
         TEST_F(ParsingTests, testParsingType) {
-//            auto type = roadHighwayNorth.type[0];
-            ASSERT_EQ(roadHighwayNorth.getType().size(), 1);
+//            auto type = roadTestMapOpendrive14.type[0];
+            ASSERT_EQ(roadTestMapOpendrive14.getType().size(), 1);
 
 //            EXPECT_NEAR(type.first, 0.0, maxDifference);
 //            ASSERT_STREQ(type.second.c_str(), "motorway");
@@ -53,7 +53,7 @@ namespace opendrive {
          * Tests parsing the test road plan view.
          */
         TEST_F(ParsingTests, testParsingPlanView) {
-            std::map<double, Geometry> planView = roadHighwayNorth.getPlanView();
+            std::map<double, Geometry> planView = roadTestMapOpendrive14.getPlanView();
 
             ASSERT_EQ(planView.size(), 4);
 
@@ -75,7 +75,7 @@ namespace opendrive {
          * Tests parsing the test road elevation profile.
          */
         TEST_F(ParsingTests, testParsingElevationProfile) {
-            auto elevationProfile = roadHighwayNorth.getElevationProfile();
+            auto elevationProfile = roadTestMapOpendrive14.getElevationProfile();
             ASSERT_EQ(elevationProfile.size(), 12);
 
             EXPECT_NEAR(elevationProfile[0].getS(), 0.000000000000e+00, maxDifference);
@@ -90,7 +90,7 @@ namespace opendrive {
          * Tests parsing the test road lateral profile.
          */
         TEST_F(ParsingTests, testParsingLateralProfile) {
-            auto lateralProfile = roadHighwayNorth.getLateralProfile();
+            auto lateralProfile = roadTestMapOpendrive14.getLateralProfile();
             ASSERT_EQ(lateralProfile.size(), 9);
 
             EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
@@ -105,11 +105,11 @@ namespace opendrive {
          * Tests parsing the test road objects.
          */
         TEST_F(ParsingTests, testParsingObjects) {
-            auto objects = roadHighwayNorth.getObjects();
+            auto objects = roadTestMapOpendrive14.getObjects();
             ASSERT_EQ(objects.size(), 52);
 
             std::string id = "4007953";
-            auto testObject = roadHighwayNorth.getElement<Object>(id);
+            auto testObject = roadTestMapOpendrive14.getElement<Object>(id);
 
             ASSERT_STREQ(testObject.getType().c_str(), "pole");
             ASSERT_STREQ(testObject.getName().c_str(), "permanentDelineator");
