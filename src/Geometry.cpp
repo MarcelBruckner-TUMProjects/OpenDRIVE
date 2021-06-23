@@ -8,41 +8,9 @@
 namespace opendrive {
 
 
-    CubicPolynom extractU(const geometry &openDriveObject) {
-        if (openDriveObject.paramPoly3().present()) {
-            return {openDriveObject.paramPoly3()->aU().get(),
-                    openDriveObject.paramPoly3()->bU().get(),
-                    openDriveObject.paramPoly3()->cU().get(),
-                    openDriveObject.paramPoly3()->dU().get()};
-
-        } else {
-            return {0, 0, 0, 0};
-        }
-    }
-
-    CubicPolynom extractV(const geometry &openDriveObject) {
-        if (openDriveObject.paramPoly3().present()) {
-            return {openDriveObject.paramPoly3()->aV().get(),
-                    openDriveObject.paramPoly3()->bV().get(),
-                    openDriveObject.paramPoly3()->cV().get(),
-                    openDriveObject.paramPoly3()->dV().get()};
-
-        } else {
-            return {0, 0, 0, 0};
-        }
-    }
-
     Geometry::Geometry(double s, const CubicPolynom &u, const CubicPolynom &v, double heading, double length,
                        const Vector &start)
             : OpenDriveWrapper(s), u(u), v(v), heading(heading), length(length), start(start) {}
-
-    Geometry::Geometry(const geometry &openDriveObject) : Geometry(openDriveObject.s().get(),
-                                                                   extractU(openDriveObject),
-                                                                   extractV(openDriveObject),
-                                                                   openDriveObject.hdg().get(),
-                                                                   openDriveObject.length().get(),
-                                                                   Vector{openDriveObject.x().get(),
-                                                                          openDriveObject.y().get()}) {}
 
     Vector Geometry::interpolatePrimitive(double s) const {
         return {u(s), v(s)};

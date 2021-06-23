@@ -7,7 +7,7 @@
 namespace opendrive {
     namespace opendrive_1_4 {
 
-        Elevation::Elevation(const elevation &openDriveObject) : opendrive::Elevation(
+        Elevation::Elevation(const class elevation &openDriveObject) : opendrive::Elevation(
                 openDriveObject.s().get(),
                 {openDriveObject.a().get(),
                  openDriveObject.b().get(),

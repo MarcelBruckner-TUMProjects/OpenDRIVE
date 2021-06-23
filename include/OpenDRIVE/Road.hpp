@@ -5,14 +5,13 @@
 #ifndef OPENDRIVE_ROAD_H
 #define OPENDRIVE_ROAD_H
 
-#include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
-
+#include <map>
 #include "OpenDRIVE/Object.hpp"
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "OpenDRIVE/Geometry.hpp"
 #include "OpenDRIVE/ElevationBase.hpp"
-#include "Elevation.hpp"
-#include "SuperElevation.hpp"
+#include "OpenDRIVE/Elevation.hpp"
+#include "OpenDRIVE/SuperElevation.hpp"
 
 namespace opendrive {
 

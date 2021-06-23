@@ -3,9 +3,20 @@
 //
 
 #include "../OpenDriveConfig.h"
+#include "tinyxml2.h"
 
 #include "OpenDRIVE/HDMapFactory.hpp"
+
+#ifdef OPENDRIVE_1_4
+
 #include "OpenDRIVE/opendrive_1_4/HDMap.hpp"
+
+#endif
+#ifdef OPENDRIVE_1_6
+
+#include "OpenDRIVE/opendrive_1_6/HDMap.hpp"
+
+#endif
 
 namespace opendrive {
 
@@ -22,6 +33,7 @@ namespace opendrive {
 #endif
             case 6:
 #ifdef OPENDRIVE_1_6
+                return opendrive::opendrive_1_6::HDMap(filename);
 #endif
             default:
                 throw std::invalid_argument(

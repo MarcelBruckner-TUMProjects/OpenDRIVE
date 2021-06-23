@@ -2,14 +2,18 @@
 // Created by brucknem on 22.02.21.
 //
 
-#ifndef OPENDRIVE_1_4_GEOMETRY_HPP
-#define OPENDRIVE_1_4_GEOMETRY_HPP
+#ifndef OPENDRIVE_1_6_GEOMETRY_HPP
+#define OPENDRIVE_1_6_GEOMETRY_HPP
 
-#include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
-#include "OpenDRIVE/Geometry.hpp"
+#include <OpenDRIVE/Geometry.hpp>
+#include "opendrive_1_6/opendrive_16_core.hxx"
+
+#include "OpenDRIVE/OpenDriveWrapper.hpp"
+#include "OpenDRIVE/utils/Vector.hpp"
+#include "OpenDRIVE/utils/CubicPolynom.hpp"
 
 namespace opendrive {
-    namespace opendrive_1_4 {
+    namespace opendrive_1_6 {
 
         /**
          * Wrapper for the OpenDRIVE geometry class.
@@ -39,4 +43,4 @@ namespace opendrive {
 
     }
 }
-#endif //OPENDRIVE_1_4_GEOMETRY_HPP
+#endif //OPENDRIVE_1_6_GEOMETRY_HPP

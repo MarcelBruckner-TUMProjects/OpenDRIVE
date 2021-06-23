@@ -71,7 +71,7 @@ namespace opendrive {
 
             }
         }
-        assert(yaml.good());
+//        assert(yaml.good());
         yaml << YAML::EndSeq;
         yaml << YAML::EndMap;
         return yaml.c_str();

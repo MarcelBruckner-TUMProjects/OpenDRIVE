@@ -5,7 +5,6 @@
 #ifndef OPENDRIVE_ELEVATION_HPP
 #define OPENDRIVE_ELEVATION_HPP
 
-#include <opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx>
 #include "OpenDRIVE/ElevationBase.hpp"
 
 namespace opendrive {
@@ -25,11 +24,6 @@ namespace opendrive {
          * @constructor
          */
         Elevation(double s, const CubicPolynom &polynom);
-
-        /**
-         * @constructor
-         */
-        explicit Elevation(const elevation &openDriveObject);
 
 
         /**

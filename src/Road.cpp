@@ -10,54 +10,6 @@
 namespace opendrive {
 
 
-#pragma region Setters
-
-    std::map<std::string, Object> extractObjects(const class road &openDriveObject) {
-        std::map<std::string, Object> objects;
-        if (openDriveObject.objects().present()) {
-            for (const auto &objectNode : openDriveObject.objects().get().object()) {
-                objects.emplace(objectNode.id().get(), Object(objectNode));
-            }
-        }
-        return objects;
-    }
-
-    std::map<double, Geometry> extractGeometry(const class road &openDriveObject) {
-        std::map<double, Geometry> planView;
-        for (const geometry &geometryNode : openDriveObject.planView().geometry()) {
-            planView.emplace(geometryNode.s().get(), Geometry(geometryNode));
-        }
-        return planView;
-    }
-
-    std::map<double, Elevation> extractElevation(const class road &openDriveObject) {
-        std::map<double, Elevation> elevationProfile;
-        for (const auto &elevationNode : openDriveObject.elevationProfile().get().elevation()) {
-            elevationProfile.emplace(elevationNode.s().get(), Elevation(elevationNode));
-        }
-        return elevationProfile;
-    }
-
-    std::map<double, SuperElevation> extractSuperElevation(const class road &openDriveObject) {
-        std::map<double, SuperElevation> lateralProfile;
-        for (const auto &superElevationNode : openDriveObject.lateralProfile().get().superelevation()) {
-            lateralProfile.emplace(superElevationNode.s().get(), SuperElevation(superElevationNode));
-        }
-        return lateralProfile;
-    }
-
-#pragma endregion Setters
-
-#pragma region ObjectOrientedFunctions
-
-    std::map<double, std::string> convertToType(const road &openDriveRoad) {
-        std::map<double, std::string> result;
-        for (const auto &type : openDriveRoad.type()) {
-            result[type.s().get()] = type.type().get().c_str();
-        }
-        return result;
-    }
-
     Road::Road(std::string id, std::string name, double length, std::string junction,
                std::map<double, std::string> type, std::map<std::string, Object> objects,
                std::map<double, Geometry> planView, std::map<double, Elevation> elevationProfile,
@@ -75,7 +27,6 @@ namespace opendrive {
         return roadId == id;
     }
 
-#pragma endregion ObjectOrientedFunctions
 
 #pragma region PlainGetters
 

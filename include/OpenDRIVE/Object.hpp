@@ -8,8 +8,6 @@
 #include <string>
 #include <memory>
 
-#include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
-
 #include "OpenDriveWrapper.hpp"
 
 namespace opendrive {
@@ -91,10 +89,6 @@ namespace opendrive {
         double zOffset;
 
     public:
-        /**
-         * @constructor
-         */
-        explicit Object(const class object &openDriveObject);
 
         /**
          * @constructor

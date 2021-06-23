@@ -8,6 +8,7 @@
 #include "HDMap.hpp"
 
 namespace opendrive {
+
     /**
      * Factory method for the HD maps.
      *

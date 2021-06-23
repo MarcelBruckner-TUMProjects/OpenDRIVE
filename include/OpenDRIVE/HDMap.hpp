@@ -11,12 +11,9 @@
 #include <map>
 
 
-#include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
-
 #include "Road.hpp"
 #include "Geometry.hpp"
 #include "OpenDRIVE/utils/Projector.hpp"
-#include "tinyxml2.h"
 
 namespace opendrive {
 

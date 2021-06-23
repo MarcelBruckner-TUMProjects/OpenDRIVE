@@ -5,7 +5,6 @@
 #ifndef OPENDRIVE_SUPERELEVATION_HPP
 #define OPENDRIVE_SUPERELEVATION_HPP
 
-#include <opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx>
 #include "OpenDRIVE/ElevationBase.hpp"
 
 namespace opendrive {
@@ -26,11 +25,6 @@ namespace opendrive {
          * @constructor
          */
         SuperElevation(double s, const CubicPolynom &polynom);
-
-        /**
-         * @constructor
-         */
-        explicit SuperElevation(const superelevation &openDriveObject);
 
         /**
          * @destructor

@@ -5,8 +5,6 @@
 #ifndef OPENDRIVE_GEOMETRY_HPP
 #define OPENDRIVE_GEOMETRY_HPP
 
-#include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
-
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "OpenDRIVE/utils/Vector.hpp"
 #include "OpenDRIVE/utils/CubicPolynom.hpp"
@@ -81,11 +79,6 @@ namespace opendrive {
         * @constructor
         */
         Geometry() = default;
-
-        /**
-        * @constructor
-        */
-        explicit Geometry(const geometry &openDriveObject);
 
         /**
         * @constructor

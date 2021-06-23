@@ -2,14 +2,14 @@
 // Created by brucknem on 23.06.21.
 //
 
-#ifndef OPENDRIVE_1_4_ELEVATION_HPP
-#define OPENDRIVE_1_4_ELEVATION_HPP
+#ifndef OPENDRIVE_1_6_ELEVATION_HPP
+#define OPENDRIVE_1_6_ELEVATION_HPP
 
-#include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
-#include "OpenDRIVE/Elevation.hpp"
+#include "opendrive_1_6/opendrive_16_core.hxx"
+#include <OpenDRIVE/Elevation.hpp>
 
 namespace opendrive {
-    namespace opendrive_1_4 {
+    namespace opendrive_1_6 {
 
         /**
          * Wrapper for the OpenDRIVE elevation class.
@@ -26,7 +26,7 @@ namespace opendrive {
             /**
              * @constructor
              */
-            explicit Elevation(const class elevation &openDriveObject);
+            explicit Elevation(const elevation &openDriveObject);
 
 
             /**
@@ -36,4 +36,4 @@ namespace opendrive {
         };
     }
 }
-#endif //OPENDRIVE_1_4_ELEVATION_HPP
+#endif //OPENDRIVE_1_6_ELEVATION_HPP
