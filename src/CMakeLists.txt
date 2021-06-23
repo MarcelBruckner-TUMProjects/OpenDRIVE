@@ -11,27 +11,39 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 ### Library ###
 ########################################################################################################################
 
+if (OPENDRIVE_1_4)
+    file(GLOB opendrive_1_4 "opendrive_1_4/*.cpp")
+endif ()
+
+if (OPENDRIVE_1_6)
+    file(GLOB opendrive_1_6 "opendrive_1_6/*.cpp")
+endif ()
+
 add_library(OpenDRIVE-lib
         HDMap.cpp
         Road.cpp
         Object.cpp
         OpenDriveWrapper.cpp
         Geometry.cpp
-        utils/Vector.cpp
-        utils/Projector.cpp
-        utils/LongLatProjector.cpp
         ElevationBase.cpp
         Elevation.cpp
         SuperElevation.cpp
+        HDMapFactory.cpp
+
         utils/Formatter.cpp
         utils/CubicPolynom.cpp
-        HDMapFactory.cpp
+        utils/Vector.cpp
+        utils/Projector.cpp
+        utils/LongLatProjector.cpp
+
+        ${opendrive_1_4}
+        ${opendrive_1_6}
         )
 
 target_include_directories(OpenDRIVE-lib
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
-        "${PROJECT_BINARY_DIR}"
+        " ${PROJECT_BINARY_DIR} "
         )
 
 target_link_libraries(OpenDRIVE-lib

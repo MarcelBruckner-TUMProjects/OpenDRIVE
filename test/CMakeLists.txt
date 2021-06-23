@@ -20,6 +20,7 @@ add_executable(Tests
         ElevationTests.cpp
         VectorTests.cpp
         FormatterTests.cpp
+        ../OpenDriveConfig.h
         )
 target_link_libraries(Tests PUBLIC OpenDRIVE-lib gtest_main yaml-cpp)
 target_include_directories(Tests PUBLIC tests "${PROJECT_BINARY_DIR}")

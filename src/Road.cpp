@@ -70,17 +70,6 @@ namespace opendrive {
                                                                   elevationProfile(std::move(elevationProfile)),
                                                                   lateralProfile(std::move(lateralProfile)) {}
 
-    Road::Road(const class road &openDriveRoad) : Road(
-            openDriveRoad.id()->c_str(),
-            openDriveRoad.name()->c_str(),
-            openDriveRoad.length().get(),
-            openDriveRoad.junction().get().c_str(),
-            convertToType(openDriveRoad),
-            extractObjects(openDriveRoad),
-            extractGeometry(openDriveRoad),
-            extractElevation(openDriveRoad),
-            extractSuperElevation(openDriveRoad)
-    ) {}
 
     bool Road::operator==(const std::string &roadId) {
         return roadId == id;

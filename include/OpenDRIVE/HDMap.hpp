@@ -60,12 +60,6 @@ namespace opendrive {
         } header;
 
         /**
-         * @constructor Reads and parses the given OpenDRIVE HD map.
-         */
-        explicit HDMap(const std::string &filename);
-
-
-        /**
          * @constructor
          */
         HDMap(std::string filename, std::map<std::string, Road> roads, Header header);

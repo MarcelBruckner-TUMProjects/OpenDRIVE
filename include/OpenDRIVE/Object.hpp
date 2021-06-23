@@ -41,7 +41,7 @@ namespace opendrive {
         std::string id;
 
         /**
-         * 
+         *
          */
         double height;
 

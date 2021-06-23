@@ -5,7 +5,6 @@
 #ifndef OPENDRIVE_HDMAPFACTORY_HPP
 #define OPENDRIVE_HDMAPFACTORY_HPP
 
-
 #include "HDMap.hpp"
 
 namespace opendrive {

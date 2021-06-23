@@ -2,7 +2,10 @@
 // Created by brucknem on 23.06.21.
 //
 
+#include "../OpenDriveConfig.h"
+
 #include "OpenDRIVE/HDMapFactory.hpp"
+#include "OpenDRIVE/opendrive_1_4/HDMap.hpp"
 
 namespace opendrive {
 
@@ -15,18 +18,15 @@ namespace opendrive {
         switch (revMinor) {
             case 4:
 #ifdef OPENDRIVE_1_4
-                return HDMap(filename);
-                break;
+                return opendrive::opendrive_1_4::HDMap(filename);
 #endif
             case 6:
 #ifdef OPENDRIVE_1_6
-                break;
 #endif
             default:
                 throw std::invalid_argument(
-                        "Maps of the revision 1." + std::to_string(revMinor) + " are not supported.");
+                        "Maps of the revision 1." + std::to_string(revMinor) +
+                        " are not supported. Have you included the standard definitions and set the correct CMAKE flags?");
         }
-        std::cout << revMinor << std::endl;
-        return HDMap("");
     }
 }

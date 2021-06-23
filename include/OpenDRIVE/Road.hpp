@@ -5,8 +5,6 @@
 #ifndef OPENDRIVE_ROAD_H
 #define OPENDRIVE_ROAD_H
 
-#include "OpenDriveConfig.h"
-
 #include "opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx"
 
 #include "OpenDRIVE/Object.hpp"
@@ -107,11 +105,6 @@ namespace opendrive {
              std::map<double, std::string> type, std::map<std::string, Object> objects,
              std::map<double, Geometry> planView, std::map<double, Elevation> elevationProfile,
              std::map<double, SuperElevation> lateralProfile);
-
-        /**
-         * @constructor
-         */
-        explicit Road(const class road &openDriveRoad);
 
         /**
          * @destructor
