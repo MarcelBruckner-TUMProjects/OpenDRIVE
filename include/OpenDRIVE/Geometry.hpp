@@ -9,6 +9,7 @@
 
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "Vector.hpp"
+#include "ParamPoly3.hpp"
 
 namespace opendrive {
 
@@ -16,14 +17,13 @@ namespace opendrive {
      * Wrapper for the OpenDRIVE geometry class.
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_geometry
      */
-    class Geometry : public OpenDriveWrapperWithCoordinate<geometry> {
+    class Geometry : public OpenDriveWrapper {
     protected:
         /**
          * Specific interpolation functions per primitive.
          *
          * @param s The s-coordinate of interest.
          */
-        template<typename S>
         Vector interpolatePrimitive(double s) const;
 
         /**
@@ -31,7 +31,6 @@ namespace opendrive {
          *
          * @param s The s-coordinate of interest.
          */
-        template<typename S>
         Vector calculatePrimitiveReferenceTangent(double s) const;
 
         /**
@@ -51,6 +50,14 @@ namespace opendrive {
         Vector getUVCoordinate(double s) const;
 
     public:
+
+        ParamPoly3 u;
+        ParamPoly3 v;
+
+        double heading;
+        double length;
+
+        Vector start;
 
         /**
         * @constructor
@@ -101,16 +108,6 @@ namespace opendrive {
          * @param s s-coordinate of start position
          */
         Vector calculateNormal(double s) const;
-
-        /**
-         * @get The length of the geometry.
-         */
-        double getLength() const;
-
-        /**
-         * @get The inertial heading in radians.
-         */
-        double getHeading() const;
 
         /**
          * Gets the ending s coordinate, i.e. the start + length.

@@ -10,10 +10,19 @@
 
 namespace opendrive {
 
-    HDMap::HDMap(std::string filename) :
-            filename(std::move(filename)),
-            OpenDriveWrapper<OpenDRIVE>(*OpenDRIVE_(filename, ::xml_schema::flags::dont_validate)) {
-        setRoads();
+    HDMap::HDMap(const std::string &filename) :
+            filename(filename),
+            OpenDriveWrapper(0) {
+        auto openDriveObject = *OpenDRIVE_(filename, ::xml_schema::flags::dont_validate);
+        header = {
+                openDriveObject.header().geoReference()->c_str(),
+                openDriveObject.header().vendor()->c_str(),
+                openDriveObject.header().north().get(),
+                openDriveObject.header().south().get(),
+                openDriveObject.header().east().get(),
+                openDriveObject.header().west().get(),
+        };
+        setRoads(openDriveObject);
     }
 
     const Road &HDMap::getRoad(const std::string &id) const {
@@ -47,14 +56,14 @@ namespace opendrive {
         throw std::invalid_argument("Could not find an object with the id " + id);
     }
 
-    void HDMap::setRoads() {
-        for (const auto &openDriveRoad : getOpenDriveObject()->road()) {
+    void HDMap::setRoads(const OpenDRIVE &openDriveObject) {
+        for (const auto &openDriveRoad : openDriveObject.road()) {
             roads.emplace(openDriveRoad.id().get(), Road(openDriveRoad));
         }
     }
 
     std::string HDMap::getGeoReference() const {
-        return getOpenDriveObject()->header().geoReference()->c_str();
+        return header.geoReference;
     }
 
     const std::map<std::string, Road> &HDMap::getRoads() const {

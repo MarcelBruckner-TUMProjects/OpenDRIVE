@@ -19,8 +19,11 @@ add_library(OpenDRIVE-lib
         Geometry.cpp
         Vector.cpp
         Projector.cpp
+        ElevationBase.cpp
         Elevation.cpp
+        SuperElevation.cpp
         Formatter.cpp
+        ParamPoly3.cpp
         )
 
 target_include_directories(OpenDRIVE-lib

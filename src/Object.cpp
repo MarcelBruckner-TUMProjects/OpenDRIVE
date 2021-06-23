@@ -6,70 +6,31 @@
 #include "OpenDRIVE/Object.hpp"
 
 namespace opendrive {
-    Object::Object(const object &openDriveObject) : OpenDriveWrapperWithCoordinate<object>(openDriveObject) {}
-
-    double Object::getTCoordinate() const {
-        return openDriveObject->t().get();
-    }
-
-    std::string Object::getType() const {
-        return openDriveObject->type()->c_str();
-    }
-
-    std::string Object::getName() const {
-        return openDriveObject->name()->c_str();
-    }
-
-    std::string Object::getId() const {
-        return openDriveObject->id()->c_str();
-    }
-
-    double Object::getHeight() const {
-        return openDriveObject->height().get();
-    }
-
-    double Object::getHeading() const {
-        return openDriveObject->hdg().get();
-    }
-
-    double Object::getValidLength() const {
-        return openDriveObject->validLength().get();
-    }
-
-    std::string Object::getOrientation() const {
-        if (openDriveObject->orientation().present()) {
-            return openDriveObject->orientation().get().c_str();
+    Object::Object(const object &openDriveObject) : OpenDriveWrapper(openDriveObject.s().get()) {
+        t = openDriveObject.t().get();
+        type = openDriveObject.type().get().c_str();
+        name = openDriveObject.name().get().c_str();
+        id = openDriveObject.id().get().c_str();
+        height = openDriveObject.height().get();
+        hdg = openDriveObject.hdg().get();
+        validLength = openDriveObject.validLength().get();
+        if (openDriveObject.orientation().present()) {
+            orientation = openDriveObject.orientation().get().c_str();
         }
-        return "none";
-    }
-
-    double Object::getPitch() const {
-        return openDriveObject->pitch().get();
-    }
-
-    double Object::getRoll() const {
-        return openDriveObject->roll().get();
-    }
-
-    double Object::getLength() const {
-        return openDriveObject->length().get();
-    }
-
-    double Object::getWidth() const {
-        return openDriveObject->width().get();
-    }
-
-    double Object::getRadius() const {
-        return openDriveObject->radius().get();
-    }
-
-    double Object::getZOffset() const {
-        return openDriveObject->zOffset().get();
+        if (orientation.empty()) {
+            orientation = "none";
+        }
+        pitch = openDriveObject.pitch().get();
+        roll = openDriveObject.roll().get();
+        length = openDriveObject.length().get();
+        width = openDriveObject.width().get();
+        radius = openDriveObject.radius().get();
+        zOffset = openDriveObject.zOffset().get();
     }
 
     std::ostream &operator<<(std::ostream &os, const Object &other) {
-        os << "Type: " << other.getType() << ", ";
-        os << "Name: " << other.getName();
+        os << "Type: " << other.type << ", ";
+        os << "Name: " << other.name;
         return os;
     }
 

@@ -2,11 +2,11 @@
 // Created by brucknem on 23.06.21.
 //
 
-#include "OpenDRIVE/Elevation.hpp"
+#include "OpenDRIVE/SuperElevation.hpp"
 
 namespace opendrive {
 
-    Elevation::Elevation(const elevation &openDriveObject) : ElevationBase(
+    SuperElevation::SuperElevation(const superelevation &openDriveObject) : ElevationBase(
             openDriveObject.s().get(),
             openDriveObject.a().get(),
             openDriveObject.b().get(),

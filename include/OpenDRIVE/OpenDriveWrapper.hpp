@@ -15,74 +15,27 @@
 namespace opendrive {
 
     /**
-     * Templated wrapper for the OpenDRIVE classes from the parser.
-     * @tparam T The parser type of the OpenDRIVE object.
+     * Wrapper for the OpenDRIVE classes from the parser.
      */
-    template<class T>
     class OpenDriveWrapper {
-
-    protected:
-
-        /**
-         * A Pointer to the original parsing result.
-         */
-        std::shared_ptr<T> openDriveObject;
 
     public:
 
         /**
-         * @constructor
+         * The s coordinate of the opendrive object.
          */
-        explicit OpenDriveWrapper() = default;
+        double s;
 
         /**
          * @constructor
          */
-        explicit OpenDriveWrapper(const T &openDriveObject);
+        explicit OpenDriveWrapper(double s = 0);
 
         /**
          * @destructor
          */
         virtual ~OpenDriveWrapper() = default;
 
-        /**
-         * @get
-         */
-        const std::shared_ptr<T> &getOpenDriveObject() const;
-
-        /**
-         * @get true if the object is valid, i.e. there exists an underlying parser object, false else.
-         */
-        bool isValid() const;
-    };
-
-
-    /**
-     * Templated wrapper for the OpenDRIVE classes from the parser for objects with a s coordinate.
-     * @tparam T The parser type of the OpenDRIVE object.
-     */
-    template<class T>
-    class OpenDriveWrapperWithCoordinate : public OpenDriveWrapper<T> {
-    public:
-        /**
-         * @constructor
-         */
-        explicit OpenDriveWrapperWithCoordinate() = default;
-
-        /**
-         * @constructor
-         */
-        explicit OpenDriveWrapperWithCoordinate(const T &openDriveObject);
-
-        /**
-         * @destructor
-         */
-        virtual ~OpenDriveWrapperWithCoordinate() = default;
-
-        /**
-         * @get s-coordinate of start position.
-         */
-        virtual double getSCoordinate() const;
     };
 }
 

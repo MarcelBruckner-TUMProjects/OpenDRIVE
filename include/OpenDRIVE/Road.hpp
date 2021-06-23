@@ -12,7 +12,9 @@
 #include "OpenDRIVE/Object.hpp"
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "OpenDRIVE/Geometry.hpp"
-#include "OpenDRIVE/Elevation.hpp"
+#include "OpenDRIVE/ElevationBase.hpp"
+#include "Elevation.hpp"
+#include "SuperElevation.hpp"
 
 namespace opendrive {
 
@@ -20,7 +22,7 @@ namespace opendrive {
      * A wrapper for the OpenDRIVE road class.
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_roads
      */
-    class Road : public OpenDriveWrapper<road> {
+    class Road : public OpenDriveWrapper {
 
     protected:
         /**
@@ -47,7 +49,7 @@ namespace opendrive {
          * @set Converts the parser objects to requested types.
          */
         template<typename T>
-        void set();
+        void set(const class road &openDriveRoad);
 
         /**
          * Gets the s coordinates of the elements in the map.
@@ -56,17 +58,6 @@ namespace opendrive {
          */
         template<typename T>
         std::vector<double> getStartCoordinates(std::map<double, T> map, bool omitLastElement) const;
-
-        /**
-         * @throws invalid_argument describing that no geometry including the given s coordinate could be found.
-         */
-        template<typename T>
-        const T &throwNotOnRoad(double s) const;
-
-        /**
-         * @throws invalid_argument describing that no object with the given id could be found.
-         */
-        static const Object &throwObjectNotFound(const std::string &id);
 
         /**
          * @get Tries to find the element including the given s coordinate along the road.
@@ -83,6 +74,12 @@ namespace opendrive {
         Vector getWorldPosition(const T &object) const;
 
     public:
+
+        std::string id;
+        std::string name;
+        double length;
+        std::string junction;
+        std::map<double, std::string> type;
 
         /**
          * @constructor
@@ -103,21 +100,6 @@ namespace opendrive {
          * @operator true if the id of the road is equal to the given id, false else.
          */
         bool operator==(const std::string &roadId);
-
-        /**
-         * @get
-         */
-        double getLength() const;
-
-        /**
-         * @get
-         */
-        std::string getId() const;
-
-        /**
-         * @get
-         */
-        std::string getName() const;
 
         /**
          * @get

@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 
 #include "HDMapTests.hpp"
+#include "OpenDRIVE/Elevation.hpp"
+#include "OpenDRIVE/SuperElevation.hpp"
 
 namespace opendrive {
     namespace tests {
@@ -27,7 +29,7 @@ namespace opendrive {
             auto elevationProfile = roadHighwayExitSouth.getElevationProfile();
 
             EXPECT_NEAR(roadHighwayExitSouth.getElement<Elevation>(0).interpolateStart(),
-                        roadHighwayExitSouth.getElement<Elevation>(0).getOpenDriveObject()->a().get(), maxDifference);
+                        roadHighwayExitSouth.getElement<Elevation>(0).paramPoly3.a, maxDifference);
 
             for (int i = 1; i < ss.size(); i++) {
                 auto previousEndHeight = roadHighwayExitSouth.getElement<Elevation>(ss[i - 1]).interpolate(ss[i]);
@@ -45,7 +47,7 @@ namespace opendrive {
             auto elevationProfile = roadHighwayExitSouth.getLateralProfile();
 
             EXPECT_NEAR(roadHighwayExitSouth.getElement<SuperElevation>(0).interpolateStart(),
-                        roadHighwayExitSouth.getElement<SuperElevation>(0).getOpenDriveObject()->a().get(),
+                        roadHighwayExitSouth.getElement<SuperElevation>(0).paramPoly3.a,
                         maxDifference);
 
             for (int i = 1; i < ss.size(); i++) {

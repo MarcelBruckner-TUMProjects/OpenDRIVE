@@ -23,7 +23,7 @@ namespace opendrive {
      * A class for parsing and querying the OpenDrive HD maps.
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8
      */
-    class HDMap : public OpenDriveWrapper<OpenDRIVE> {
+    class HDMap : public OpenDriveWrapper {
     private:
 
         /**
@@ -39,14 +39,20 @@ namespace opendrive {
         /**
          * @set Converts the parser roads to Road objects.
          */
-        void setRoads();
+        void setRoads(const OpenDRIVE &openDriveObject);
 
     public:
+
+        struct {
+            std::string geoReference;
+            std::string vendor;
+            double north, south, east, west;
+        } header;
 
         /**
          * @constructor Reads and parses the given OpenDRIVE HD map.
          */
-        explicit HDMap(std::string filename);
+        explicit HDMap(const std::string &filename);
 
         /**
          * @destructor
@@ -84,6 +90,7 @@ namespace opendrive {
 
         template<typename T>
         Vector getPosition(const std::string &id) const;
+
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

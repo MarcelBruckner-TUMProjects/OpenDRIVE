@@ -7,114 +7,70 @@
 
 namespace opendrive {
 
-    Geometry::Geometry(const geometry &openDriveObject) : OpenDriveWrapperWithCoordinate<geometry>(openDriveObject) {}
-
-    template<>
-    Vector Geometry::interpolatePrimitive<line>(double s) const {
-        return {s, 0};
+    Geometry::Geometry(const geometry &openDriveObject) : OpenDriveWrapper(openDriveObject.s().get()),
+                                                          heading(openDriveObject.hdg().get()),
+                                                          length(openDriveObject.length().get()),
+                                                          start(Vector{openDriveObject.x().get(),
+                                                                       openDriveObject.y().get()}) {
+        if (openDriveObject.paramPoly3().present()) {
+            u = {openDriveObject.paramPoly3()->aU().get(),
+                 openDriveObject.paramPoly3()->bU().get(),
+                 openDriveObject.paramPoly3()->cU().get(),
+                 openDriveObject.paramPoly3()->dU().get()};
+            v = {openDriveObject.paramPoly3()->aV().get(),
+                 openDriveObject.paramPoly3()->bV().get(),
+                 openDriveObject.paramPoly3()->cV().get(),
+                 openDriveObject.paramPoly3()->dV().get()};
+        } else {
+            u = {0, 0, 0, 0};
+            v = {0, 0, 0, 0};
+        }
     }
 
-    template<>
-    Vector Geometry::interpolatePrimitive<paramPoly3>(double s) const {
-        auto primitive = openDriveObject->paramPoly3().get();
-
-        double p = s;
-        auto p2 = p * p;
-        auto p3 = p2 * p;
-
-        auto u = primitive.aU().get() +
-                 primitive.bU().get() * p +
-                 primitive.cU().get() * p2 +
-                 primitive.dU().get() * p3;
-
-        auto v = primitive.aV().get() +
-                 primitive.bV().get() * p +
-                 primitive.cV().get() * p2 +
-                 primitive.dV().get() * p3;
-
-        return {u, v};
+    Vector Geometry::interpolatePrimitive(double s) const {
+        return {u(s), v(s)};
     }
 
     Vector Geometry::interpolate(double s) const {
         Vector result = getUVCoordinate(s);
-        result = result.rotateXY(openDriveObject->hdg().get());
+        result = result.rotateXY(heading);
         result += getStart();
         return result;
     }
 
     Vector Geometry::getUVCoordinate(double s) const {
         double localS = getGetLocalS(s);
-        if (openDriveObject->line().present()) {
-            return interpolatePrimitive<line>(localS);
-        } else if (openDriveObject->paramPoly3().present()) {
-            return interpolatePrimitive<paramPoly3>(localS);
-        }
-        throw std::invalid_argument("Interpolation function for this primitive not implemented.");
+        return interpolatePrimitive(localS);
     }
 
-    double Geometry::getGetLocalS(double s) const { return s - getSCoordinate(); }
+    double Geometry::getGetLocalS(double _s) const { return _s - s; }
 
     Vector Geometry::getStart() const {
-        return {openDriveObject->x().get(), openDriveObject->y().get()};
-    }
-
-    double Geometry::getLength() const {
-        return openDriveObject->length().get();
+        return start;
     }
 
     Vector Geometry::interpolateStart() const {
-        return interpolate(getSCoordinate());
+        return interpolate(s);
     }
 
     Vector Geometry::interpolateEnd() const {
-        return interpolate(getSCoordinate() + getLength());
+        return interpolate(getEndSCoordinate());
     }
 
-    double Geometry::getHeading() const {
-        return openDriveObject->hdg().get();
+    Vector Geometry::calculatePrimitiveReferenceTangent(double s) const {
+        return {u[s], v[s]};
     }
 
-    template<>
-    Vector Geometry::calculatePrimitiveReferenceTangent<paramPoly3>(double s) const {
-        auto primitive = openDriveObject->paramPoly3().get();
+    Vector Geometry::calculateTangent(double _s) const {
+        double primitiveS = getGetLocalS(_s);
 
-        double p = s;
-        auto p2 = p * p;
-
-        auto du = primitive.bU().get() +
-                  2 * primitive.cU().get() * p +
-                  3 * primitive.dU().get() * p2;
-
-        auto dv = primitive.bV().get() +
-                  2 * primitive.cV().get() * p +
-                  3 * primitive.dV().get() * p2;
-
-        return {du, dv};
-    }
-
-    template<>
-    Vector Geometry::calculatePrimitiveReferenceTangent<line>(double s) const {
-        return {1, 0};
-    }
-
-    Vector Geometry::calculateTangent(double s) const {
-        double primitiveS = getGetLocalS(s);
-
-        Vector tangent;
-        if (openDriveObject->line().present()) {
-            tangent = calculatePrimitiveReferenceTangent<line>(primitiveS);
-        } else if (openDriveObject->paramPoly3().present()) {
-            tangent = calculatePrimitiveReferenceTangent<paramPoly3>(primitiveS);
-        } else {
-            throw std::invalid_argument("Interpolation function for this primitive not implemented.");
-        }
-
-        tangent = tangent.rotateXY(openDriveObject->hdg().get());
+        Vector tangent = calculatePrimitiveReferenceTangent(primitiveS);
+        tangent = tangent.rotateXY(heading);
         return tangent.normalize();
     }
 
     double Geometry::getEndSCoordinate() const {
-        return getSCoordinate() + getLength();
+        return s + length;
     }
 
     Vector Geometry::calculateNormal(double s) const {
@@ -122,4 +78,5 @@ namespace opendrive {
         Vector up{0, 0, 1};
         return up.cross(tangent).normalize();
     }
+
 }
