@@ -71,12 +71,6 @@ namespace opendrive {
         std::map<double, SuperElevation> lateralProfile;
 
         /**
-         * @set Converts the parser objects to requested types.
-         */
-        template<typename T>
-        void set(const class road &openDriveRoad);
-
-        /**
          * Gets the s coordinates of the elements in the map.
          *
          * @param omitLastElement Flag if the last element should be omitted.
@@ -105,6 +99,14 @@ namespace opendrive {
          * @constructor
          */
         explicit Road() = default;
+
+        /**
+         * @constructor
+         */
+        Road(const std::string &id, const std::string &name, double length, const std::string &junction,
+             const std::map<double, std::string> &type, const std::map<std::string, Object> &objects,
+             const std::map<double, Geometry> &planView, const std::map<double, Elevation> &elevationProfile,
+             const std::map<double, SuperElevation> &lateralProfile);
 
         /**
          * @constructor

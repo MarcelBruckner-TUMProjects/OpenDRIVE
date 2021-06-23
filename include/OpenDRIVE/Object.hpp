@@ -97,6 +97,14 @@ namespace opendrive {
         explicit Object(const class object &openDriveObject);
 
         /**
+         * @constructor
+         */
+        Object(double s, double t, const std::string &type, const std::string &name, const std::string &id,
+               double height,
+               double hdg, double validLength, const std::string &orientation, double pitch, double roll, double length,
+               double width, double radius, double zOffset);
+
+        /**
          * @destructor
          */
         ~Object() override = default;

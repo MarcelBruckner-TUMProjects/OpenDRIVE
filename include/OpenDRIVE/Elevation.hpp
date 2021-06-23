@@ -25,7 +25,13 @@ namespace opendrive {
         /**
          * @constructor
          */
+        Elevation(double s, const CubicPolynom &polynom);
+
+        /**
+         * @constructor
+         */
         explicit Elevation(const elevation &openDriveObject);
+
 
         /**
          * @destructor

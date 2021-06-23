@@ -25,6 +25,11 @@ namespace opendrive {
         /**
          * @constructor
          */
+        SuperElevation(double s, const CubicPolynom &polynom);
+
+        /**
+         * @constructor
+         */
         explicit SuperElevation(const superelevation &openDriveObject);
 
         /**

@@ -3,10 +3,7 @@
 //
 
 #include "OpenDRIVE/Road.hpp"
-#include "OpenDRIVE/Elevation.hpp"
-#include "OpenDRIVE/SuperElevation.hpp"
 #include <string>
-
 #include <iomanip>
 
 namespace opendrive {
@@ -14,34 +11,38 @@ namespace opendrive {
 
 #pragma region Setters
 
-    template<>
-    void Road::set<Object>(const class road &openDriveObject) {
+    std::map<std::string, Object> extractObjects(const class road &openDriveObject) {
+        std::map<std::string, Object> objects;
         if (openDriveObject.objects().present()) {
             for (const auto &objectNode : openDriveObject.objects().get().object()) {
                 objects.emplace(objectNode.id().get(), Object(objectNode));
             }
         }
+        return objects;
     }
 
-    template<>
-    void Road::set<Geometry>(const class road &openDriveObject) {
-        for (const auto &geometryNode : openDriveObject.planView().geometry()) {
+    std::map<double, Geometry> extractGeometry(const class road &openDriveObject) {
+        std::map<double, Geometry> planView;
+        for (const geometry &geometryNode : openDriveObject.planView().geometry()) {
             planView.emplace(geometryNode.s().get(), Geometry(geometryNode));
         }
+        return planView;
     }
 
-    template<>
-    void Road::set<Elevation>(const class road &openDriveObject) {
+    std::map<double, Elevation> extractElevation(const class road &openDriveObject) {
+        std::map<double, Elevation> elevationProfile;
         for (const auto &elevationNode : openDriveObject.elevationProfile().get().elevation()) {
             elevationProfile.emplace(elevationNode.s().get(), Elevation(elevationNode));
         }
+        return elevationProfile;
     }
 
-    template<>
-    void Road::set<SuperElevation>(const class road &openDriveObject) {
+    std::map<double, SuperElevation> extractSuperElevation(const class road &openDriveObject) {
+        std::map<double, SuperElevation> lateralProfile;
         for (const auto &superElevationNode : openDriveObject.lateralProfile().get().superelevation()) {
             lateralProfile.emplace(superElevationNode.s().get(), SuperElevation(superElevationNode));
         }
+        return lateralProfile;
     }
 
 #pragma endregion Setters
@@ -56,17 +57,27 @@ namespace opendrive {
         return result;
     }
 
-    Road::Road(const road &openDriveRoad) : OpenDriveWrapper(0),
-                                            id(openDriveRoad.id()->c_str()),
-                                            name(openDriveRoad.name()->c_str()),
-                                            length(openDriveRoad.length().get()),
-                                            junction(openDriveRoad.junction().get().c_str()),
-                                            type(convertToType(openDriveRoad)) {
-        set<Geometry>(openDriveRoad);
-        set<Elevation>(openDriveRoad);
-        set<SuperElevation>(openDriveRoad);
-        set<Object>(openDriveRoad);
-    }
+    Road::Road(const std::string &id, const std::string &name, double length, const std::string &junction,
+               const std::map<double, std::string> &type, const std::map<std::string, Object> &objects,
+               const std::map<double, Geometry> &planView, const std::map<double, Elevation> &elevationProfile,
+               const std::map<double, SuperElevation> &lateralProfile) : OpenDriveWrapper(0), id(id), name(name),
+                                                                         length(length),
+                                                                         junction(junction), type(type),
+                                                                         objects(objects), planView(planView),
+                                                                         elevationProfile(elevationProfile),
+                                                                         lateralProfile(lateralProfile) {}
+
+    Road::Road(const class road &openDriveRoad) : Road(
+            openDriveRoad.id()->c_str(),
+            openDriveRoad.name()->c_str(),
+            openDriveRoad.length().get(),
+            openDriveRoad.junction().get().c_str(),
+            convertToType(openDriveRoad),
+            extractObjects(openDriveRoad),
+            extractGeometry(openDriveRoad),
+            extractElevation(openDriveRoad),
+            extractSuperElevation(openDriveRoad)
+    ) {}
 
     bool Road::operator==(const std::string &roadId) {
         return roadId == id;
@@ -189,8 +200,8 @@ namespace opendrive {
 
 #pragma endregion Other
 
-#pragma region Calculations
 
+#pragma region Calculations
 
     Vector Road::interpolate(double s, double t) const {
         Geometry geometry = getElement<Geometry>(s);

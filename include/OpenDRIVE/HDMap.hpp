@@ -69,6 +69,7 @@ namespace opendrive {
          */
         explicit HDMap(const std::string &filename);
 
+
         /**
          * @destructor
          */

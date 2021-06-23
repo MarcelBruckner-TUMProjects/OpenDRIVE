@@ -26,17 +26,18 @@ namespace opendrive {
          * The polynom describing the shape of the elevation.
          */
         CubicPolynom polynom;
+
     public:
 
         /**
          * @constructor
          */
-        ElevationBase() : ElevationBase(0, 0, 0, 0, 0) {};
+        ElevationBase();;
 
         /**
          * @constructor
          */
-        ElevationBase(double s, double a, double b, double c, double d);
+        explicit ElevationBase(double s, const CubicPolynom &polynom);
 
         /**
          * @destructor

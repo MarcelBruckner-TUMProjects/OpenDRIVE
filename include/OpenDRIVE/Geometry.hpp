@@ -20,12 +20,29 @@ namespace opendrive {
     class Geometry : public OpenDriveWrapper {
 
     private:
+
+        /**
+         * The polynom to calculate the u ccordinate.
+         */
         CubicPolynom u;
+        /**
+         * The polynom to calculate the v ccordinate.
+         */
         CubicPolynom v;
 
-        double heading;
-        double length;
+        /**
+         * The heading direction of the geometry.
+         */
+        double heading{};
 
+        /**
+         * The length of the geometry.
+         */
+        double length{};
+
+        /**
+         * The x,y start position of the geometry.
+         */
         Vector start;
 
     protected:
@@ -52,7 +69,6 @@ namespace opendrive {
          */
         double getGetLocalS(double s) const;
 
-
         /**
          * Calculates the [u, v] coordinate of the primitive at coordinate s in the local reference frame.
          *
@@ -65,12 +81,18 @@ namespace opendrive {
         /**
         * @constructor
         */
-        explicit Geometry() = default;
+        Geometry() = default;
 
         /**
         * @constructor
         */
         explicit Geometry(const geometry &openDriveObject);
+
+        /**
+        * @constructor
+        */
+        Geometry(double s, const CubicPolynom &u, const CubicPolynom &v, double heading, double length,
+                 const Vector &start);
 
         /**
         * @destructor
