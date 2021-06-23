@@ -25,7 +25,7 @@ namespace opendrive {
             /**
              * @constructor
              */
-            explicit Object(const class object &openDriveObject);
+            explicit Object(const class simulation::standard::opendrive_schema::t_road_objects_object &openDriveObject);
 
             /**
              * @destructor

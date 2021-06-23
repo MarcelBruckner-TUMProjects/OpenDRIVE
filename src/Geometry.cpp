@@ -8,7 +8,8 @@
 namespace opendrive {
 
 
-    Geometry::Geometry(double s, const CubicPolynom &u, const CubicPolynom &v, double heading, double length,
+    Geometry::Geometry(double s, const CubicPolynom &u, const CubicPolynom &v, double heading,
+                       double length,
                        const Vector &start)
             : OpenDriveWrapper(s), u(u), v(v), heading(heading), length(length), start(start) {}
 

@@ -55,7 +55,7 @@ namespace opendrive {
         TEST_F(ParsingTests, testParsingPlanView) {
             std::map<double, Geometry> planView = roadHighwayNorth.getPlanView();
 
-            ASSERT_EQ(planView.size(), 5);
+            ASSERT_EQ(planView.size(), 4);
 
             auto geometry = planView[0];
             EXPECT_NEAR(geometry.getU().a, -0.000000000000e+00, maxDifference);

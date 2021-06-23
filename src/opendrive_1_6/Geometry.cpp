@@ -9,36 +9,40 @@ namespace opendrive {
     namespace opendrive_1_6 {
 
 
-        CubicPolynom extractU(const geometry &openDriveObject) {
+        CubicPolynom
+        extractU(const class simulation::standard::opendrive_schema::t_road_planView_geometry &openDriveObject) {
             if (openDriveObject.paramPoly3().present()) {
-                return {openDriveObject.paramPoly3()->aU().get(),
-                        openDriveObject.paramPoly3()->bU().get(),
-                        openDriveObject.paramPoly3()->cU().get(),
-                        openDriveObject.paramPoly3()->dU().get()};
+                return {openDriveObject.paramPoly3()->aU(),
+                        openDriveObject.paramPoly3()->bU(),
+                        openDriveObject.paramPoly3()->cU(),
+                        openDriveObject.paramPoly3()->dU()};
 
             } else {
                 return {0, 0, 0, 0};
             }
         }
 
-        CubicPolynom extractV(const geometry &openDriveObject) {
+        CubicPolynom
+        extractV(const class simulation::standard::opendrive_schema::t_road_planView_geometry &openDriveObject) {
             if (openDriveObject.paramPoly3().present()) {
-                return {openDriveObject.paramPoly3()->aV().get(),
-                        openDriveObject.paramPoly3()->bV().get(),
-                        openDriveObject.paramPoly3()->cV().get(),
-                        openDriveObject.paramPoly3()->dV().get()};
+                return {openDriveObject.paramPoly3()->aV(),
+                        openDriveObject.paramPoly3()->bV(),
+                        openDriveObject.paramPoly3()->cV(),
+                        openDriveObject.paramPoly3()->dV()};
 
             } else {
                 return {0, 0, 0, 0};
             }
         }
 
-        Geometry::Geometry(const geometry &openDriveObject) : opendrive::Geometry(openDriveObject.s().get(),
-                                                                                  extractU(openDriveObject),
-                                                                                  extractV(openDriveObject),
-                                                                                  openDriveObject.hdg().get(),
-                                                                                  openDriveObject.length().get(),
-                                                                                  Vector{openDriveObject.x().get(),
-                                                                                         openDriveObject.y().get()}) {}
+        Geometry::Geometry(
+                const class simulation::standard::opendrive_schema::t_road_planView_geometry &openDriveObject)
+                : opendrive::Geometry(openDriveObject.s().operator const double &(),
+                                      extractU(openDriveObject),
+                                      extractV(openDriveObject),
+                                      (double) openDriveObject.hdg(),
+                                      std::strtod(openDriveObject.length().text_content().c_str(), nullptr),
+                                      Vector{(double) openDriveObject.x(),
+                                             (double) openDriveObject.y()}) {}
     }
 }

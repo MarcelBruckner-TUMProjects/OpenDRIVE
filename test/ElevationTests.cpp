@@ -25,15 +25,15 @@ namespace opendrive {
          * Tests that the interpolation of the height works as expected.
          */
         TEST_F(ElevationTests, testInterpolateHeight) {
-            auto ss = roadHighwayExitSouth.getStartCoordinates<Elevation>(false);
-            auto elevationProfile = roadHighwayExitSouth.getElevationProfile();
+            auto ss = roadHighwayNorth.getStartCoordinates<Elevation>(false);
+            auto elevationProfile = roadHighwayNorth.getElevationProfile();
 
-            EXPECT_NEAR(roadHighwayExitSouth.getElement<Elevation>(0).interpolateStart(),
-                        roadHighwayExitSouth.getElement<Elevation>(0).getPolynom().a, maxDifference);
+            EXPECT_NEAR(roadHighwayNorth.getElement<Elevation>(0).interpolateStart(),
+                        roadHighwayNorth.getElement<Elevation>(0).getPolynom().a, maxDifference);
 
             for (int i = 1; i < ss.size(); i++) {
-                auto previousEndHeight = roadHighwayExitSouth.getElement<Elevation>(ss[i - 1]).interpolate(ss[i]);
-                auto startHeight = roadHighwayExitSouth.getElement<Elevation>(ss[i]).interpolateStart();
+                auto previousEndHeight = roadHighwayNorth.getElement<Elevation>(ss[i - 1]).interpolate(ss[i]);
+                auto startHeight = roadHighwayNorth.getElement<Elevation>(ss[i]).interpolateStart();
                 EXPECT_NEAR(previousEndHeight, startHeight, 1e-10);
             }
         }
@@ -43,16 +43,16 @@ namespace opendrive {
          * Tests that the interpolation of the super elevation works as expected.
          */
         TEST_F(ElevationTests, testInterpolateSuperElevation) {
-            auto ss = roadHighwayExitSouth.getStartCoordinates<SuperElevation>(false);
-            auto elevationProfile = roadHighwayExitSouth.getLateralProfile();
+            auto ss = roadHighwayNorth.getStartCoordinates<SuperElevation>(false);
+            auto elevationProfile = roadHighwayNorth.getLateralProfile();
 
-            EXPECT_NEAR(roadHighwayExitSouth.getElement<SuperElevation>(0).interpolateStart(),
-                        roadHighwayExitSouth.getElement<SuperElevation>(0).getPolynom().a,
+            EXPECT_NEAR(roadHighwayNorth.getElement<SuperElevation>(0).interpolateStart(),
+                        roadHighwayNorth.getElement<SuperElevation>(0).getPolynom().a,
                         maxDifference);
 
             for (int i = 1; i < ss.size(); i++) {
-                auto previousEndRoll = roadHighwayExitSouth.getElement<SuperElevation>(ss[i - 1]).interpolate(ss[i]);
-                auto startRoll = roadHighwayExitSouth.getElement<SuperElevation>(ss[i]).interpolateStart();
+                auto previousEndRoll = roadHighwayNorth.getElement<SuperElevation>(ss[i - 1]).interpolate(ss[i]);
+                auto startRoll = roadHighwayNorth.getElement<SuperElevation>(ss[i]).interpolateStart();
                 EXPECT_NEAR(previousEndRoll, startRoll, 1e-10);
             }
         }

@@ -5,6 +5,7 @@
 #ifndef OPENDRIVE_1_6_SUPERELEVATION_HPP
 #define OPENDRIVE_1_6_SUPERELEVATION_HPP
 
+#include <OpenDRIVE/SuperElevation.hpp>
 #include "opendrive_1_6/opendrive_16_core.hxx"
 
 #include "OpenDRIVE/ElevationBase.hpp"
@@ -16,7 +17,7 @@ namespace opendrive {
          * Wrapper for the OpenDRIVE super elevation class.
          * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_methods_of_elevation
          */
-        class SuperElevation : public opendrive::ElevationBase {
+        class SuperElevation : public opendrive::SuperElevation {
         public:
 
             /**
@@ -27,7 +28,8 @@ namespace opendrive {
             /**
              * @constructor
              */
-            explicit SuperElevation(const superelevation &openDriveObject);
+            explicit SuperElevation(
+                    const class simulation::standard::opendrive_schema::t_road_lateralProfile_superelevation &openDriveObject);
 
             /**
              * @destructor

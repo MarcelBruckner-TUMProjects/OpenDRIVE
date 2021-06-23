@@ -30,12 +30,12 @@ namespace opendrive {
         /**
          * The heading direction of the geometry.
          */
-        double heading{};
+        double heading;
 
         /**
          * The length of the geometry.
          */
-        double length{};
+        double length;
 
         /**
          * The x,y start position of the geometry.

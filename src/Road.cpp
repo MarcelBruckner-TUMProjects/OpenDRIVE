@@ -51,14 +51,14 @@ namespace opendrive {
 #pragma region TemplateGetters
 
     template<typename T>
-    const T &Road::getElement(const std::map<double, T> &map, double s) const {
-        if (s < 0) {
-            throw std::invalid_argument(std::to_string(s) + " is not on the road.");
+    const T &Road::getElement(const std::map<double, T> &map, double ss) const {
+        if (ss < 0) {
+            throw std::invalid_argument(std::to_string(ss) + " is not on the road.");
         }
         double previous = 0;
         for (const auto &entry : map) {
             double getS = entry.second.getS();
-            if (getS > s) {
+            if (getS > ss) {
                 break;
             }
             previous = getS;

@@ -31,7 +31,8 @@ namespace opendrive {
             /**
             * @constructor
             */
-            explicit Geometry(const geometry &openDriveObject);
+            explicit Geometry(
+                    const class simulation::standard::opendrive_schema::t_road_planView_geometry &openDriveObject);
 
 
             /**

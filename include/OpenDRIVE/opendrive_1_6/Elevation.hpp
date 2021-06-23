@@ -26,7 +26,8 @@ namespace opendrive {
             /**
              * @constructor
              */
-            explicit Elevation(const elevation &openDriveObject);
+            explicit Elevation(
+                    const class simulation::standard::opendrive_schema::t_road_elevationProfile_elevation &openDriveObject);
 
 
             /**

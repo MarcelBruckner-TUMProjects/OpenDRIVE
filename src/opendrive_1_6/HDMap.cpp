@@ -8,17 +8,20 @@
 namespace opendrive {
     namespace opendrive_1_6 {
 
-        std::map<std::string, opendrive::Road> extractRoads(const OpenDRIVE &openDriveObject) {
+        std::map<std::string, opendrive::Road>
+        extractRoads(const class simulation::standard::opendrive_schema::OpenDRIVE &openDriveObject) {
             std::map<std::string, opendrive::Road> roads;
             for (const auto &openDriveRoad : openDriveObject.road()) {
-                roads.emplace(openDriveRoad.id().get(), opendrive::opendrive_1_6::Road(openDriveRoad));
+                roads.emplace(openDriveRoad.id().text_content(), opendrive::opendrive_1_6::Road(openDriveRoad));
             }
             return roads;
         }
 
-        HDMap::Header extractHeader(const OpenDRIVE &openDriveObject) {
+        HDMap::Header extractHeader(const class simulation::standard::opendrive_schema::OpenDRIVE &openDriveObject) {
+            auto geoReference = openDriveObject.header().geoReference();
+
             return HDMap::Header{
-                    openDriveObject.header().geoReference()->c_str(),
+                    "",
                     openDriveObject.header().vendor()->c_str(),
                     openDriveObject.header().north().get(),
                     openDriveObject.header().south().get(),
@@ -29,8 +32,10 @@ namespace opendrive {
 
         HDMap::HDMap(const std::string &filename) : opendrive::HDMap(
                 filename,
-                extractRoads(*OpenDRIVE_(filename, ::xml_schema::flags::dont_validate)),
-                extractHeader(*OpenDRIVE_(filename, ::xml_schema::flags::dont_validate))) {
+                extractRoads(*simulation::standard::opendrive_schema::OpenDRIVE_(filename,
+                                                                                 ::xml_schema::flags::dont_validate)),
+                extractHeader(*simulation::standard::opendrive_schema::OpenDRIVE_(filename,
+                                                                                  ::xml_schema::flags::dont_validate))) {
         }
     }
 }

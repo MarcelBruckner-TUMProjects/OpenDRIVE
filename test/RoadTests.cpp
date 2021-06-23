@@ -32,14 +32,14 @@ namespace opendrive {
          * Tests finding the correct geometry for a given s value.
          */
         TEST_F(RoadTests, testRoadEqualsId) {
-            ASSERT_EQ(roadHighwayExitSouth == roadIdHighwayExitSouth, true);
+            ASSERT_EQ(roadHighwayNorth == roadIdHighwayNorth, true);
         }
 
         /**
          * Tests finding the correct geometry for a given s value.
          */
         TEST_F(RoadTests, testFindCorrectGeometry) {
-            ASSERT_EQ(roadHighwayNorth.getPlanView().size(), 5);
+            ASSERT_EQ(roadHighwayNorth.getPlanView().size(), 4);
             double expected;
 
             expected = 0;

@@ -7,12 +7,13 @@
 namespace opendrive {
     namespace opendrive_1_6 {
 
-        SuperElevation::SuperElevation(const superelevation &openDriveObject) : opendrive::ElevationBase(
-                openDriveObject.s().get(),
-                {openDriveObject.a().get(),
-                 openDriveObject.b().get(),
-                 openDriveObject.c().get(),
-                 openDriveObject.d().get()}
+        SuperElevation::SuperElevation(
+                const class simulation::standard::opendrive_schema::t_road_lateralProfile_superelevation &openDriveObject)
+                : opendrive::SuperElevation((double) openDriveObject.s(),
+                                            {openDriveObject.a(),
+                                             openDriveObject.b(),
+                                             openDriveObject.c(),
+                                             openDriveObject.d()}
         ) {}
     }
 }

@@ -11,9 +11,9 @@ namespace opendrive {
             highwayNorth = std::make_shared<HDMap>(opendrive::createHDMap("../misc/highway_north.xodr"));
             roadHighwayNorth = highwayNorth->getRoad(roadIdHighwayNorth);
 
-            highwayExitSouth = std::make_shared<HDMap>(
-                    opendrive::createHDMap("../misc/highway_exit_south.xodr"));
-            roadHighwayExitSouth = highwayExitSouth->getRoad(roadIdHighwayExitSouth);
+//            highwayExitSouth = std::make_shared<HDMap>(
+//                    opendrive::createHDMap("../misc/highway_exit_south.xodr"));
+//            roadHighwayExitSouth = highwayExitSouth->getRoad(roadIdHighwayExitSouth);
         }
     }
 }

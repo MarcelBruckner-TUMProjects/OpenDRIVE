@@ -20,7 +20,8 @@ namespace opendrive {
             /**
              * The HD maps.
              */
-            std::shared_ptr<HDMap> highwayNorth, highwayExitSouth, highwayCenter;
+            std::shared_ptr<HDMap> highwayNorth;
+//            , highwayExitSouth, highwayCenter;
 
             /**
              * The id of the test roads.
@@ -30,7 +31,7 @@ namespace opendrive {
             /**
              * The test roads.
              */
-            Road roadHighwayNorth, roadHighwayExitSouth;
+            Road roadHighwayNorth;
 
             /**
              * The maximal difference after parsing.
