@@ -9,6 +9,10 @@
 #include "Projector.hpp"
 
 namespace opendrive {
+
+    /**
+     * A projector from a given projection to longitude, latitude.
+     */
     class LongLatProjector : public Projector {
     public:
 
@@ -21,8 +25,14 @@ namespace opendrive {
          */
         explicit LongLatProjector(const std::string &fromProjection);
 
+        /**
+         * Converts the given vector to a google maps link.
+         */
         static std::string toGoogleMapsLink(const Vector &vector);
 
+        /**
+         * @destructor
+         */
         ~LongLatProjector() override = default;
     };
 }

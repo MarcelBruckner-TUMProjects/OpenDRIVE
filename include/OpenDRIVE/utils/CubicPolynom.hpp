@@ -6,15 +6,42 @@
 #define OPENDRIVE_CUBICPOLYNOM_HPP
 
 namespace opendrive {
+    /**
+     * A cubic polynom of the form: a * x^0 + b * x^1 + c * x^2 + d * x^3
+     */
     struct CubicPolynom {
+
+        /**
+         * The coefficients.
+         */
         double a, b, c, d;
 
+        /**
+         * @constructor
+         */
         CubicPolynom(double a, double b, double c, double d);
 
+        /**
+         * @constructor
+         */
         CubicPolynom();
 
+        /**
+         * Evaluate polynom.
+         *
+         * @param s The location to evaluate.
+         *
+         * @return The polynom result.
+         */
         double operator()(double s) const;
 
+        /**
+         * Evaluate first derivative of polynom.
+         *
+         * @param s The location to evaluate.
+         *
+         * @return The derivative.
+         */
         double operator[](double s) const;
     };
 }

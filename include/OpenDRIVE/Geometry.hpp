@@ -118,12 +118,24 @@ namespace opendrive {
          */
         double getEndSCoordinate() const;
 
+        /**
+         * @get
+         */
         const CubicPolynom &getU() const;
 
+        /**
+         * @get
+         */
         const CubicPolynom &getV() const;
 
+        /**
+         * @get
+         */
         double getHeading() const;
 
+        /**
+         * @get
+         */
         double getLength() const;
     };
 

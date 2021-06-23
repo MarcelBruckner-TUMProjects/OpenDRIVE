@@ -21,6 +21,10 @@ namespace opendrive {
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_methods_of_elevation
      */
     class ElevationBase : public OpenDriveWrapper {
+
+        /**
+         * The polynom describing the shape of the elevation.
+         */
         CubicPolynom polynom;
     public:
 
@@ -53,6 +57,9 @@ namespace opendrive {
          */
         double interpolateStart() const;
 
+        /**
+         * @get
+         */
         const CubicPolynom &getPolynom() const;
     };
 

@@ -24,10 +24,29 @@ namespace opendrive {
      */
     class Road : public OpenDriveWrapper {
 
+        /**
+         * The id of the road.
+         */
         std::string id;
+
+        /**
+         * The name of the road.
+         */
         std::string name;
+
+        /**
+         * The length of the road in meters.
+         */
         double length;
+
+        /**
+         * The id of the junction of the road.
+         */
         std::string junction;
+
+        /**
+         * The types of the road surface.
+         */
         std::map<double, std::string> type;
 
     protected:
@@ -176,14 +195,29 @@ namespace opendrive {
          */
         Vector interpolate(double s, double t = 0) const;
 
+        /**
+         * @get
+         */
         const std::string &getId() const;
 
+        /**
+         * @get
+         */
         const std::string &getName() const;
 
+        /**
+         * @get
+         */
         double getLength() const;
 
+        /**
+         * @get
+         */
         const std::string &getJunction() const;
 
+        /**
+         * @get
+         */
         const std::map<double, std::string> &getType() const;
     };
 }

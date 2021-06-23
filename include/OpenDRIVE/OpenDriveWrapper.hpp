@@ -19,11 +19,11 @@ namespace opendrive {
      */
     class OpenDriveWrapper {
 
-
         /**
          * The s coordinate of the opendrive object.
          */
         double s;
+
     public:
 
         /**
@@ -36,6 +36,9 @@ namespace opendrive {
          */
         virtual ~OpenDriveWrapper() = default;
 
+        /**
+         * @get
+         */
         double getS() const;
 
     };

@@ -23,7 +23,7 @@ namespace opendrive {
      * @param filename The filename of the output file.
      * @param content The content that is written.
      */
-    void WriteToFile(const std::string &filename, const std::string &content);
+    void writeToFile(const std::string &filename, const std::string &content);
 
 
     /**
@@ -36,7 +36,7 @@ namespace opendrive {
      * @return A string in the YAML format representing the objects.
      */
     std::string
-    ObjectsToYAML(const HDMap &map, double longitude, double latitude);
+    objectsToYAML(const HDMap &map, double longitude, double latitude);
 
     /**
      * Converts the objects in the HD map to the YAML format.
@@ -47,7 +47,7 @@ namespace opendrive {
      * @return A string in the YAML format representing the objects.
      */
     std::string
-    ObjectsToYAML(const HDMap &map, const std::string &worldOriginId = "");
+    objectsToYaml(const HDMap &map, const std::string &worldOriginId = "");
 }
 
 

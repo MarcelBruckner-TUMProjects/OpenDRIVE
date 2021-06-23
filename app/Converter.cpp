@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     auto worldOriginID = vm["world_origin_id"].as<std::string>();
 
     if (!worldOriginID.empty()) {
-        content = opendrive::ObjectsToYAML(hdMap, worldOriginID);
+        content = opendrive::objectsToYaml(hdMap, worldOriginID);
     } else if (!long_lat_origin_str.empty()) {
         std::regex long_lat_regex(R"(-?(\d+)\.(\d+))");
         auto words_begin = std::sregex_iterator(long_lat_origin_str.begin(), long_lat_origin_str.end(), long_lat_regex);
@@ -67,9 +67,9 @@ int main(int argc, char **argv) {
         double longitude = std::strtod(words_begin->str().c_str(), nullptr);
         double latitude = std::strtod((++words_begin)->str().c_str(), nullptr);
 
-        content = opendrive::ObjectsToYAML(hdMap, longitude, latitude);
+        content = opendrive::objectsToYAML(hdMap, longitude, latitude);
     } else {
-        content = opendrive::ObjectsToYAML(hdMap);
+        content = opendrive::objectsToYaml(hdMap);
     }
-    opendrive::WriteToFile(output + ".yaml", content);
+    opendrive::writeToFile(output + ".yaml", content);
 }

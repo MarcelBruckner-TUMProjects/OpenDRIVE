@@ -7,5 +7,5 @@
 int main(int argc, char **argv) {
     auto highwayExitSouth = opendrive::HDMap("../misc/highway_exit_south.xodr");
 
-    opendrive::WriteToFile("objects.csv", opendrive::ObjectsToYAML(highwayExitSouth));
+    opendrive::writeToFile("objects.csv", opendrive::objectsToYaml(highwayExitSouth));
 }

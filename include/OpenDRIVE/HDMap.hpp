@@ -41,9 +41,23 @@ namespace opendrive {
          */
         void setRoads(const OpenDRIVE &openDriveObject);
 
+        /**
+         * The header of the map.
+         */
         struct Header {
+            /**
+             * The proj geo reference string.
+             */
             std::string geoReference;
+
+            /**
+             * The vendor.
+             */
             std::string vendor;
+
+            /**
+             * The displacement in the compass directions.
+             */
             double north, south, east, west;
         } header;
 
@@ -89,9 +103,15 @@ namespace opendrive {
          */
         const std::string &getFilename() const;
 
+        /**
+         * @get
+         */
         template<typename T>
         Vector getPosition(const std::string &id) const;
 
+        /**
+         * @get
+         */
         const Header &getHeader() const;
     };
 }

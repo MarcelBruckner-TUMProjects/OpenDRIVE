@@ -40,7 +40,6 @@ namespace opendrive {
          */
         std::string id;
 
-
         /**
          * 
          */
@@ -107,32 +106,74 @@ namespace opendrive {
          */
         friend std::ostream &operator<<(std::ostream &os, const Object &other);
 
+        /**
+         * @get
+         */
         double getT() const;
 
+        /**
+         * @get
+         */
         const std::string &getType() const;
 
+        /**
+         * @get
+         */
         const std::string &getName() const;
 
+        /**
+         * @get
+         */
         const std::string &getId() const;
 
+        /**
+         * @get
+         */
         double getHeight() const;
 
+        /**
+         * @get
+         */
         double getHdg() const;
 
+        /**
+         * @get
+         */
         double getValidLength() const;
 
+        /**
+         * @get
+         */
         const std::string &getOrientation() const;
 
+        /**
+         * @get
+         */
         double getPitch() const;
 
+        /**
+         * @get
+         */
         double getRoll() const;
 
+        /**
+         * @get
+         */
         double getLength() const;
 
+        /**
+         * @get
+         */
         double getWidth() const;
 
+        /**
+         * @get
+         */
         double getRadius() const;
 
+        /**
+         * @get
+         */
         double getZOffset() const;
     };
 }
