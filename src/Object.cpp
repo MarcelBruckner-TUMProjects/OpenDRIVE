@@ -3,8 +3,10 @@
 //
 
 #include <proj.h>
+#include <sstream>
 
 #include <utility>
+#include <opendrive_1_4/OpenDRIVE_1.4H_Schema_Files.hxx>
 #include "OpenDRIVE/Object.hpp"
 
 namespace opendrive {
@@ -82,6 +84,33 @@ namespace opendrive {
 
     double Object::getZOffset() const {
         return zOffset;
+    }
+
+    std::string Object::toInitializer() const {
+        std::stringstream ss;
+        ss << "{";
+        ss << "\"" << getId() << "\"" << ",";
+
+        ss << "{";
+        ss << getS() << ",";
+        ss << getT() << ",";
+        ss << "\"" << getType() << "\"" << ",";
+        ss << "\"" << getName() << "\"" << ",";
+        ss << "\"" << getId() << "\"" << ",";
+        ss << getHeight() << ",";
+        ss << getHdg() << ",";
+        ss << getValidLength() << ",";
+        ss << "\"" << getOrientation() << "\"" << ",";
+        ss << getPitch() << ",";
+        ss << getRoll() << ",";
+        ss << getLength() << ",";
+        ss << getWidth() << ",";
+        ss << getRadius() << ",";
+        ss << getZOffset();
+        ss << "}";
+
+        ss << "}" << std::endl;
+        return ss.str();
     }
 
 }

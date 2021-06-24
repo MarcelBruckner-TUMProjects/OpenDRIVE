@@ -14,7 +14,7 @@ namespace opendrive {
         extractOrientation(const class simulation::standard::opendrive_schema::t_road_objects_object &openDriveObject) {
             std::string orientation;
             if (openDriveObject.orientation().present()) {
-                orientation = openDriveObject.orientation().get().text_content();
+                orientation = openDriveObject.orientation().get();
             }
             if (orientation.empty()) {
                 orientation = "none";
@@ -27,7 +27,7 @@ namespace opendrive {
                                     (double) openDriveObject.t(),
                                     openDriveObject.type()->text_content(),
                                     openDriveObject.name()->text_content(),
-                                    openDriveObject.id().text_content(),
+                                    openDriveObject.id(),
                                     (double) openDriveObject.height().get(),
                                     (double) openDriveObject.hdg().get(),
                                     (double) openDriveObject.validLength().get(),

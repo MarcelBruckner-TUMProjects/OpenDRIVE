@@ -83,8 +83,8 @@ namespace opendrive {
         /**
         * @constructor
         */
-        Geometry(double s, const CubicPolynom &u, const CubicPolynom &v, double heading, double length,
-                 const Vector &start);
+        Geometry(double s, const Vector &start, double heading, double length, const CubicPolynom &u,
+                 const CubicPolynom &v);
 
         /**
         * @destructor

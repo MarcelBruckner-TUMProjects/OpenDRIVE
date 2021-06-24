@@ -34,11 +34,11 @@ namespace opendrive {
         }
 
         Geometry::Geometry(const geometry &openDriveObject) : opendrive::Geometry(openDriveObject.s().get(),
-                                                                                  extractU(openDriveObject),
-                                                                                  extractV(openDriveObject),
+                                                                                  Vector{openDriveObject.x().get(),
+                                                                                         openDriveObject.y().get()},
                                                                                   openDriveObject.hdg().get(),
                                                                                   openDriveObject.length().get(),
-                                                                                  Vector{openDriveObject.x().get(),
-                                                                                         openDriveObject.y().get()}) {}
+                                                                                  extractU(openDriveObject),
+                                                                                  extractV(openDriveObject)) {}
     }
 }

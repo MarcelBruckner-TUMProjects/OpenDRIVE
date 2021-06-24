@@ -2,8 +2,8 @@
 // Created by brucknem on 22.02.21.
 //
 
-#ifndef OPENDRIVE_HDMAPTESTS_HPP
-#define OPENDRIVE_HDMAPTESTS_HPP
+#ifndef OPENDRIVE_TESTS_HPP
+#define OPENDRIVE_TESTS_HPP
 
 #include "gtest/gtest.h"
 #include "OpenDRIVE/HDMap.hpp"
@@ -14,24 +14,23 @@ namespace opendrive {
         /**
          * Common setup for the tests on the mock HD map.
          */
-        class HDMapTests : public ::testing::Test {
+        class OpenDriveTests : public ::testing::Test {
         protected:
 
             /**
              * The HD maps.
              */
-            std::shared_ptr<HDMap> testMapOpendrive14;
-//            , highwayExitSouth, highwayCenter;
+            std::shared_ptr<opendrive::HDMap> testMapOpenDrive14;
 
             /**
              * The id of the test roads.
              */
-            const char *roadIdTestMapOpendrive14 = "2311000", *roadIdHighwayExitSouth = "1088000";
+            const char *roadIdTestMapOpenDrive14 = "0";
 
             /**
              * The test roads.
              */
-            Road roadTestMapOpendrive14;
+            Road roadTestMapOpenDrive14;
 
             /**
              * The maximal difference after parsing.
@@ -41,7 +40,7 @@ namespace opendrive {
             /**
              * @destructor
              */
-            ~HDMapTests() override = default;
+            ~OpenDriveTests() override = default;
 
             /**
              * @setup
@@ -50,6 +49,4 @@ namespace opendrive {
         };
     }
 }
-
-
-#endif //OPENDRIVE_HDMAPTESTS_HPP
+#endif //OPENDRIVE_TESTS_HPP

@@ -8,7 +8,7 @@
 
 namespace opendrive {
 
-    HDMap::HDMap(std::string filename, std::map<std::string, Road> roads, HDMap::Header header)
+    HDMap::HDMap(std::string filename, std::map<std::string, opendrive::Road> roads, HDMap::Header header)
             : OpenDriveWrapper(0), filename(std::move(filename)), roads(std::move(roads)), header(std::move(header)) {}
 
 

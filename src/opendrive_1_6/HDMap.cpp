@@ -4,6 +4,7 @@
 
 #include "OpenDRIVE/opendrive_1_6/Road.hpp"
 #include "OpenDRIVE/opendrive_1_6/HDMap.hpp"
+#include "tinyxml2.h"
 
 namespace opendrive {
     namespace opendrive_1_6 {
@@ -12,21 +13,22 @@ namespace opendrive {
         extractRoads(const class simulation::standard::opendrive_schema::OpenDRIVE &openDriveObject) {
             std::map<std::string, opendrive::Road> roads;
             for (const auto &openDriveRoad : openDriveObject.road()) {
-                roads.emplace(openDriveRoad.id().text_content(), opendrive::opendrive_1_6::Road(openDriveRoad));
+                roads.emplace(openDriveRoad.id(), opendrive::opendrive_1_6::Road(openDriveRoad));
             }
             return roads;
         }
 
-        HDMap::Header extractHeader(const class simulation::standard::opendrive_schema::OpenDRIVE &openDriveObject) {
-            auto geoReference = openDriveObject.header().geoReference();
-
+        HDMap::Header extractHeader(const std::string &openDriveObject) {
+            tinyxml2::XMLDocument document;
+            document.LoadFile(openDriveObject.c_str());
+            auto header = document.RootElement()->FirstChildElement("header");
             return HDMap::Header{
-                    "",
-                    openDriveObject.header().vendor()->c_str(),
-                    openDriveObject.header().north().get(),
-                    openDriveObject.header().south().get(),
-                    openDriveObject.header().east().get(),
-                    openDriveObject.header().west().get(),
+                    header->FirstChildElement("geoReference")->GetText(),
+                    header->Attribute("vendor"),
+                    std::strtod(header->Attribute("north"), nullptr),
+                    std::strtod(header->Attribute("south"), nullptr),
+                    std::strtod(header->Attribute("east"), nullptr),
+                    std::strtod(header->Attribute("west"), nullptr),
             };
         }
 
@@ -34,8 +36,7 @@ namespace opendrive {
                 filename,
                 extractRoads(*simulation::standard::opendrive_schema::OpenDRIVE_(filename,
                                                                                  ::xml_schema::flags::dont_validate)),
-                extractHeader(*simulation::standard::opendrive_schema::OpenDRIVE_(filename,
-                                                                                  ::xml_schema::flags::dont_validate))) {
+                extractHeader(filename)) {
         }
     }
 }

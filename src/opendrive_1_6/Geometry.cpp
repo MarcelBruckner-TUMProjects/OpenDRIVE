@@ -38,11 +38,11 @@ namespace opendrive {
         Geometry::Geometry(
                 const class simulation::standard::opendrive_schema::t_road_planView_geometry &openDriveObject)
                 : opendrive::Geometry(openDriveObject.s().operator const double &(),
-                                      extractU(openDriveObject),
-                                      extractV(openDriveObject),
-                                      (double) openDriveObject.hdg(),
-                                      std::strtod(openDriveObject.length().text_content().c_str(), nullptr),
                                       Vector{(double) openDriveObject.x(),
-                                             (double) openDriveObject.y()}) {}
+                                             (double) openDriveObject.y()},
+                                      (double) openDriveObject.hdg(),
+                                      std::strtod(openDriveObject.length().c_str(), nullptr),
+                                      extractU(openDriveObject),
+                                      extractV(openDriveObject)) {}
     }
 }

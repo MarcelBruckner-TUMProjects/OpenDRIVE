@@ -20,7 +20,7 @@ namespace opendrive {
             std::map<std::string, opendrive::Object> objects;
             if (openDriveObject.objects().present()) {
                 for (const auto &objectNode : openDriveObject.objects().get().object()) {
-                    objects.emplace(objectNode.id().text_content(), opendrive::opendrive_1_6::Object(objectNode));
+                    objects.emplace(objectNode.id(), opendrive::opendrive_1_6::Object(objectNode));
                 }
             }
             return objects;
@@ -47,6 +47,8 @@ namespace opendrive {
 
         std::map<double, opendrive::SuperElevation>
         extractSuperElevation(const class simulation::standard::opendrive_schema::t_road &openDriveObject) {
+
+            // TODO include shape tag
             std::map<double, opendrive::SuperElevation> lateralProfile;
             for (const auto &superElevationNode : openDriveObject.lateralProfile().get().superelevation()) {
                 lateralProfile.emplace((double) superElevationNode.s(),
@@ -59,16 +61,16 @@ namespace opendrive {
         convertToType(const simulation::standard::opendrive_schema::t_road &openDriveRoad) {
             std::map<double, std::string> result;
             for (const auto &type : openDriveRoad.type()) {
-                result[(double) type.s()] = type.type().text_content();
+                result[(double) type.s()] = type.type();
             }
             return result;
         }
 
         Road::Road(const class simulation::standard::opendrive_schema::t_road &openDriveRoad) : opendrive::Road(
-                openDriveRoad.id().text_content(),
-                openDriveRoad.name().get().text_content(),
-                std::strtod(openDriveRoad.length().text_content().c_str(), nullptr),
-                openDriveRoad.junction().text_content(),
+                openDriveRoad.id(),
+                openDriveRoad.name().get(),
+                std::strtod(openDriveRoad.length().c_str(), nullptr),
+                openDriveRoad.junction(),
                 convertToType(openDriveRoad),
                 extractObjects(openDriveRoad),
                 extractGeometry(openDriveRoad),

@@ -83,10 +83,11 @@ namespace opendrive {
 
         int i = 0;
         for (const auto &entry : map) {
-            if (omitLastElement && i++ >= map.size() - 1) {
+            if (omitLastElement && i >= map.size() - 1) {
                 break;
             }
             result.emplace_back(entry.first);
+            i++;
         }
 
         return result;

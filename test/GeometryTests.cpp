@@ -1,100 +1,102 @@
 #include "gtest/gtest.h"
 
-#include "HDMapTests.hpp"
+#include "OpenDriveTests.hpp"
 
 namespace opendrive {
-    namespace tests {
-
-        /**
-         * Base setup for the geometry calculation tests.
-         */
-        class GeometryTests : public HDMapTests {
-        public:
-            /**
-             * @destrcutor
-             */
-            ~GeometryTests() override = default;
-
-        protected:
+    namespace opendrive_1_4 {
+        namespace tests {
 
             /**
-             * Asserts that the interpolation for the start and end of a parametric cubic curve works as expected, i.e.
-             * that the interpolated end point is the start of the next geometry.
+             * Base setup for the geometry calculation tests.
              */
-            void assertStartAndEnd(const Geometry &paramPoly3Geometry) {
-                Vector expected = paramPoly3Geometry.getStart();
-                auto distance = expected.distance(paramPoly3Geometry.interpolateStart());
-                EXPECT_NEAR(distance, 0, maxDifference);
+            class GeometryTests : public opendrive::tests::OpenDriveTests {
+            public:
+                /**
+                 * @destrcutor
+                 */
+                ~GeometryTests() override = default;
 
-                expected = roadTestMapOpendrive14.getElement<Geometry>(
-                        paramPoly3Geometry.getEndSCoordinate() + 0.5).getStart();
-                auto actual = paramPoly3Geometry.interpolateEnd();
-                distance = expected.distance(actual);
-                EXPECT_NEAR(distance, 0, 1e-6);
-            }
+            protected:
 
-            /**
-             * Asserts that the calculation of the reference s tangent is correct.
-             * Calculates the tangent at the end of the geometry and the start of the next one and asserts that they are near equal.
-             */
-            static void assertTangent(const Geometry &geometry, const Geometry &nextGeometry) {
-                Vector endTangent = geometry.calculateTangent(geometry.getEndSCoordinate());
-                Vector nextStartTangent = nextGeometry.calculateTangent(nextGeometry.getS());
+                /**
+                 * Asserts that the interpolation for the start and end of a parametric cubic curve works as expected, i.e.
+                 * that the interpolated end point is the start of the next geometry.
+                 */
+                void assertStartAndEnd(const Geometry &paramPoly3Geometry) {
+                    Vector expected = paramPoly3Geometry.getStart();
+                    auto distance = expected.distance(paramPoly3Geometry.interpolateStart());
+                    EXPECT_NEAR(distance, 0, maxDifference);
 
-                EXPECT_NEAR(endTangent.distance(nextStartTangent), 0, 1e-12);
-            }
-
-            /**
-             * Asserts that the calculation of the reference t normal is correct.
-             * Calculates the normal at 1 meter steps along the geometry and checks if the dot product of the normal and tangent is 0.
-             */
-            static void assertTangentAndNormalOrthogonal(const Geometry &geometry) {
-                Vector tangent, normal;
-                tangent = geometry.calculateTangent(geometry.getS());
-                normal = geometry.calculateNormal(geometry.getS());
-                EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
-
-                for (int ss = (int) geometry.getS() + 1; ss < geometry.getEndSCoordinate(); ss++) {
-                    tangent = geometry.calculateTangent(ss);
-                    normal = geometry.calculateNormal(ss);
-                    EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
+                    expected = roadTestMapOpenDrive14.getElement<Geometry>(
+                            paramPoly3Geometry.getEndSCoordinate() + 0.5).getStart();
+                    auto actual = paramPoly3Geometry.interpolateEnd();
+                    distance = expected.distance(actual);
+                    EXPECT_NEAR(distance, 0, 1e-6);
                 }
 
-                tangent = geometry.calculateTangent(geometry.getEndSCoordinate());
-                normal = geometry.calculateNormal(geometry.getEndSCoordinate());
-                EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
-            }
-        };
+                /**
+                 * Asserts that the calculation of the reference s tangent is correct.
+                 * Calculates the tangent at the end of the geometry and the start of the next one and asserts that they are near equal.
+                 */
+                static void assertTangent(const Geometry &geometry, const Geometry &nextGeometry) {
+                    Vector endTangent = geometry.calculateTangent(geometry.getEndSCoordinate());
+                    Vector nextStartTangent = nextGeometry.calculateTangent(nextGeometry.getS());
 
-        /**
-         * Tests that the parametric cubic curve interpolation works as expected.
-         */
-        TEST_F(GeometryTests, testInterpolateParamPoly3) {
-            for (const auto &s : roadTestMapOpendrive14.getStartCoordinates<Geometry>(true)) {
-                auto geometry = roadTestMapOpendrive14.getElement<Geometry>(s);
-                assertStartAndEnd(geometry);
+                    EXPECT_NEAR(endTangent.distance(nextStartTangent), 0, 1e-12);
+                }
+
+                /**
+                 * Asserts that the calculation of the reference t normal is correct.
+                 * Calculates the normal at 1 meter steps along the geometry and checks if the dot product of the normal and tangent is 0.
+                 */
+                static void assertTangentAndNormalOrthogonal(const Geometry &geometry) {
+                    Vector tangent, normal;
+                    tangent = geometry.calculateTangent(geometry.getS());
+                    normal = geometry.calculateNormal(geometry.getS());
+                    EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
+
+                    for (int ss = (int) geometry.getS() + 1; ss < geometry.getEndSCoordinate(); ss++) {
+                        tangent = geometry.calculateTangent(ss);
+                        normal = geometry.calculateNormal(ss);
+                        EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
+                    }
+
+                    tangent = geometry.calculateTangent(geometry.getEndSCoordinate());
+                    normal = geometry.calculateNormal(geometry.getEndSCoordinate());
+                    EXPECT_NEAR(tangent.dot(normal), 0, 1e-16);
+                }
+            };
+
+            /**
+             * Tests that the parametric cubic curve interpolation works as expected.
+             */
+            TEST_F(GeometryTests, testInterpolateParamPoly3) {
+                for (const auto &s : roadTestMapOpenDrive14.getStartCoordinates<Geometry>(true)) {
+                    auto geometry = roadTestMapOpenDrive14.getElement<Geometry>(s);
+                    assertStartAndEnd(geometry);
+                }
             }
-        }
 
 
-        /**
-         * Tests that calculated s tangent of the parametric cubic curve primitive is correct.
-         */
-        TEST_F(GeometryTests, testCalculateParamPoly3ReferenceTangentS) {
-            for (const auto &s : roadTestMapOpendrive14.getStartCoordinates<Geometry>(true)) {
-                auto geometry = roadTestMapOpendrive14.getElement<Geometry>(s);
-                auto nextGeometry = roadTestMapOpendrive14.getElement<Geometry>(geometry.getEndSCoordinate() + 0.5);
-                assertTangent(geometry, nextGeometry);
+            /**
+             * Tests that calculated s tangent of the parametric cubic curve primitive is correct.
+             */
+            TEST_F(GeometryTests, testCalculateParamPoly3ReferenceTangentS) {
+                for (const auto &s : roadTestMapOpenDrive14.getStartCoordinates<Geometry>(true)) {
+                    auto geometry = roadTestMapOpenDrive14.getElement<Geometry>(s);
+                    auto nextGeometry = roadTestMapOpenDrive14.getElement<Geometry>(geometry.getEndSCoordinate() + 0.5);
+                    assertTangent(geometry, nextGeometry);
+                }
             }
-        }
 
-        /**
-         * Tests that calculated t normal of the parametric cubic curve primitive is correct.
-         */
-        TEST_F(GeometryTests, testCalculateParamPoly3ReferenceNormal) {
-            for (const auto &s : roadTestMapOpendrive14.getStartCoordinates<Geometry>(true)) {
-                assertTangentAndNormalOrthogonal(roadTestMapOpendrive14.getElement<Geometry>(s));
+            /**
+             * Tests that calculated t normal of the parametric cubic curve primitive is correct.
+             */
+            TEST_F(GeometryTests, testCalculateParamPoly3ReferenceNormal) {
+                for (const auto &s : roadTestMapOpenDrive14.getStartCoordinates<Geometry>(true)) {
+                    assertTangentAndNormalOrthogonal(roadTestMapOpenDrive14.getElement<Geometry>(s));
+                }
             }
-        }
-    }// namespace tests
-}// namespace opendrive
+        }// namespace tests
+    }// namespace opendrive
+}
