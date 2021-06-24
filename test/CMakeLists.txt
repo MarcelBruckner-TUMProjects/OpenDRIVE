@@ -34,6 +34,7 @@ add_executable(Tests
         ProjectorTests.cpp
         RoadTests.cpp
         )
+
 target_link_libraries(Tests PUBLIC OpenDRIVE-lib gtest_main yaml-cpp)
 target_include_directories(Tests PUBLIC tests "${PROJECT_BINARY_DIR}")
 

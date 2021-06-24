@@ -46,8 +46,11 @@ target_include_directories(OpenDRIVE-lib
         " ${PROJECT_BINARY_DIR} "
         )
 
+if (OPENDRIVE_1_4 OR OPENDRIVE_1_6)
+    set(additional_libs OpenDRIVEStandard)
+endif ()
 target_link_libraries(OpenDRIVE-lib
-        OpenDRIVEStandard
+        ${additional_libs}
         ${PROJ_LIBRARIES}
         yaml-cpp
         tinyxml2
