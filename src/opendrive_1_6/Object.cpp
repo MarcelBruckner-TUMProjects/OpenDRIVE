@@ -25,8 +25,8 @@ namespace opendrive {
         Object::Object(const class simulation::standard::opendrive_schema::t_road_objects_object &openDriveObject)
                 : opendrive::Object((double) openDriveObject.s(),
                                     (double) openDriveObject.t(),
-                                    openDriveObject.type()->text_content(),
-                                    openDriveObject.name()->text_content(),
+                                    openDriveObject.type().get(),
+                                    openDriveObject.name().get(),
                                     openDriveObject.id(),
                                     (double) openDriveObject.height().get(),
                                     (double) openDriveObject.hdg().get(),

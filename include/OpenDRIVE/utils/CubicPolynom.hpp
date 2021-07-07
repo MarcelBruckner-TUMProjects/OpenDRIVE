@@ -43,6 +43,21 @@ namespace opendrive {
          * @return The derivative.
          */
         double operator[](double s) const;
+
+        /**
+         * @comparison
+         */
+        friend bool operator==(const CubicPolynom &lhs, const CubicPolynom &rhs);
+
+        /**
+         * @comparison
+         */
+        friend bool operator!=(const CubicPolynom &lhs, const CubicPolynom &rhs);
+
+        /**
+         * @return true if all values are 0, false else
+         */
+        bool isEmpty() const;
     };
 }
 

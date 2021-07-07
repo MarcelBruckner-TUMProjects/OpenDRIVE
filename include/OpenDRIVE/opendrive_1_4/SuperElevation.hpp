@@ -29,6 +29,11 @@ namespace opendrive {
             explicit SuperElevation(const class superelevation &openDriveObject);
 
             /**
+             * @constructor
+             */
+            explicit SuperElevation(const class shape &openDriveObject);
+
+            /**
              * @destructor
              */
             ~SuperElevation() override = default;

@@ -22,4 +22,17 @@ namespace opendrive {
                2 * c * s +
                3 * d * s * s;
     }
+
+    bool operator!=(const CubicPolynom &lhs, const CubicPolynom &rhs) { return !(lhs == rhs); }
+
+    bool operator==(const CubicPolynom &lhs, const CubicPolynom &rhs) {
+        return lhs.a == rhs.a ||
+               lhs.b == rhs.b ||
+               lhs.c == rhs.c ||
+               lhs.d == rhs.d;
+    }
+
+    bool CubicPolynom::isEmpty() const {
+        return *this == CubicPolynom(0, 0, 0, 0);
+    }
 }

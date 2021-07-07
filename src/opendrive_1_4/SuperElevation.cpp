@@ -14,5 +14,14 @@ namespace opendrive {
                  openDriveObject.c().get(),
                  openDriveObject.d().get()}
         ) {}
+
+        SuperElevation::SuperElevation(const class shape &openDriveObject) : opendrive::SuperElevation(
+                openDriveObject.s().get(),
+                openDriveObject.t().get(),
+                {openDriveObject.a().get(),
+                 openDriveObject.b().get(),
+                 openDriveObject.c().get(),
+                 openDriveObject.d().get()}
+        ) {}
     }
 }

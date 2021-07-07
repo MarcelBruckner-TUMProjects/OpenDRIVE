@@ -15,5 +15,15 @@ namespace opendrive {
                                              openDriveObject.c(),
                                              openDriveObject.d()}
         ) {}
+
+        SuperElevation::SuperElevation(
+                const class simulation::standard::opendrive_schema::t_road_lateralProfile_shape &openDriveObject)
+                : opendrive::SuperElevation((double) openDriveObject.s(),
+                                            (double) openDriveObject.t(),
+                                            {openDriveObject.a(),
+                                             openDriveObject.b(),
+                                             openDriveObject.c(),
+                                             openDriveObject.d()}
+        ) {}
     }
 }

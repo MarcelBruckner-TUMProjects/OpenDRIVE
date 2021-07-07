@@ -32,6 +32,12 @@ namespace opendrive {
                     const class simulation::standard::opendrive_schema::t_road_lateralProfile_superelevation &openDriveObject);
 
             /**
+             * @constructor
+             */
+            explicit SuperElevation(
+                    const class simulation::standard::opendrive_schema::t_road_lateralProfile_shape &openDriveObject);
+
+            /**
              * @destructor
              */
             ~SuperElevation() override = default;

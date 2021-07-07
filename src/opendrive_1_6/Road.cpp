@@ -54,6 +54,13 @@ namespace opendrive {
                 lateralProfile.emplace((double) superElevationNode.s(),
                                        opendrive::opendrive_1_6::SuperElevation(superElevationNode));
             }
+            if (lateralProfile.empty() || lateralProfile.size() == 1 && lateralProfile[0].getPolynom().isEmpty()) {
+                lateralProfile.clear();
+                for (const auto &superElevationNode : openDriveObject.lateralProfile().get().shape()) {
+                    auto shape = opendrive::opendrive_1_6::SuperElevation(superElevationNode);
+                    lateralProfile.emplace(shape.getS(), shape);
+                }
+            }
             return lateralProfile;
         }
 

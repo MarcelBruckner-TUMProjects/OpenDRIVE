@@ -10,7 +10,7 @@ namespace opendrive {
             /**
              * Base setup for the tests that parse the mock HD map.
              */
-            class ParseOpenDrive16Tests : public ::testing::Test {
+            class ParseOpendrive16Tests : public ::testing::Test {
             public:
 
                 /**
@@ -36,7 +36,7 @@ namespace opendrive {
                 /**
                  * @destrcutor
                  */
-                ~ParseOpenDrive16Tests() override = default;
+                ~ParseOpendrive16Tests() override = default;
 
                 /**
                  * @setup
@@ -51,7 +51,7 @@ namespace opendrive {
             /**
              * Tests parsing the HD map header.
              */
-            TEST_F(ParseOpenDrive16Tests, testParsingHeader) {
+            TEST_F(ParseOpendrive16Tests, testParsingHeader) {
                 EXPECT_NEAR(testMapOpendrive16->getHeader().north, 2.221400906000e+3, maxDifference);
                 ASSERT_STREQ(testMapOpendrive16->getHeader().vendor.c_str(), "3D Mapping Solutions");
 
@@ -59,101 +59,100 @@ namespace opendrive {
                              "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=-196000 +y_0=-5348000 +datum=WGS84 +units=m +no_defs");
             }
 
-//        /**
-//         * Tests parsing the test road basic attributes.
-//         */
-//        TEST_F(ParsingTests, testParsingRoadAttributes) {
-//            ASSERT_STREQ(testRoadOpenDrive14.getName().c_str(), "");
-//            ASSERT_STREQ(testRoadOpenDrive14.getJunction().c_str(), "-1");
-//            ASSERT_STREQ(testRoadOpenDrive14.getId().c_str(), testRoadIdOpenDrive14);
-//            EXPECT_NEAR(testRoadOpenDrive14.getLength(), 1.724447338294e+03, maxDifference);
-//        }
-//
-//        /**
-//         * Tests parsingthe test road type.
-//         */
-//        TEST_F(ParsingTests, testParsingType) {
-////            auto type = testRoadOpenDrive14.type[0];
-//            ASSERT_EQ(testRoadOpenDrive14.getType().size(), 1);
-//
-////            EXPECT_NEAR(type.first, 0.0, maxDifference);
-////            ASSERT_STREQ(type.second.c_str(), "motorway");
-//        }
-//
-//        /**
-//         * Tests parsing the test road plan view.
-//         */
-//        TEST_F(ParsingTests, testParsingPlanView) {
-//            std::map<double, Geometry> planView = testRoadOpenDrive14.getPlanView();
-//
-//            ASSERT_EQ(planView.size(), 4);
-//
-//            auto geometry = planView[0];
-//            EXPECT_NEAR(geometry.getU().a, -0.000000000000e+00, maxDifference);
-//            EXPECT_NEAR(geometry.getU().b, 1.000000000000e+00, maxDifference);
-//            EXPECT_NEAR(geometry.getU().c, -2.864238929279e-11, maxDifference);
-//            EXPECT_NEAR(geometry.getU().d, 9.895389049440e-14, maxDifference);
-//
-//            EXPECT_NEAR(geometry.getV().a, 0.000000000000e+00, maxDifference);
-//            EXPECT_NEAR(geometry.getV().b, 2.775557561563e-16, maxDifference);
-//            EXPECT_NEAR(geometry.getV().c, -1.284829717715e-07, maxDifference);
-//            EXPECT_NEAR(geometry.getV().d, 3.576738398807e-10, maxDifference);
-//
-////            ASSERT_STREQ(geometry.pRange.c_str(), "arcLength");
-//        }
-//
-//        /**
-//         * Tests parsing the test road elevation profile.
-//         */
-//        TEST_F(ParsingTests, testParsingElevationProfile) {
-//            auto elevationProfile = testRoadOpenDrive14.getElevationProfile();
-//            ASSERT_EQ(elevationProfile.size(), 12);
-//
-//            EXPECT_NEAR(elevationProfile[0].getS(), 0.000000000000e+00, maxDifference);
-//
-//            EXPECT_NEAR(elevationProfile[0].getPolynom().a, 5.299890546737e+02, maxDifference);
-//            EXPECT_NEAR(elevationProfile[0].getPolynom().b, 1.580599780197e-03, maxDifference);
-//            EXPECT_NEAR(elevationProfile[0].getPolynom().c, -1.160874186427e-05, maxDifference);
-//            EXPECT_NEAR(elevationProfile[0].getPolynom().d, 6.476066427343e-08, maxDifference);
-//        }
-//
-//        /**
-//         * Tests parsing the test road lateral profile.
-//         */
-//        TEST_F(ParsingTests, testParsingLateralProfile) {
-//            auto lateralProfile = testRoadOpenDrive14.getLateralProfile();
-//            ASSERT_EQ(lateralProfile.size(), 9);
-//
-//            EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
-//
-//            EXPECT_NEAR(lateralProfile[0].getPolynom().a, 3.192305336358e-02, maxDifference);
-//            EXPECT_NEAR(lateralProfile[0].getPolynom().b, -7.543093979616e-05, maxDifference);
-//            EXPECT_NEAR(lateralProfile[0].getPolynom().c, -4.921087190205e-08, maxDifference);
-//            EXPECT_NEAR(lateralProfile[0].getPolynom().d, 1.391947694799e-09, maxDifference);
-//        }
-//
-//        /**
-//         * Tests parsing the test road objects.
-//         */
-//        TEST_F(ParsingTests, testParsingObjects) {
-//            auto objects = testRoadOpenDrive14.getObjects();
-//            ASSERT_EQ(objects.size(), 52);
-//
-//            std::string id = "4007953";
-//            auto testObject = testRoadOpenDrive14.getElement<Object>(id);
-//
-//            ASSERT_STREQ(testObject.getType().c_str(), "pole");
-//            ASSERT_STREQ(testObject.getName().c_str(), "permanentDelineator");
-//            ASSERT_STREQ(testObject.getId().c_str(), "4007953");
-//            EXPECT_NEAR(testObject.getS(), 1.0092e+02, maxDifference);
-//            EXPECT_NEAR(testObject.getT(), -1.7770e+01, maxDifference);
-//            EXPECT_NEAR(testObject.getZOffset(), -4.215e-01, maxDifference);
-//            EXPECT_NEAR(testObject.getValidLength(), 0.00, maxDifference);
-//            ASSERT_STREQ(testObject.getOrientation().c_str(), "none");
-//            EXPECT_NEAR(testObject.getRadius(), 5.00e-02, maxDifference);
-//            EXPECT_NEAR(testObject.getHeight(), 7.705e-01, maxDifference);
-//            EXPECT_NEAR(testObject.getHdg(), 0.0000e+00, maxDifference);
-//        }
+            /**
+             * Tests parsing the test road basic attributes.
+             */
+            TEST_F(ParseOpendrive16Tests, testParsingRoadAttributes) {
+                ASSERT_STREQ(testRoadOpendrive16.getName().c_str(), "");
+                ASSERT_STREQ(testRoadOpendrive16.getJunction().c_str(), "-1");
+                ASSERT_STREQ(testRoadOpendrive16.getId().c_str(), testRoadIdOpendrive16);
+                EXPECT_NEAR(testRoadOpendrive16.getLength(), 1.724448767048e+03, maxDifference);
+            }
+
+            /**
+             * Tests parsingthe test road type.
+             */
+            TEST_F(ParseOpendrive16Tests, testParsingType) {
+                auto type = *testRoadOpendrive16.getType().begin();
+                ASSERT_EQ(testRoadOpendrive16.getType().size(), 1);
+
+                EXPECT_NEAR(type.first, 0.0, maxDifference);
+                ASSERT_STREQ(type.second.c_str(), "motorway");
+            }
+
+            /**
+             * Tests parsing the test road plan view.
+             */
+            TEST_F(ParseOpendrive16Tests, testParsingPlanView) {
+                std::map<double, Geometry> planView = testRoadOpendrive16.getPlanView();
+
+                ASSERT_EQ(planView.size(), 30);
+
+                auto geometry = planView[0];
+                EXPECT_EQ(geometry.getU(), CubicPolynom(-0.000000000000e+00, 1.000000000000e+00, -2.298912093268e-12,
+                                                        9.000529057042e-15));
+                EXPECT_EQ(geometry.getV(), CubicPolynom(0.000000000000e+00, 3.330669073875e-16, -1.829164785029e-07,
+                                                        4.630645388358e-10));
+            }
+
+            /**
+             * Tests parsing the test road elevation profile.
+             */
+            TEST_F(ParseOpendrive16Tests, testParsingElevationProfile) {
+                auto elevationProfile = testRoadOpendrive16.getElevationProfile();
+                ASSERT_EQ(elevationProfile.size(), 16);
+
+                EXPECT_NEAR(elevationProfile[0].getS(), 0.000000000000e+00, maxDifference);
+
+                EXPECT_EQ(elevationProfile[0].getPolynom(),
+                          CubicPolynom(4.843095000000e+02, 9.772863692333e-04, -5.198291728835e-06,
+                                       4.459605220186e-08));
+            }
+
+            /**
+             * Tests parsing the test road lateral profile.
+             */
+            TEST_F(ParseOpendrive16Tests, testParsingLateralProfile) {
+                auto lateralProfile = testRoadOpendrive16.getLateralProfile();
+                ASSERT_EQ(lateralProfile.size(), 12);
+                EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
+                EXPECT_NEAR(lateralProfile[0].getT(), 0.000000000000e+00, maxDifference);
+                EXPECT_EQ(lateralProfile[0].getPolynom(),
+                          CubicPolynom(3.126709068491e-02, -1.122780414966e-04, 6.705325035129e-08,
+                                       1.626353779681e-09));
+
+                auto roadWithShapeId = "3142050";
+                lateralProfile = testMapOpendrive16->getRoad(roadWithShapeId).getLateralProfile();
+                ASSERT_EQ(lateralProfile.size(), 16);
+                EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
+                EXPECT_NEAR(lateralProfile[0].getT(), -1.159817420823e+01, maxDifference);
+                EXPECT_EQ(lateralProfile[0].getPolynom(),
+                          CubicPolynom(-8.949226152504e-02, 5.551115120463e-18, 0.000000000000e+00,
+                                       0.000000000000e+00));
+            }
+
+            /**
+             * Tests parsing the test road objects.
+             */
+            TEST_F(ParseOpendrive16Tests, testParsingObjects) {
+                auto objects = testRoadOpendrive16.getObjects();
+                ASSERT_EQ(objects.size(), 168);
+
+                std::string id = "4069001";
+                auto testObject = testRoadOpendrive16.getElement<Object>(id);
+
+                ASSERT_STREQ(testObject.getType().c_str(), "pole");
+                ASSERT_STREQ(testObject.getName().c_str(), "permanentDelineator");
+                ASSERT_STREQ(testObject.getId().c_str(), id.c_str());
+                EXPECT_NEAR(testObject.getS(), 1.5153e+00, maxDifference);
+                EXPECT_NEAR(testObject.getT(), -1.8082e+01, maxDifference);
+                EXPECT_NEAR(testObject.getZOffset(), -5.349e-01, maxDifference);
+                EXPECT_NEAR(testObject.getValidLength(), 0.00, maxDifference);
+                ASSERT_STREQ(testObject.getOrientation().c_str(), "none");
+                EXPECT_NEAR(testObject.getRadius(), 5.00e-02, maxDifference);
+                EXPECT_NEAR(testObject.getHeight(), 9.282e-01, maxDifference);
+                EXPECT_NEAR(testObject.getHdg(), 0.0000e+00, maxDifference);
+            }
 
         }// namespace tests
     }// namespace opendrive
