@@ -76,8 +76,8 @@ namespace opendrive {
                 auto type = *testRoadOpendrive16.getType().begin();
                 ASSERT_EQ(testRoadOpendrive16.getType().size(), 1);
 
-                EXPECT_NEAR(type.first, 0.0, maxDifference);
-                ASSERT_STREQ(type.second.c_str(), "motorway");
+                EXPECT_NEAR(type.getS(), 0.0, maxDifference);
+                ASSERT_STREQ(type.getType().c_str(), "motorway");
             }
 
             /**

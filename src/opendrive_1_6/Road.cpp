@@ -64,11 +64,11 @@ namespace opendrive {
             return lateralProfile;
         }
 
-        std::map<double, std::string>
+        std::vector<Road::Type>
         convertToType(const simulation::standard::opendrive_schema::t_road &openDriveRoad) {
-            std::map<double, std::string> result;
+            std::vector<Road::Type> result;
             for (const auto &type : openDriveRoad.type()) {
-                result[(double) type.s()] = type.type();
+                result.emplace_back(type.s(), type.type());
             }
             return result;
         }

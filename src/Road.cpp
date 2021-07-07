@@ -11,7 +11,7 @@ namespace opendrive {
 
 
     Road::Road(std::string id, std::string name, double length, std::string junction,
-               std::map<double, std::string> type, std::map<std::string, Object> objects,
+               std::vector<Type> type, std::map<std::string, Object> objects,
                std::map<double, Geometry> planView, std::map<double, Elevation> elevationProfile,
                std::map<double, SuperElevation> lateralProfile) : OpenDriveWrapper(0), id(std::move(id)),
                                                                   name(std::move(name)),
@@ -194,11 +194,16 @@ namespace opendrive {
         return junction;
     }
 
-    const std::map<double, std::string> &Road::getType() const {
+    const std::vector<Road::Type> &Road::getType() const {
         return type;
     }
 
 
 #pragma endregion Calculations
 
+    Road::Type::Type(const double s, std::string type) : OpenDriveWrapper(s), type(std::move(type)) {}
+
+    const std::string &Road::Type::getType() const {
+        return type;
+    }
 }

@@ -49,10 +49,13 @@ namespace opendrive {
             return lateralProfile;
         }
 
-        std::map<double, std::string> convertToType(const road &openDriveRoad) {
-            std::map<double, std::string> result;
+        std::vector<Road::Type> convertToType(const road &openDriveRoad) {
+            std::vector<Road::Type> result;
             for (const auto &type : openDriveRoad.type()) {
-                result[type.s().get()] = type.type().get().c_str();
+                result.emplace_back(Road::Type{
+                        type.s().get(),
+                        type.type().get().c_str()
+                });
             }
             return result;
         }

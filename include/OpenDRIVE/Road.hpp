@@ -20,6 +20,31 @@ namespace opendrive {
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_roads
      */
     class Road : public OpenDriveWrapper {
+    public:
+        /**
+         * Wrapper for the types of the road surface.
+         */
+        class Type : public OpenDriveWrapper {
+
+            /**
+             * The type name.
+             */
+            std::string type;
+
+        public:
+
+            /**
+             * @constructor
+             */
+            Type(double s, std::string type);
+
+            /**
+             * @get
+             */
+            const std::string &getType() const;
+        };
+
+    private:
 
         /**
          * The id of the road.
@@ -44,7 +69,7 @@ namespace opendrive {
         /**
          * The types of the road surface.
          */
-        std::map<double, std::string> type;
+        std::vector<Type> type;
 
     protected:
         /**
@@ -101,7 +126,7 @@ namespace opendrive {
          * @constructor
          */
         Road(std::string id, std::string name, double length, std::string junction,
-             std::map<double, std::string> type, std::map<std::string, Object> objects,
+             std::vector<Type> type, std::map<std::string, Object> objects,
              std::map<double, Geometry> planView, std::map<double, Elevation> elevationProfile,
              std::map<double, SuperElevation> lateralProfile);
 
@@ -212,7 +237,8 @@ namespace opendrive {
         /**
          * @get
          */
-        const std::map<double, std::string> &getType() const;
+        const std::vector<Road::Type> &getType() const;
+
     };
 }
 
