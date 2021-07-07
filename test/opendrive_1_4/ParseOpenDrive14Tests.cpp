@@ -85,7 +85,7 @@ namespace opendrive {
              * Tests parsing the test road plan view.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingPlanView) {
-                std::map<double, Geometry> planView = testRoadOpenDrive14.getPlanView();
+                auto planView = testRoadOpenDrive14.getPlanView();
 
                 ASSERT_EQ(planView.size(), 4);
 

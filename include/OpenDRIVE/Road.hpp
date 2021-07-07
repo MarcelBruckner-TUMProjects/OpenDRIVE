@@ -75,22 +75,22 @@ namespace opendrive {
         /**
          * The objects along the road.
          */
-        std::map<std::string, Object> objects;
+        std::vector<Object> objects;
 
         /**
          * The planView consisting of the road geometries.
          */
-        std::map<double, Geometry> planView;
+        std::vector<Geometry> planView;
 
         /**
          * The elevationProfile consisting of the road elevations.
          */
-        std::map<double, Elevation> elevationProfile;
+        std::vector<Elevation> elevationProfile;
 
         /**
          * The elevationProfile consisting of the road elevations.
          */
-        std::map<double, SuperElevation> lateralProfile;
+        std::vector<SuperElevation> lateralProfile;
 
         /**
          * Gets the s coordinates of the elements in the map.
@@ -98,7 +98,7 @@ namespace opendrive {
          * @param omitLastElement Flag if the last element should be omitted.
          */
         template<typename T>
-        std::vector<double> getStartCoordinates(std::map<double, T> map, bool omitLastElement) const;
+        std::vector<double> getStartCoordinates(std::vector<T> map, bool omitLastElement) const;
 
         /**
          * @get Tries to find the element including the given s coordinate along the road.
@@ -106,13 +106,8 @@ namespace opendrive {
          * @throws invalid_argument if the s coordinate is negative.
          */
         template<typename T>
-        const T &getElement(const std::map<double, T> &map, double s) const;
+        const T &getElement(const std::vector<T> &map, double ss) const;
 
-        /**
-         * @get Calculates the world positions of the element.
-         */
-        template<typename T>
-        Vector getWorldPosition(const T &object) const;
 
     public:
 
@@ -126,9 +121,9 @@ namespace opendrive {
          * @constructor
          */
         Road(std::string id, std::string name, double length, std::string junction,
-             std::vector<Type> type, std::map<std::string, Object> objects,
-             std::map<double, Geometry> planView, std::map<double, Elevation> elevationProfile,
-             std::map<double, SuperElevation> lateralProfile);
+             std::vector<Type> type, std::vector<Object> objects,
+             std::vector<Geometry> planView, std::vector<Elevation> elevationProfile,
+             std::vector<SuperElevation> lateralProfile);
 
         /**
          * @destructor
@@ -143,27 +138,27 @@ namespace opendrive {
         /**
          * @get
          */
-        const std::map<double, Geometry> &getPlanView() const;
+        const std::vector<Geometry> &getPlanView() const;
 
         /**
          * @get
          */
-        const std::map<double, Elevation> &getElevationProfile() const;
+        const std::vector<Elevation> &getElevationProfile() const;
 
         /**
          * @get
          */
-        const std::map<double, SuperElevation> &getLateralProfile() const;
+        const std::vector<SuperElevation> &getLateralProfile() const;
 
         /**
          * @get
          */
-        const std::map<std::string, Object> &getObjects() const;
+        const std::vector<Object> &getObjects() const;
 
         /**
          * @get Filters the objects by the given type and name.
          */
-        std::map<std::string, Object> filterObjects(const std::string &type, const std::string &name) const;
+        std::vector<Object> filterObjects(const std::string &type, const std::string &name) const;
 
         /**
          * @get Tries to find the element including the given s coordinate along the road.
@@ -190,13 +185,12 @@ namespace opendrive {
         Vector getWorldPosition(const std::string &id) const;
 
         /**
-         * @get Tries to find the world positions of the element including the given s coordinate along the road.
+         * @get Tries to find the world position of an element with the given id along the road.
          *
-         * @throws invalid_argument if the s coordinate is negative.
+         * @throws invalid_argument if no object with the given id is found.
          */
         template<typename T>
-        Vector getWorldPosition(double s) const;
-
+        Vector getWorldPosition(const T &object) const;
 
         /**
          * Gets the s coordinates of the requested elements.

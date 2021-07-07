@@ -6,21 +6,34 @@
 #include <string>
 #include <iomanip>
 #include <utility>
+#include<algorithm>
 
 namespace opendrive {
 
 
     Road::Road(std::string id, std::string name, double length, std::string junction,
-               std::vector<Type> type, std::map<std::string, Object> objects,
-               std::map<double, Geometry> planView, std::map<double, Elevation> elevationProfile,
-               std::map<double, SuperElevation> lateralProfile) : OpenDriveWrapper(0), id(std::move(id)),
-                                                                  name(std::move(name)),
-                                                                  length(length),
-                                                                  junction(std::move(junction)), type(std::move(type)),
-                                                                  objects(std::move(objects)),
-                                                                  planView(std::move(planView)),
-                                                                  elevationProfile(std::move(elevationProfile)),
-                                                                  lateralProfile(std::move(lateralProfile)) {}
+               std::vector<Type> type, std::vector<Object> objects,
+               std::vector<Geometry> planView, std::vector<Elevation> elevationProfile,
+               std::vector<SuperElevation> lateralProfile) : OpenDriveWrapper(0), id(std::move(id)),
+                                                             name(std::move(name)),
+                                                             length(length),
+                                                             junction(std::move(junction)), type(std::move(type)),
+                                                             objects(std::move(objects)),
+                                                             planView(std::move(planView)),
+                                                             elevationProfile(std::move(elevationProfile)),
+                                                             lateralProfile(std::move(lateralProfile)) {
+
+        std::sort(planView.begin(), planView.end(), [](const Geometry &lhs, const Geometry &rhs) {
+            return lhs.getS() < rhs.getS();
+        });
+        std::sort(elevationProfile.begin(), elevationProfile.end(), [](const Elevation &lhs, const Elevation &rhs) {
+            return lhs.getS() < rhs.getS();
+        });
+        std::sort(lateralProfile.begin(), lateralProfile.end(),
+                  [](const SuperElevation &lhs, const SuperElevation &rhs) {
+                      return lhs.getS() < rhs.getS() || lhs.getT() < rhs.getT();
+                  });
+    }
 
 
     bool Road::operator==(const std::string &roadId) {
@@ -30,19 +43,19 @@ namespace opendrive {
 
 #pragma region PlainGetters
 
-    const std::map<std::string, Object> &Road::getObjects() const {
+    const std::vector<Object> &Road::getObjects() const {
         return objects;
     }
 
-    const std::map<double, Geometry> &Road::getPlanView() const {
+    const std::vector<Geometry> &Road::getPlanView() const {
         return planView;
     }
 
-    const std::map<double, Elevation> &Road::getElevationProfile() const {
+    const std::vector<Elevation> &Road::getElevationProfile() const {
         return elevationProfile;
     }
 
-    const std::map<double, SuperElevation> &Road::getLateralProfile() const {
+    const std::vector<SuperElevation> &Road::getLateralProfile() const {
         return lateralProfile;
     }
 
@@ -51,34 +64,31 @@ namespace opendrive {
 #pragma region TemplateGetters
 
     template<typename T>
-    const T &Road::getElement(const std::map<double, T> &map, double ss) const {
+    const T &Road::getElement(const std::vector<T> &map, double ss) const {
         if (ss < 0) {
             throw std::invalid_argument(std::to_string(ss) + " is not on the road.");
         }
-        double previous = 0;
-        for (const auto &entry : map) {
-            double getS = entry.second.getS();
+        for (int i = 0; i < map.size(); i++) {
+            double getS = map[i].getS();
             if (getS > ss) {
-                break;
+                return map[i - 1];
             }
-            previous = getS;
         }
-        const T &geometry = map.at(previous);
-        return geometry;
+        return map[map.size() - 1];
     }
 
     template<>
     const Object &Road::getElement<Object>(const std::string &id) const {
         for (const auto &entry : objects) {
-            if (entry.second.getId() == id) {
-                return objects.at(entry.first);
+            if (entry.getId() == id) {
+                return entry;
             }
         }
         throw std::invalid_argument("There exists no object " + id + ".");
     }
 
     template<typename T>
-    std::vector<double> Road::getStartCoordinates(std::map<double, T> map, bool omitLastElement) const {
+    std::vector<double> Road::getStartCoordinates(std::vector<T> map, bool omitLastElement) const {
         std::vector<double> result;
 
         int i = 0;
@@ -86,7 +96,7 @@ namespace opendrive {
             if (omitLastElement && i >= map.size() - 1) {
                 break;
             }
-            result.emplace_back(entry.first);
+            result.emplace_back(entry.getS());
             i++;
         }
 
@@ -131,12 +141,12 @@ namespace opendrive {
 
 #pragma region Other
 
-    std::map<std::string, Object> Road::filterObjects(const std::string &type, const std::string &name) const {
-        std::map<std::string, Object> filtered;
+    std::vector<Object> Road::filterObjects(const std::string &type, const std::string &name) const {
+        std::vector<Object> filtered;
         for (const auto &entry : objects) {
-            if (entry.second.getType() == type &&
-                entry.second.getName() == name) {
-                filtered.emplace(entry.first, entry.second);
+            if (entry.getType() == type &&
+                entry.getName() == name) {
+                filtered.emplace_back(entry);
             }
         }
         return filtered;
@@ -160,22 +170,23 @@ namespace opendrive {
         return geometry.interpolate(s) + t * normal + Vector{0, 0, 1} * height;
     }
 
+
     template<>
-    Vector Road::getWorldPosition<Object>(const std::string &id) const {
-        auto object = getElement<Object>(id);
+    Vector Road::getWorldPosition(const Geometry &object) const {
+        auto position = interpolate(object.getS());
+        return position;
+    }
+
+    template<>
+    Vector Road::getWorldPosition(const Object &object) const {
         auto position = interpolate(object.getS(), object.getT());
         auto zOffset = object.getZOffset();
         return position + Vector{0, 0, zOffset};
     }
 
-    template<typename T>
-    Vector Road::getWorldPosition(const T &object) const {
-        return interpolate(object.getS());
-    }
-
     template<>
-    Vector Road::getWorldPosition<Geometry>(double s) const {
-        return getWorldPosition(getElement<Geometry>(s));
+    Vector Road::getWorldPosition<opendrive::Object>(const std::string &id) const {
+        return getWorldPosition(getElement<Object>(id));
     }
 
     const std::string &Road::getId() const {

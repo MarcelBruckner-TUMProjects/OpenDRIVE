@@ -14,37 +14,36 @@
 namespace opendrive {
     namespace opendrive_1_4 {
 
-        std::map<std::string, opendrive::Object> extractObjects(const class road &openDriveObject) {
-            std::map<std::string, opendrive::Object> objects;
+        std::vector<opendrive::Object> extractObjects(const class road &openDriveObject) {
+            std::vector<opendrive::Object> objects;
             if (openDriveObject.objects().present()) {
                 for (const auto &objectNode : openDriveObject.objects().get().object()) {
-                    objects.emplace(objectNode.id().get(), opendrive::opendrive_1_4::Object(objectNode));
+                    objects.emplace_back(opendrive::opendrive_1_4::Object(objectNode));
                 }
             }
             return objects;
         }
 
-        std::map<double, opendrive::Geometry> extractGeometry(const class road &openDriveObject) {
-            std::map<double, opendrive::Geometry> planView;
+        std::vector<opendrive::Geometry> extractGeometry(const class road &openDriveObject) {
+            std::vector<opendrive::Geometry> planView;
             for (const geometry &geometryNode : openDriveObject.planView().geometry()) {
-                planView.emplace(geometryNode.s().get(), opendrive::opendrive_1_4::Geometry(geometryNode));
+                planView.emplace_back(opendrive::opendrive_1_4::Geometry(geometryNode));
             }
             return planView;
         }
 
-        std::map<double, opendrive::Elevation> extractElevation(const class road &openDriveObject) {
-            std::map<double, opendrive::Elevation> elevationProfile;
+        std::vector<opendrive::Elevation> extractElevation(const class road &openDriveObject) {
+            std::vector<opendrive::Elevation> elevationProfile;
             for (const auto &elevationNode : openDriveObject.elevationProfile().get().elevation()) {
-                elevationProfile.emplace(elevationNode.s().get(), opendrive::opendrive_1_4::Elevation(elevationNode));
+                elevationProfile.emplace_back(opendrive::opendrive_1_4::Elevation(elevationNode));
             }
             return elevationProfile;
         }
 
-        std::map<double, opendrive::SuperElevation> extractSuperElevation(const class road &openDriveObject) {
-            std::map<double, opendrive::SuperElevation> lateralProfile;
+        std::vector<opendrive::SuperElevation> extractSuperElevation(const class road &openDriveObject) {
+            std::vector<opendrive::SuperElevation> lateralProfile;
             for (const auto &superElevationNode : openDriveObject.lateralProfile().get().superelevation()) {
-                lateralProfile.emplace(superElevationNode.s().get(),
-                                       opendrive::opendrive_1_4::SuperElevation(superElevationNode));
+                lateralProfile.emplace_back(opendrive::opendrive_1_4::SuperElevation(superElevationNode));
             }
             return lateralProfile;
         }

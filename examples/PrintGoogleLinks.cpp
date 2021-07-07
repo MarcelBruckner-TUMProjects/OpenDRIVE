@@ -17,8 +17,9 @@ int main(int argc, char **argv) {
     std::cout << "Geometry start positions" << std::endl;
     std::cout << "****************************************************************************" << std::endl;
 
-    for (const auto &s: roadHighwayExitSouth.getStartCoordinates<opendrive::Geometry>()) {
-        auto projected = projector.project(roadHighwayExitSouth.getWorldPosition<opendrive::Geometry>(s));
+    for (const auto &geometry: roadHighwayExitSouth.getPlanView()) {
+        auto projected = projector.project(
+                roadHighwayExitSouth.getWorldPosition(geometry));
         std::cout << opendrive::LongLatProjector::toGoogleMapsLink(projected) << std::endl;
     }
 
@@ -27,9 +28,8 @@ int main(int argc, char **argv) {
     std::cout << "****************************************************************************" << std::endl;
 
     for (const auto &object: roadHighwayExitSouth.getObjects()) {
-        auto projected = projector.project(
-                roadHighwayExitSouth.getWorldPosition<opendrive::Object>(object.first));
-        std::cout << object.second << std::endl;
+        auto projected = projector.project(roadHighwayExitSouth.getWorldPosition(object));
+        std::cout << object << std::endl;
         std::cout << opendrive::LongLatProjector::toGoogleMapsLink(projected) << std::endl;
     }
 

@@ -16,8 +16,7 @@ namespace opendrive {
         for (const auto &roadEntry : map.getRoads()) {
             auto road = roadEntry.second;
 
-            for (const auto &objectEntry : road.getObjects()) {
-                auto object = objectEntry.second;
+            for (const auto &object : road.getObjects()) {
                 if (object.getId() == id) {
                     return road.getWorldPosition<Object>(object.getId());
                 }
@@ -40,9 +39,7 @@ namespace opendrive {
         for (const auto &roadEntry : map.getRoads()) {
             auto road = roadEntry.second;
 
-            for (const auto &objectEntry : road.getObjects()) {
-                auto object = objectEntry.second;
-
+            for (const auto &object : road.getObjects()) {
                 yaml << YAML::BeginMap;
 
                 yaml << YAML::Key << "id" << YAML::Value << object.getId();

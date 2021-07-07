@@ -23,8 +23,8 @@ namespace opendrive {
     const Object &HDMap::getObject(const std::string &id) const {
         for (const auto &road : roads) {
             for (const auto &object : road.second.getObjects()) {
-                if (object.first == id) {
-                    return object.second;
+                if (object.getId() == id) {
+                    return object;
                 }
             }
         }
@@ -35,8 +35,8 @@ namespace opendrive {
     Vector HDMap::getPosition<opendrive::Object>(const std::string &id) const {
         for (const auto &road : roads) {
             for (const auto &object : road.second.getObjects()) {
-                if (object.first == id) {
-                    return road.second.getWorldPosition<Object>(object.first);
+                if (object.getId() == id) {
+                    return road.second.getWorldPosition(object);
                 }
             }
         }

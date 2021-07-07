@@ -15,50 +15,45 @@
 namespace opendrive {
     namespace opendrive_1_6 {
 
-        std::map<std::string, opendrive::Object>
+        std::vector<opendrive::Object>
         extractObjects(const class simulation::standard::opendrive_schema::t_road &openDriveObject) {
-            std::map<std::string, opendrive::Object> objects;
+            std::vector<opendrive::Object> objects;
             if (openDriveObject.objects().present()) {
                 for (const auto &objectNode : openDriveObject.objects().get().object()) {
-                    objects.emplace(objectNode.id(), opendrive::opendrive_1_6::Object(objectNode));
+                    objects.emplace_back(opendrive::opendrive_1_6::Object(objectNode));
                 }
             }
             return objects;
         }
 
-        std::map<double, opendrive::Geometry>
+        std::vector<opendrive::Geometry>
         extractGeometry(const class simulation::standard::opendrive_schema::t_road &openDriveObject) {
-            std::map<double, opendrive::Geometry> planView;
+            std::vector<opendrive::Geometry> planView;
             for (const auto &geometryNode : openDriveObject.planView().geometry()) {
-                planView.emplace((double) geometryNode.s(), opendrive::opendrive_1_6::Geometry(geometryNode));
+                planView.emplace_back(opendrive::opendrive_1_6::Geometry(geometryNode));
             }
             return planView;
         }
 
-        std::map<double, opendrive::Elevation>
+        std::vector<opendrive::Elevation>
         extractElevation(const class simulation::standard::opendrive_schema::t_road &openDriveObject) {
-            std::map<double, opendrive::Elevation> elevationProfile;
+            std::vector<opendrive::Elevation> elevationProfile;
             for (const auto &elevationNode : openDriveObject.elevationProfile().get().elevation()) {
-                elevationProfile.emplace((double) elevationNode.s(),
-                                         opendrive::opendrive_1_6::Elevation(elevationNode));
+                elevationProfile.emplace_back(opendrive::opendrive_1_6::Elevation(elevationNode));
             }
             return elevationProfile;
         }
 
-        std::map<double, opendrive::SuperElevation>
+        std::vector<opendrive::SuperElevation>
         extractSuperElevation(const class simulation::standard::opendrive_schema::t_road &openDriveObject) {
-
-            // TODO include shape tag
-            std::map<double, opendrive::SuperElevation> lateralProfile;
+            std::vector<opendrive::SuperElevation> lateralProfile;
             for (const auto &superElevationNode : openDriveObject.lateralProfile().get().superelevation()) {
-                lateralProfile.emplace((double) superElevationNode.s(),
-                                       opendrive::opendrive_1_6::SuperElevation(superElevationNode));
+                lateralProfile.emplace_back(opendrive::opendrive_1_6::SuperElevation(superElevationNode));
             }
             if (lateralProfile.empty() || lateralProfile.size() == 1 && lateralProfile[0].getPolynom().isEmpty()) {
                 lateralProfile.clear();
                 for (const auto &superElevationNode : openDriveObject.lateralProfile().get().shape()) {
-                    auto shape = opendrive::opendrive_1_6::SuperElevation(superElevationNode);
-                    lateralProfile.emplace(shape.getS(), shape);
+                    lateralProfile.emplace_back(opendrive::opendrive_1_6::SuperElevation(superElevationNode));
                 }
             }
             return lateralProfile;
