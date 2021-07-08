@@ -6,6 +6,7 @@
 #include <string>
 #include <iomanip>
 #include <utility>
+#include <OpenDRIVE/opendrive_1_6/Shape.hpp>
 
 #include "OpenDRIVE/opendrive_1_6/Geometry.hpp"
 #include "OpenDRIVE/opendrive_1_6/Object.hpp"
@@ -50,11 +51,14 @@ namespace opendrive {
             for (const auto &superElevationNode : openDriveObject.lateralProfile().get().superelevation()) {
                 lateralProfile.emplace_back(opendrive::opendrive_1_6::SuperElevation(superElevationNode));
             }
-            if (lateralProfile.empty() || lateralProfile.size() == 1 && lateralProfile[0].getPolynom().isEmpty()) {
-                lateralProfile.clear();
-                for (const auto &superElevationNode : openDriveObject.lateralProfile().get().shape()) {
-                    lateralProfile.emplace_back(opendrive::opendrive_1_6::SuperElevation(superElevationNode));
-                }
+            return lateralProfile;
+        }
+
+        std::vector<opendrive::Shape>
+        extractShape(const class simulation::standard::opendrive_schema::t_road &openDriveObject) {
+            std::vector<opendrive::Shape> lateralProfile;
+            for (const auto &shapeNode : openDriveObject.lateralProfile().get().shape()) {
+                lateralProfile.emplace_back(opendrive::opendrive_1_6::Shape(shapeNode));
             }
             return lateralProfile;
         }
@@ -77,7 +81,8 @@ namespace opendrive {
                 extractObjects(openDriveRoad),
                 extractGeometry(openDriveRoad),
                 extractElevation(openDriveRoad),
-                extractSuperElevation(openDriveRoad)
+                extractSuperElevation(openDriveRoad),
+                extractShape(openDriveRoad)
         ) {}
 
     }

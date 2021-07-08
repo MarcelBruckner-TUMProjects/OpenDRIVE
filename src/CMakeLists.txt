@@ -28,6 +28,7 @@ add_library(OpenDRIVE-lib
         ElevationBase.cpp
         Elevation.cpp
         SuperElevation.cpp
+        Shape.cpp
         HDMapFactory.cpp
 
         utils/Formatter.cpp

@@ -12,6 +12,7 @@
 #include "OpenDRIVE/ElevationBase.hpp"
 #include "OpenDRIVE/Elevation.hpp"
 #include "OpenDRIVE/SuperElevation.hpp"
+#include "Shape.hpp"
 
 namespace opendrive {
 
@@ -88,9 +89,14 @@ namespace opendrive {
         std::vector<Elevation> elevationProfile;
 
         /**
-         * The elevationProfile consisting of the road elevations.
+         * The super elevations of the roads elevationProfile.
          */
-        std::vector<SuperElevation> lateralProfile;
+        std::vector<SuperElevation> lateralProfileSuperElevations;
+
+        /**
+         * The shapes of the roads elevationProfile.
+         */
+        std::vector<Shape> lateralProfileShapes;
 
         /**
          * Gets the s coordinates of the elements in the map.
@@ -106,7 +112,14 @@ namespace opendrive {
          * @throws invalid_argument if the s coordinate is negative.
          */
         template<typename T>
-        const T &getElement(const std::vector<T> &map, double ss) const;
+        std::vector<T> getElements(const std::vector<T> &map, double s) const;
+
+        /**
+         * @get Tries to find the element including the given s coordinate along the road.
+         *
+         * @throws invalid_argument if the s coordinate is negative.
+         */
+        std::vector<Shape> getElements(const std::vector<Shape> &map, double s, double t) const;
 
 
     public:
@@ -123,7 +136,7 @@ namespace opendrive {
         Road(std::string id, std::string name, double length, std::string junction,
              std::vector<Type> type, std::vector<Object> objects,
              std::vector<Geometry> planView, std::vector<Elevation> elevationProfile,
-             std::vector<SuperElevation> lateralProfile);
+             std::vector<SuperElevation> lateralProfileSuperElevations, std::vector<Shape> lateralProfileShapes);
 
         /**
          * @destructor
@@ -148,7 +161,8 @@ namespace opendrive {
         /**
          * @get
          */
-        const std::vector<SuperElevation> &getLateralProfile() const;
+        template<typename T>
+        const std::vector<T> &getLateralProfile() const;
 
         /**
          * @get
@@ -166,7 +180,14 @@ namespace opendrive {
          * @throws invalid_argument if the s coordinate is negative.
          */
         template<typename T>
-        const T &getElement(double s) const;
+        T getElement(double s) const;
+
+        /**
+         * @get Tries to find the element including the given s coordinate along the road.
+         *
+         * @throws invalid_argument if the s coordinate is negative.
+         */
+        Shape *getElement(double s, double t) const;
 
         /**
          * @get Tries to find an element with the given id along the road.

@@ -63,7 +63,7 @@ namespace opendrive {
             };
         }
 
-        std::vector<opendrive::SuperElevation> createMockLateralProfile() {
+        std::vector<opendrive::SuperElevation> createMockLateralProfileSuperElevation() {
             return {
                     {0.000000000000e+00, {3.192305336358e-02, -7.543093979616e-05, -4.921087190205e-08, 1.391947694799e-09}},
                     {1.443000000201e+02, {2.419604064954e-02, -2.681746538422e-06, 5.533632852603e-07,  -2.399473526998e-09}},
@@ -122,7 +122,7 @@ namespace opendrive {
             roadTestMapOpenDrive14 = opendrive::Road("0", "test", 1.724447338294e+03, "-1", {{0, "motorway"}},
                                                      createMockObjects(),
                                                      createMockPlanView(), createMockElevationProfile(),
-                                                     createMockLateralProfile());
+                                                     createMockLateralProfileSuperElevation(), {});
 
             testMapOpenDrive14 = std::make_shared<opendrive::HDMap>(
                     opendrive::HDMap{

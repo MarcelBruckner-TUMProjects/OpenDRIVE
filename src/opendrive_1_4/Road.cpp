@@ -6,6 +6,7 @@
 #include <string>
 #include <iomanip>
 #include <utility>
+#include <OpenDRIVE/opendrive_1_4/Shape.hpp>
 #include "OpenDRIVE/opendrive_1_4/Object.hpp"
 #include "OpenDRIVE/opendrive_1_4/Geometry.hpp"
 #include "OpenDRIVE/opendrive_1_4/SuperElevation.hpp"
@@ -48,6 +49,14 @@ namespace opendrive {
             return lateralProfile;
         }
 
+        std::vector<opendrive::Shape> extractShape(const class road &openDriveObject) {
+            std::vector<opendrive::Shape> lateralProfile;
+            for (const auto &shapeNode : openDriveObject.lateralProfile().get().shape()) {
+                lateralProfile.emplace_back(opendrive::opendrive_1_4::Shape(shapeNode));
+            }
+            return lateralProfile;
+        }
+
         std::vector<Road::Type> convertToType(const road &openDriveRoad) {
             std::vector<Road::Type> result;
             for (const auto &type : openDriveRoad.type()) {
@@ -68,7 +77,8 @@ namespace opendrive {
                 extractObjects(openDriveRoad),
                 extractGeometry(openDriveRoad),
                 extractElevation(openDriveRoad),
-                extractSuperElevation(openDriveRoad)
+                extractSuperElevation(openDriveRoad),
+                extractShape(openDriveRoad)
         ) {}
 
     }

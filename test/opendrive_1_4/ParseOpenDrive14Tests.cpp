@@ -122,7 +122,7 @@ namespace opendrive {
              * Tests parsing the test road lateral profile.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingLateralProfile) {
-                auto lateralProfile = testRoadOpenDrive14.getLateralProfile();
+                auto lateralProfile = testRoadOpenDrive14.getLateralProfile<SuperElevation>();
                 ASSERT_EQ(lateralProfile.size(), 9);
 
                 EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);

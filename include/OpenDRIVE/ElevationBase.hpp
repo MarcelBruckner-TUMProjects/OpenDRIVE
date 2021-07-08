@@ -20,11 +20,11 @@ namespace opendrive {
      */
     class ElevationBase : public OpenDriveWrapper {
 
-        /**
-         * The polynom describing the shape of the elevation.
-         */
+    protected:
+/**
+ * The polynom describing the shape of the elevation.
+ */
         CubicPolynom polynom;
-
     public:
 
         /**
@@ -42,14 +42,14 @@ namespace opendrive {
          */
         ~ElevationBase() override = default;
 
-        /**
+        virtual /**
          * Interpolates the height at the s coordinate.
          *
          * @param s The s-coordinate of interest.
          */
         double interpolate(double s) const;
 
-        /**
+        virtual /**
          * Interpolates the height at the beginning of the elevation.
          *
          * @param s The s-coordinate of interest.

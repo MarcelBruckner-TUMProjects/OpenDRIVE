@@ -14,14 +14,18 @@ namespace opendrive {
     Road::Road(std::string id, std::string name, double length, std::string junction,
                std::vector<Type> type, std::vector<Object> objects,
                std::vector<Geometry> planView, std::vector<Elevation> elevationProfile,
-               std::vector<SuperElevation> lateralProfile) : OpenDriveWrapper(0), id(std::move(id)),
-                                                             name(std::move(name)),
-                                                             length(length),
-                                                             junction(std::move(junction)), type(std::move(type)),
-                                                             objects(std::move(objects)),
-                                                             planView(std::move(planView)),
-                                                             elevationProfile(std::move(elevationProfile)),
-                                                             lateralProfile(std::move(lateralProfile)) {
+               std::vector<SuperElevation> lateralProfileSuperElevations,
+               std::vector<Shape> lateralProfileShapes) : OpenDriveWrapper(0), id(std::move(id)),
+                                                          name(std::move(name)),
+                                                          length(length),
+                                                          junction(std::move(junction)),
+                                                          type(std::move(type)),
+                                                          objects(std::move(objects)),
+                                                          planView(std::move(planView)),
+                                                          elevationProfile(std::move(elevationProfile)),
+                                                          lateralProfileSuperElevations(
+                                                                  std::move(lateralProfileSuperElevations)),
+                                                          lateralProfileShapes(std::move(lateralProfileShapes)) {
 
         std::sort(planView.begin(), planView.end(), [](const Geometry &lhs, const Geometry &rhs) {
             return lhs.getS() < rhs.getS();
@@ -29,10 +33,13 @@ namespace opendrive {
         std::sort(elevationProfile.begin(), elevationProfile.end(), [](const Elevation &lhs, const Elevation &rhs) {
             return lhs.getS() < rhs.getS();
         });
-        std::sort(lateralProfile.begin(), lateralProfile.end(),
+        std::sort(lateralProfileSuperElevations.begin(), lateralProfileSuperElevations.end(),
                   [](const SuperElevation &lhs, const SuperElevation &rhs) {
-                      return lhs.getS() < rhs.getS() || lhs.getT() < rhs.getT();
+                      return lhs.getS() < rhs.getS();
                   });
+        std::sort(lateralProfileShapes.begin(), lateralProfileShapes.end(), [](const Shape &lhs, const Shape &rhs) {
+            return lhs.getS() < rhs.getS() || lhs.getT() < rhs.getT();
+        });
     }
 
 
@@ -55,26 +62,109 @@ namespace opendrive {
         return elevationProfile;
     }
 
+    template<>
     const std::vector<SuperElevation> &Road::getLateralProfile() const {
-        return lateralProfile;
+        return lateralProfileSuperElevations;
+    }
+
+    template<>
+    const std::vector<Shape> &Road::getLateralProfile() const {
+        return lateralProfileShapes;
     }
 
 #pragma endregion PlainGetters
 
 #pragma region TemplateGetters
 
-    template<typename T>
-    const T &Road::getElement(const std::vector<T> &map, double ss) const {
-        if (ss < 0) {
-            throw std::invalid_argument(std::to_string(ss) + " is not on the road.");
+    std::vector<Shape> Road::getElements(const std::vector<Shape> &map, double s, double t) const {
+        if (s < 0) {
+            throw std::invalid_argument(std::to_string(s) + " is not on the road.");
         }
-        for (int i = 0; i < map.size(); i++) {
-            double getS = map[i].getS();
-            if (getS > ss) {
-                return map[i - 1];
+        if (map.empty()) {
+            return {};
+        }
+        auto possibleShapes = getElements(map, s);
+
+        double upperBound = std::numeric_limits<double>::max();
+        double lowerBound = -upperBound;
+
+        for (const auto &i : possibleShapes) {
+            auto current = i.getT();
+            if (current > lowerBound && current <= t) {
+                lowerBound = current;
+                continue;
+            }
+            if (current <= upperBound && current > t) {
+                upperBound = current;
+                continue;
+            }
+            break;
+        }
+
+        std::vector<Shape> result;
+        for (const auto &i : possibleShapes) {
+            double getT = i.getT();
+            if (lowerBound <= getT && getT < upperBound) {
+                result.emplace_back(i);
             }
         }
-        return map[map.size() - 1];
+
+        if (result.empty()) {
+            int add = -1;
+            int startIndex = (int) (possibleShapes.size() - 1);
+            if (map[0].getT() > t) {
+                add = 1;
+                startIndex = 0;
+            }
+
+            int i = startIndex;
+            result.emplace_back(possibleShapes[i]);
+            while (((i += add) >= 0) && i < possibleShapes.size() && possibleShapes[i].getT() == result[0].getT()) {
+                result.template emplace_back(possibleShapes[i]);
+            }
+            std::reverse(result.begin(), result.end());
+        }
+        return result;
+    }
+
+    template<typename T>
+    std::vector<T> Road::getElements(const std::vector<T> &map, double s) const {
+        if (s < 0 || s > length) {
+            throw std::invalid_argument(std::to_string(s) + " is not on the road.");
+        }
+
+        double upperBound = std::numeric_limits<double>::max();
+        double lowerBound = -upperBound;
+
+        for (int i = 0; i < map.size(); i++) {
+            auto current = map[i].getS();
+            if (current > lowerBound && current <= s) {
+                lowerBound = current;
+                continue;
+            }
+            if (current <= upperBound && current > s) {
+                upperBound = current;
+                continue;
+            }
+            break;
+        }
+
+        std::vector<T> result;
+        for (int i = 0; i < map.size(); i++) {
+            if (lowerBound <= map[i].getS() && map[i].getS() < upperBound) {
+                result.template emplace_back(map[i]);
+            }
+        }
+
+        if (result.empty()) {
+            int i = map.size() - 1;
+            result.template emplace_back(map[i]);
+            while (i-- >= 0 && map[i].getS() == result[0].getS()) {
+                result.template emplace_back(map[i]);
+            }
+            std::reverse(result.begin(), result.end());
+        }
+        return result;
     }
 
     template<>
@@ -115,26 +205,39 @@ namespace opendrive {
 
     template<>
     std::vector<double> Road::getStartCoordinates<SuperElevation>(bool omitLastElement) const {
-        return getStartCoordinates(lateralProfile, omitLastElement);
+        return getStartCoordinates(lateralProfileSuperElevations, omitLastElement);
     }
 
     template<>
-    const Geometry &Road::getElement<Geometry>(double s) const {
-        const auto &geometry = getElement<Geometry>(planView, s);
-        if (s > geometry.getEndSCoordinate()) {
+    std::vector<double> Road::getStartCoordinates<Shape>(bool omitLastElement) const {
+        return getStartCoordinates(lateralProfileShapes, omitLastElement);
+    }
+
+    template<>
+    Geometry Road::getElement<Geometry>(double s) const {
+        auto geometry = getElements<Geometry>(planView, s);
+        if (s > geometry[0].getEndSCoordinate()) {
             throw std::invalid_argument(std::to_string(s) + " is not on the road.");
         }
-        return geometry;
+        return geometry[0];
     }
 
     template<>
-    const Elevation &Road::getElement<Elevation>(double s) const {
-        return getElement<Elevation>(elevationProfile, s);
+    Elevation Road::getElement<Elevation>(double s) const {
+        return getElements<Elevation>(elevationProfile, s)[0];
     }
 
     template<>
-    const SuperElevation &Road::getElement<SuperElevation>(double s) const {
-        return getElement<SuperElevation>(lateralProfile, s);
+    SuperElevation Road::getElement<SuperElevation>(double s) const {
+        return getElements<SuperElevation>(lateralProfileSuperElevations, s)[0];
+    }
+
+    Shape *Road::getElement(double s, double t) const {
+        std::vector<Shape> shapes = getElements(lateralProfileShapes, s, t);
+        if (shapes.empty()) {
+            return nullptr;
+        }
+        return new Shape(shapes[0]);
     }
 
 #pragma endregion TemplateGetters
@@ -165,6 +268,12 @@ namespace opendrive {
         Vector normal = geometry.calculateNormal(s);
 
         double roll = getElement<SuperElevation>(s).interpolate(s);
+        // TODO Integrate SuperElevation/Shape interpolation
+        Shape *shape = getElement(s, t);
+        if (shape != nullptr) {
+            auto shapeHeight = shape->interpolate(t);
+            tangent += {0, 0, shapeHeight};
+        }
         normal = normal.rotate(tangent, roll).normalized();
 
         return geometry.interpolate(s) + t * normal + Vector{0, 0, 1} * height;

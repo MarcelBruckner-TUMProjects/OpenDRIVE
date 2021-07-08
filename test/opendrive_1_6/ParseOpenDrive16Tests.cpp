@@ -113,20 +113,22 @@ namespace opendrive {
              * Tests parsing the test road lateral profile.
              */
             TEST_F(ParseOpendrive16Tests, testParsingLateralProfile) {
-                auto lateralProfile = testRoadOpendrive16.getLateralProfile();
+                auto lateralProfile = testRoadOpendrive16.getLateralProfile<SuperElevation>();
                 ASSERT_EQ(lateralProfile.size(), 12);
                 EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
-                EXPECT_NEAR(lateralProfile[0].getT(), 0.000000000000e+00, maxDifference);
                 EXPECT_EQ(lateralProfile[0].getPolynom(),
                           CubicPolynom(3.126709068491e-02, -1.122780414966e-04, 6.705325035129e-08,
                                        1.626353779681e-09));
+                ASSERT_EQ(testRoadOpendrive16.getLateralProfile<Shape>().size(), 0);
 
                 auto roadWithShapeId = "3142050";
-                lateralProfile = testMapOpendrive16->getRoad(roadWithShapeId).getLateralProfile();
-                ASSERT_EQ(lateralProfile.size(), 16);
-                EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
-                EXPECT_NEAR(lateralProfile[0].getT(), -1.159817420823e+01, maxDifference);
-                EXPECT_EQ(lateralProfile[0].getPolynom(),
+                Road anotherRoad = testMapOpendrive16->getRoad(roadWithShapeId);
+                auto shapes = anotherRoad.getLateralProfile<Shape>();
+                ASSERT_EQ(anotherRoad.getLateralProfile<SuperElevation>().size(), 1);
+                ASSERT_EQ(shapes.size(), 16);
+                EXPECT_NEAR(shapes[0].getS(), 0.000000000000e+00, maxDifference);
+                EXPECT_NEAR(shapes[0].getT(), -1.159817420823e+01, maxDifference);
+                EXPECT_EQ(shapes[0].getPolynom(),
                           CubicPolynom(-8.949226152504e-02, 5.551115120463e-18, 0.000000000000e+00,
                                        0.000000000000e+00));
             }
