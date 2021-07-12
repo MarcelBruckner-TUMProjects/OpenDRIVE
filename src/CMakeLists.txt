@@ -12,11 +12,11 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 ########################################################################################################################
 
 if (OPENDRIVE_1_4)
-    file(GLOB opendrive_1_4 "opendrive_1_4/*.cpp")
+    set(opendrive_1_4 "opendrive_1_4/FactoryMethods.cpp")
 endif ()
 
 if (OPENDRIVE_1_6)
-    file(GLOB opendrive_1_6 "opendrive_1_6/*.cpp")
+    set(opendrive_1_6 "opendrive_1_6/FactoryMethods.cpp")
 endif ()
 
 add_library(OpenDRIVE-lib

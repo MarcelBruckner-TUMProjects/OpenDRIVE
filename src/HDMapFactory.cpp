@@ -9,18 +9,18 @@
 
 #ifdef OPENDRIVE_1_4
 
-#include "OpenDRIVE/opendrive_1_4/HDMap.hpp"
+#include "OpenDRIVE/opendrive_1_4/FactoryMethods.hpp"
 
 #endif
 #ifdef OPENDRIVE_1_6
 
-#include "OpenDRIVE/opendrive_1_6/HDMap.hpp"
+#include "OpenDRIVE/opendrive_1_6/FactoryMethods.hpp"
 
 #endif
 
 namespace opendrive {
 
-    HDMap createHDMap(const std::string &filename) {
+    opendrive::HDMap createHDMap(const std::string &filename) {
         tinyxml2::XMLDocument document;
         document.LoadFile(filename.c_str());
 
@@ -29,11 +29,11 @@ namespace opendrive {
         switch (revMinor) {
             case 4:
 #ifdef OPENDRIVE_1_4
-                return opendrive::opendrive_1_4::HDMap(filename);
+                return opendrive::opendrive_1_4::create<opendrive::HDMap>(filename);
 #endif
             case 6:
 #ifdef OPENDRIVE_1_6
-                return opendrive::opendrive_1_6::HDMap(filename);
+                return opendrive::opendrive_1_6::create<opendrive::HDMap>(filename);
 #endif
             default:
                 throw std::invalid_argument(
