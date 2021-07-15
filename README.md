@@ -35,7 +35,10 @@ the [OpenDRIVE 1.6 standard](https://www.asam.net/index.php?eID=dumpFile&t=f&f=3
 .  
 If there are any inconsistencies in the comments or unclear code, please refer to
 the [OpenDRIVE 1.6 standard](https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#)
-.
+.  
+The corresponding parts of
+the [OpenDRIVE 1.6 standard](https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#)
+to the implemented class is always linked at the top of the class definition.
 
 ***
 
