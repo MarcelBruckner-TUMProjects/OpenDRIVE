@@ -1,6 +1,6 @@
 # OpenDRIVE
 
-- [OpenDRIVE 1.6 standard definition](https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_repeating_objects)
+- [OpenDRIVE 1.6 standard definition](https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#)
 - [See the project website of Providentia++](https://innovation-mobility.com/en)
 - [See the overview repository for general information about my Guided Research](https://github.com/Brucknem/GuidedResearch)
 - [See the Static Calibration project that uses the parser](https://github.com/Brucknem/StaticCalibration)
@@ -25,6 +25,17 @@ For instructions and convenience scripts see:
 
 - OpenDRIVE 1.4: `extern/opendrive_1_4/bootstrap.sh`
 - OpenDRIVE 1.6: `extern/opendrive_1_6/bootstrap.sh`
+
+***
+
+# Get Help
+
+I try to be as close as possible to the naming of the classes and attributes specified in
+the [OpenDRIVE 1.6 standard](https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#)
+.  
+If there are any inconsistencies in the comments or unclear code, please refer to
+the [OpenDRIVE 1.6 standard](https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#)
+.
 
 ***
 
