@@ -44,7 +44,7 @@ namespace opendrive {
          */
         double getT() const;
 
-        double interpolate(double ss) const override;
+        double interpolate(double t) const override;
 
         double interpolateStart() const override;
     };

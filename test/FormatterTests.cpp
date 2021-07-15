@@ -40,7 +40,7 @@ namespace opendrive {
              * Tests formatting the objects to YAML.
              */
             TEST_F(FormatterTests, testToYAML) {
-                const std::string &formattedYaml = opendrive::objectsToYaml(*testMapOpenDrive14);
+                const std::string &formattedYaml = opendrive::objectsToYaml(*mockTestMap);
                 YAML::Node actual = YAML::Load(formattedYaml);
 
                 ASSERT_EQ(actual["geoReference"].IsDefined(), true);

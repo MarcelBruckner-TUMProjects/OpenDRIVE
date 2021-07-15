@@ -20,22 +20,22 @@ namespace opendrive {
             /**
              * The HD maps.
              */
-            std::shared_ptr<opendrive::HDMap> testMapOpenDrive14;
+            std::shared_ptr<opendrive::HDMap> mockTestMap;
 
             /**
              * The id of the test roads.
              */
-            const char *roadIdTestMapOpenDrive14 = "0";
+            const char *mockTestRoadId = "0";
 
             /**
              * The test roads.
              */
-            std::shared_ptr<Road> roadTestMapOpenDrive14;
+            std::shared_ptr<Road> mockTestRoad;
 
             /**
              * The maximal difference after parsing.
              */
-            double maxDifference = 1e-52;
+            double maxDifference = 1e-15;
 
             /**
              * @destructor

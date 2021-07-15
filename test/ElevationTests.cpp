@@ -25,16 +25,16 @@ namespace opendrive {
              * Tests that the interpolation of the height works as expected.
              */
             TEST_F(ElevationTests, testInterpolateHeight) {
-                auto ss = roadTestMapOpenDrive14->getStartCoordinates<Elevation>(false);
-                auto elevationProfile = roadTestMapOpenDrive14->getElevationProfile();
+                auto ss = mockTestRoad->getStartCoordinates<Elevation>(false);
+                auto elevationProfile = mockTestRoad->getElevationProfile();
 
-                EXPECT_NEAR(roadTestMapOpenDrive14->getElement<Elevation>(0).interpolateStart(),
-                            roadTestMapOpenDrive14->getElement<Elevation>(0).getPolynom().a, maxDifference);
+                EXPECT_NEAR(mockTestRoad->getElement<Elevation>(0).interpolateStart(),
+                            mockTestRoad->getElement<Elevation>(0).getPolynom().a, maxDifference);
 
                 for (int i = 1; i < ss.size(); i++) {
-                    auto previousEndHeight = roadTestMapOpenDrive14->getElement<Elevation>(ss[i - 1]).interpolate(
+                    auto previousEndHeight = mockTestRoad->getElement<Elevation>(ss[i - 1]).interpolate(
                             ss[i]);
-                    auto startHeight = roadTestMapOpenDrive14->getElement<Elevation>(ss[i]).interpolateStart();
+                    auto startHeight = mockTestRoad->getElement<Elevation>(ss[i]).interpolateStart();
                     EXPECT_NEAR(previousEndHeight, startHeight, 1e-10);
                 }
             }
@@ -44,17 +44,17 @@ namespace opendrive {
              * Tests that the interpolation of the super elevation works as expected.
              */
             TEST_F(ElevationTests, testInterpolateSuperElevation) {
-                auto ss = roadTestMapOpenDrive14->getStartCoordinates<SuperElevation>(false);
-                auto elevationProfile = roadTestMapOpenDrive14->getLateralProfile<SuperElevation>();
+                auto ss = mockTestRoad->getStartCoordinates<SuperElevation>(false);
+                auto elevationProfile = mockTestRoad->getLateralProfile<SuperElevation>();
 
-                EXPECT_NEAR(roadTestMapOpenDrive14->getElement<SuperElevation>(0).interpolateStart(),
-                            roadTestMapOpenDrive14->getElement<SuperElevation>(0).getPolynom().a,
+                EXPECT_NEAR(mockTestRoad->getElement<SuperElevation>(0).interpolateStart(),
+                            mockTestRoad->getElement<SuperElevation>(0).getPolynom().a,
                             maxDifference);
 
                 for (int i = 1; i < ss.size(); i++) {
-                    auto previousEndRoll = roadTestMapOpenDrive14->getElement<SuperElevation>(ss[i - 1]).interpolate(
+                    auto previousEndRoll = mockTestRoad->getElement<SuperElevation>(ss[i - 1]).interpolate(
                             ss[i]);
-                    auto startRoll = roadTestMapOpenDrive14->getElement<SuperElevation>(ss[i]).interpolateStart();
+                    auto startRoll = mockTestRoad->getElement<SuperElevation>(ss[i]).interpolateStart();
                     EXPECT_NEAR(previousEndRoll, startRoll, 1e-10);
                 }
             }
@@ -63,26 +63,16 @@ namespace opendrive {
              * Tests that the interpolation of the super elevation works as expected.
              */
             TEST_F(ElevationTests, testInterpolateShape) {
-                auto road = opendrive::Road(
-                        "", "", 0, "", {}, {}, {}, {}, {},
-                        {
-                                {0.000000000000e+00, 0, {1, 0, 0, 0}},
-                                {0.000000000000e+00, 1, {1, 1, 0, 0}},
-                                {0.000000000000e+00, 2, {2, 2, 0, 0}},
-                                {0.000000000000e+00, 3, {4, 3, 0, 0}},
-                        }
-                );
-
-                EXPECT_NEAR(road.getElement(0, 0)->interpolateStart(),
-                            road.getElement(0, 0)->getPolynom().a,
+                EXPECT_NEAR(mockTestRoad->getElement(0, 10)->interpolateStart(),
+                            mockTestRoad->getElement(0, 10)->getPolynom().a,
                             maxDifference);
 
-                EXPECT_NEAR(road.getElement(0, -10)->interpolate(-10), 1, maxDifference);
-                EXPECT_NEAR(road.getElement(0, -1)->interpolate(-1), 1, maxDifference);
-                EXPECT_NEAR(road.getElement(0, 1)->interpolate(1), 1, maxDifference);
-                EXPECT_NEAR(road.getElement(0, 2)->interpolate(2), 2, maxDifference);
-                EXPECT_NEAR(road.getElement(0, 3)->interpolate(3), 4, maxDifference);
-                EXPECT_NEAR(road.getElement(0, 4)->interpolate(4), 7, maxDifference);
+                for (int i = 1; i < 10; ++i) {
+                    EXPECT_NEAR(mockTestRoad->getElement(0, 0)->interpolate(i), 0, maxDifference);
+                }
+                for (int i = 1; i < 10; ++i) {
+                    EXPECT_NEAR(mockTestRoad->getElement(0, 10)->interpolate(10 * i), -10 * i + 10, maxDifference);
+                }
             }
         }// namespace tests
     }// namespace opendrive

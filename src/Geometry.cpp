@@ -60,8 +60,7 @@ namespace opendrive {
 
     Vector Geometry::calculateNormal(double s) const {
         Vector tangent = calculateTangent(s);
-        Vector up{0, 0, 1};
-        return up.cross(tangent).normalize();
+        return {-tangent.getY(), tangent.getX()};
     }
 
     const CubicPolynom &Geometry::getU() const {

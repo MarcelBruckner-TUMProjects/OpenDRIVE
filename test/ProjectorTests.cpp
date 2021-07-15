@@ -25,7 +25,7 @@ namespace opendrive {
             protected:
                 void SetUp() override {
                     OpenDriveTests::SetUp();
-                    projector = std::make_shared<LongLatProjector>(testMapOpenDrive14->getGeoReference());
+                    projector = std::make_shared<LongLatProjector>(mockTestMap->getGeoReference());
                 }
 
             protected:
@@ -51,16 +51,23 @@ namespace opendrive {
                 Vector projected;
 
                 std::vector<Vector> expected = {
-                        {1.16418201941519221521e+01, 4.82462323099842222973e+01, 0.00000000000000000000e+00},
-                        {1.16405902219479955306e+01, 4.82437818279910075603e+01, 0.00000000000000000000e+00},
-                        {1.16381324315085894483e+01, 4.82388804146878342749e+01, 0.00000000000000000000e+00},
-                        {1.16356778613077995743e+01, 4.82339783246442337372e+01, 0.00000000000000000000e+00}
+                        {4.51125611561280059902e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51134570558514003125e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51143529556855327201e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51152488556303676859e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51161447556859140917e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51170406558521630558e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51179365561291412234e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51188324565168130675e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51197283570151874699e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51206242576242733122e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00},
+                        {4.51215201583440439492e+00, 0.00000000000000000000e+00, 0.00000000000000000000e+00}
                 };
 
                 int i = 0;
-                for (const auto &s : roadTestMapOpenDrive14->getStartCoordinates<Geometry>()) {
-                    projected = projector->project(roadTestMapOpenDrive14->getElement<Geometry>(s).getStart());
-//                std::cout << "{" << projected << "}," << std::endl;
+                for (const auto &s : mockTestRoad->getStartCoordinates<Geometry>()) {
+                    projected = projector->project(mockTestRoad->getElement<Geometry>(s).getStart());
+//                    std::cout << "{" << projected << "}," << std::endl;
                     EXPECT_NEAR(projected.distance(expected[i++]), 0, maxDifference);
                 }
             }
@@ -73,17 +80,24 @@ namespace opendrive {
                 Vector projected;
 
                 std::vector<std::string> expected = {
-                        "https://www.google.de/maps/place/48.2462323099842222973165917210280895233154296875,11.641820194151922152059341897256672382354736328125",
-                        "https://www.google.de/maps/place/48.24378182799100756028565228916704654693603515625,11.64059022194799553062694030813872814178466796875",
-                        "https://www.google.de/maps/place/48.23888041468783427490052417851984500885009765625,11.6381324315085894482990624965168535709381103515625",
-                        "https://www.google.de/maps/place/48.23397832464423373721729149110615253448486328125,11.6356778613077995743196879629977047443389892578125"
+                        "https://www.google.de/maps/place/0,4.5112561156128005990240126266144216060638427734375",
+                        "https://www.google.de/maps/place/0,4.51134570558514003124628288787789642810821533203125",
+                        "https://www.google.de/maps/place/0,4.51143529556855327200537431053817272186279296875",
+                        "https://www.google.de/maps/place/0,4.51152488556303676858760809409432113170623779296875",
+                        "https://www.google.de/maps/place/0,4.51161447556859140917140393867157399654388427734375",
+                        "https://www.google.de/maps/place/0,4.51170406558521630557834214414469897747039794921875",
+                        "https://www.google.de/maps/place/0,4.5117936556129141223436818108893930912017822265625",
+                        "https://www.google.de/maps/place/0,4.51188324565168130675374413840472698211669921875",
+                        "https://www.google.de/maps/place/0,4.5119728357015187469869488268159329891204833984375",
+                        "https://www.google.de/maps/place/0,4.51206242576242733122171557624824345111846923828125",
+                        "https://www.google.de/maps/place/0,4.5121520158344043949227852863259613513946533203125",
                 };
 
                 int i = 0;
-                for (const auto &s : roadTestMapOpenDrive14->getStartCoordinates<Geometry>()) {
-                    projected = projector->project(roadTestMapOpenDrive14->getElement<Geometry>(s).getStart());
+                for (const auto &s : mockTestRoad->getStartCoordinates<Geometry>()) {
+                    projected = projector->project(mockTestRoad->getElement<Geometry>(s).getStart());
                     auto actual = LongLatProjector::toGoogleMapsLink(projected);
-//                std::cout << actual << std::endl;
+//                    std::cout << "\"" << actual << "\"," << std::endl;
                     ASSERT_STREQ(actual.c_str(), expected[i++].c_str());
                 }
             }

@@ -262,21 +262,26 @@ namespace opendrive {
 
     Vector Road::interpolate(double s, double t) const {
         Geometry geometry = getElement<Geometry>(s);
-        auto height = getElement<Elevation>(s).interpolate(s);
 
         Vector tangent = geometry.calculateTangent(s);
         Vector normal = geometry.calculateNormal(s);
+        normal = (normal * t);
 
+        auto height = getElement<Elevation>(s).interpolate(s);
         double roll = getElement<SuperElevation>(s).interpolate(s);
-        // TODO Integrate SuperElevation/Shape interpolation
+
+
         Shape *shape = getElement(s, t);
         if (shape != nullptr) {
             auto shapeHeight = shape->interpolate(t);
-            tangent += {0, 0, shapeHeight};
+            normal += {0, 0, shapeHeight};
         }
-        normal = normal.rotate(tangent, roll).normalized();
 
-        return geometry.interpolate(s) + t * normal + Vector{0, 0, 1} * height;
+//        std::cout << normal.length() << std::endl;
+        normal = normal.rotate(tangent, roll);
+//        std::cout << normal.length() << std::endl;
+
+        return geometry.interpolate(s) + normal + Vector{0, 0, 1} * height;
     }
 
 
