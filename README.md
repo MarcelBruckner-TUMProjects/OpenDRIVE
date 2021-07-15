@@ -1,5 +1,6 @@
 # OpenDRIVE
 
+- [OpenDRIVE 1.6 standard definition](https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_repeating_objects)
 - [See the project website of Providentia++](https://innovation-mobility.com/en)
 - [See the overview repository for general information about my Guided Research](https://github.com/Brucknem/GuidedResearch)
 - [See the Static Calibration project that uses the parser](https://github.com/Brucknem/StaticCalibration)
@@ -9,7 +10,7 @@
 
 # Overview
 
-This serves as an OpenDRIVE 1.4 parser for my [Guided Research](https://github.com/Brucknem/GuidedResearch) at the
+This serves as an OpenDRIVE parser for my [Guided Research](https://github.com/Brucknem/GuidedResearch) at the
 [Providentia++](https://innovation-mobility.com/en) project. The parser extracts the world positions of landmarks from
 the OpenDRIVE HD maps that are used within the project.
 
@@ -17,12 +18,13 @@ the OpenDRIVE HD maps that are used within the project.
 
 # Setup
 
-Before running any code you have to download the OpenDRIVE V1.4 standard by _VIRES Simulationstechnologie GmbH_ and use
-the XSD schema to generate c++ data bindings.
+Before running any code, you have to download an OpenDRIVE standard. We then generate C++ data bindings for the XSD
+files.
 
-To make this process easier there is the `extern/standard/bootstrap.sh` script.  
-You have to run it from within the `extern/standard` directory and follow the instructions to download and generate the
-data bindings.
+For instructions and convenience scripts see:
+
+- OpenDRIVE 1.4: `extern/opendrive_1_4/bootstrap.sh`
+- OpenDRIVE 1.6: `extern/opendrive_1_6/bootstrap.sh`
 
 ***
 
@@ -44,6 +46,10 @@ cmake --build . -j8
 # Default is OFF for all options
 
 -DWITH_TESTS=ON/OFF     # Build with tests.
+
+-DOPENDRIVE_1_4=ON/OFF  # Build with support for the OpenDRIVE 1.4 standard.
+
+-DOPENDRIVE_1_6=ON/OFF  # Build with support for the OpenDRIVE 1.6 standard.
 ```
 
 ### Running
@@ -75,7 +81,8 @@ These dependencies are pulled by CMake when the project is built. You `do not` h
 
 | Dependency | Usage | Required | 
 | ---------- | ----------- | -------- |
-| [YAML-CPP](https://github.com/jbeder/yaml-cpp.git) | YAML parser for objects and pixels | Yes |
+| [YAML-CPP](https://github.com/jbeder/yaml-cpp.git) | YAML parser. | Yes |
+| [TINYXML2](https://github.com/leethomason/tinyxml2.git) | XML parser. | Yes |
 | [GoogleTest](https://github.com/google/googletest) | Google unit testing framework | `-DWITH_TESTS=ON` |
 
 ***
@@ -86,10 +93,12 @@ These dependencies are pulled by CMake when the project is built. You `do not` h
 
 ### XMLNS Attribute
 
-The parser fails if there is the `xmlns` attribute set.
+OpenDRIVE 1.4: The parser may fail if the `xmlns` attribute **is** set.  
+OpenDRIVE 1.4: The parser may fail if the `xmlns` attribute **is not exactly** set.
 
 ### Workaround
 
-Change `<OpenDRIVE xmlns="http://www.opendrive.org">` to `<OpenDRIVE>`
+OpenDRIVE 1.6: Change `<OpenDRIVE xmlns="http://www.opendrive.org">` to `<OpenDRIVE>`.  
+OpenDRIVE 1.6: The `xmlns` attribute **must** be `xmlns="http://code.asam.net/simulation/standard/opendrive_schema"`.
 
 ***
