@@ -13,6 +13,7 @@
 #include "OpenDRIVE/Elevation.hpp"
 #include "OpenDRIVE/SuperElevation.hpp"
 #include "Shape.hpp"
+#include "Lanes.hpp"
 
 namespace opendrive {
 
@@ -102,6 +103,11 @@ namespace opendrive {
         std::vector<Shape> lateralProfileShapes;
 
         /**
+         * The lanes of the road.
+         */
+        opendrive::Lanes lanes;
+
+        /**
          * Gets the s coordinates of the elements in the map.
          *
          * @param omitLastElement Flag if the last element should be omitted.
@@ -133,7 +139,8 @@ namespace opendrive {
         Road(std::string id, std::string name, double length, std::string junction,
              std::vector<Type> type, std::vector<Object> objects,
              std::vector<Geometry> planView, std::vector<Elevation> elevationProfile,
-             std::vector<SuperElevation> lateralProfileSuperElevations, std::vector<Shape> lateralProfileShapes);
+             std::vector<SuperElevation> lateralProfileSuperElevations, std::vector<Shape> lateralProfileShapes,
+             const opendrive::Lanes &lanes);
 
         /**
          * @destructor

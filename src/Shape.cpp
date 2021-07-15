@@ -15,10 +15,6 @@ namespace opendrive {
     double Shape::interpolate(double _t) const {
         double dt = _t - getT();
 
-        if (dt < 0) {
-            throw std::invalid_argument("Local t cannot be negative.");
-        }
-
         double elev = polynom(dt);
         return elev;
     }

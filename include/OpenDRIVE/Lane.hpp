@@ -78,6 +78,21 @@ namespace opendrive {
         std::vector<opendrive::CubicPolynomWrapper> borders;
 
     public:
+
+        /**
+         * @constructor
+         */
+        Lane(int id, std::string laneType, bool level, std::vector<Height> heights,
+             std::vector<opendrive::CubicPolynomWrapper> widths,
+             std::vector<opendrive::CubicPolynomWrapper> borders);
+
+        /**
+         * Factory for the default center lane.
+         */
+        static Lane getCenterLane() {
+            return Lane(0, "none", false, {}, {}, {});
+        }
+
         virtual ~Lane() = default;
     };
 

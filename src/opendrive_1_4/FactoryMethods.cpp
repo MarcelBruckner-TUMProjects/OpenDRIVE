@@ -160,6 +160,11 @@ namespace opendrive {
             return result;
         }
 
+        opendrive::Lanes extractLanes(const road &openDriveObject) {
+            // TODO Extract Lanes
+            return opendrive::Lanes({}, {});
+        }
+
         template<>
         opendrive::Road create(const road &openDriveRoad) {
             const char *roadId = openDriveRoad.id()->c_str();
@@ -173,7 +178,8 @@ namespace opendrive {
                     extractGeometry(openDriveRoad),
                     extractElevation(openDriveRoad),
                     extractSuperElevation(openDriveRoad),
-                    extractShape(openDriveRoad)
+                    extractShape(openDriveRoad),
+                    extractLanes(openDriveRoad)
             );
         }
 

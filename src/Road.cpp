@@ -15,17 +15,19 @@ namespace opendrive {
                std::vector<Type> type, std::vector<Object> objects,
                std::vector<Geometry> planView, std::vector<Elevation> elevationProfile,
                std::vector<SuperElevation> lateralProfileSuperElevations,
-               std::vector<Shape> lateralProfileShapes) : OpenDriveWrapper(0), id(std::move(id)),
-                                                          name(std::move(name)),
-                                                          length(length),
-                                                          junction(std::move(junction)),
-                                                          type(std::move(type)),
-                                                          objects(std::move(objects)),
-                                                          planView(std::move(planView)),
-                                                          elevationProfile(std::move(elevationProfile)),
-                                                          lateralProfileSuperElevations(
-                                                                  std::move(lateralProfileSuperElevations)),
-                                                          lateralProfileShapes(std::move(lateralProfileShapes)) {
+               std::vector<Shape> lateralProfileShapes, const opendrive::Lanes &lanes) :
+            OpenDriveWrapper(0),
+            id(std::move(id)),
+            name(std::move(name)),
+            length(length),
+            junction(std::move(junction)),
+            type(std::move(type)),
+            objects(std::move(objects)),
+            planView(std::move(planView)),
+            elevationProfile(std::move(elevationProfile)),
+            lateralProfileSuperElevations(std::move(lateralProfileSuperElevations)),
+            lateralProfileShapes(std::move(lateralProfileShapes)),
+            lanes(lanes) {
 
         std::sort(planView.begin(), planView.end(), [](const Geometry &lhs, const Geometry &rhs) {
             return lhs.getS() < rhs.getS();

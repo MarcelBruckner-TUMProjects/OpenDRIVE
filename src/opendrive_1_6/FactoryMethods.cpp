@@ -193,6 +193,11 @@ namespace opendrive {
             return result;
         }
 
+        opendrive::Lanes extractLanes(const simulation::standard::opendrive_schema::t_road &openDriveObject) {
+            // TODO Extract Lanes
+            return opendrive::Lanes({}, {});
+        }
+
         template<>
         opendrive::Road
         create(const simulation::standard::opendrive_schema::t_road &openDriveRoad) {
@@ -206,7 +211,8 @@ namespace opendrive {
                     extractGeometry(openDriveRoad),
                     extractElevation(openDriveRoad),
                     extractSuperElevation(openDriveRoad),
-                    extractShape(openDriveRoad)
+                    extractShape(openDriveRoad),
+                    extractLanes(openDriveRoad)
             );
         }
 

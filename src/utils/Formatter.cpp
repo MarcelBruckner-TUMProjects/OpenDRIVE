@@ -24,7 +24,7 @@ namespace opendrive {
         yaml << YAML::BeginMap;
         yaml << YAML::Key << "mapFilename" << YAML::Value << map.getFilename();
         yaml << YAML::Key << "geoReference" << YAML::Value << map.getGeoReference();
-        yaml << YAML::Key << "origin" << YAML::Value << origin.getElements();
+        yaml << YAML::Key << "origin" << YAML::Value << YAML::Flow << origin.getElements();
         yaml << YAML::Key << "objects" << YAML::Value;
 
         yaml << YAML::BeginSeq;
