@@ -8,7 +8,7 @@ namespace opendrive {
     namespace opendrive_1_4 {
         namespace tests {
             /**
-             * Base setup for the geometry calculation tests.
+             * Base setup for the elevation tests.
              */
             class ElevationTests : public opendrive::tests::OpenDriveTests {
             public:
@@ -32,7 +32,8 @@ namespace opendrive {
                             roadTestMapOpenDrive14->getElement<Elevation>(0).getPolynom().a, maxDifference);
 
                 for (int i = 1; i < ss.size(); i++) {
-                    auto previousEndHeight = roadTestMapOpenDrive14->getElement<Elevation>(ss[i - 1]).interpolate(ss[i]);
+                    auto previousEndHeight = roadTestMapOpenDrive14->getElement<Elevation>(ss[i - 1]).interpolate(
+                            ss[i]);
                     auto startHeight = roadTestMapOpenDrive14->getElement<Elevation>(ss[i]).interpolateStart();
                     EXPECT_NEAR(previousEndHeight, startHeight, 1e-10);
                 }

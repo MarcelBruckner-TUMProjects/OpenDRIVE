@@ -8,7 +8,7 @@ namespace opendrive {
         namespace tests {
 
             /**
-             * Base setup for the tests that parse the mock HD map.
+             * Base setup for the tests that parse the opendrive 1.6 test HD map.
              */
             class ParseOpendrive16Tests : public ::testing::Test {
             public:

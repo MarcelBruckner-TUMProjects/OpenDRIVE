@@ -9,7 +9,7 @@ namespace opendrive {
         namespace tests {
 
             /**
-             * Base setup for the tests of the Road class.
+             * Base setup for the tests of the Formatters.
              */
             class FormatterTests : public opendrive::tests::OpenDriveTests {
             public:

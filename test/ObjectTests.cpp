@@ -9,7 +9,7 @@ namespace opendrive {
         namespace tests {
 
             /**
-             * Base setup for the geometry calculation tests.
+             * Base setup for the objects tests.
              */
             class ObjectTests : public opendrive::tests::OpenDriveTests {
             public:
