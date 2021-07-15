@@ -81,8 +81,8 @@ These dependencies are pulled by CMake when the project is built. You `do not` h
 
 | Dependency | Usage | Required | 
 | ---------- | ----------- | -------- |
-| [YAML-CPP](https://github.com/jbeder/yaml-cpp.git) | YAML parser. | Yes |
-| [TINYXML2](https://github.com/leethomason/tinyxml2.git) | XML parser. | Yes |
+| [YAML-CPP](https://github.com/jbeder/yaml-cpp.git) | YAML parser | Yes |
+| [TinyXML-2](https://github.com/leethomason/tinyxml2.git) | XML parser | Yes |
 | [GoogleTest](https://github.com/google/googletest) | Google unit testing framework | `-DWITH_TESTS=ON` |
 
 ***
@@ -98,7 +98,7 @@ OpenDRIVE 1.4: The parser may fail if the `xmlns` attribute **is not exactly** s
 
 ### Workaround
 
-OpenDRIVE 1.6: Change `<OpenDRIVE xmlns="http://www.opendrive.org">` to `<OpenDRIVE>`.  
+OpenDRIVE 1.4: Change `<OpenDRIVE xmlns="http://www.opendrive.org">` to `<OpenDRIVE>`.  
 OpenDRIVE 1.6: The `xmlns` attribute **must** be `xmlns="http://code.asam.net/simulation/standard/opendrive_schema"`.
 
 ***
