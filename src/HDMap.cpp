@@ -20,17 +20,6 @@ namespace opendrive {
         throw std::invalid_argument("Could not find a road with the id " + id);
     }
 
-    const Object &HDMap::getObject(const std::string &id) const {
-        for (const auto &road : roads) {
-            for (const auto &object : road.second.getObjects()) {
-                if (object.getId() == id) {
-                    return object;
-                }
-            }
-        }
-        throw std::invalid_argument("Could not find an object with the id " + id);
-    }
-
     template<>
     Vector HDMap::getPosition<opendrive::Object>(const std::string &id) const {
         for (const auto &road : roads) {

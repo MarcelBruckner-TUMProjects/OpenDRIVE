@@ -26,7 +26,7 @@ namespace opendrive {
                 /**
                  * The test roads.
                  */
-                Road testRoadOpendrive16;
+                std::shared_ptr<Road> testRoadOpendrive16;
 
                 /**
                  * The maximal difference after parsing.
@@ -44,7 +44,8 @@ namespace opendrive {
                 void SetUp() override {
                     testMapOpendrive16 = std::make_shared<HDMap>(
                             opendrive::createHDMap("../../misc/test_map_opendrive_1_6.xodr"));
-                    testRoadOpendrive16 = testMapOpendrive16->getRoad(testRoadIdOpendrive16);
+                    testRoadOpendrive16 = std::make_shared<opendrive::Road>(
+                            testMapOpendrive16->getRoad(testRoadIdOpendrive16));
                 };
             };
 
@@ -63,18 +64,18 @@ namespace opendrive {
              * Tests parsing the test road basic attributes.
              */
             TEST_F(ParseOpendrive16Tests, testParsingRoadAttributes) {
-                ASSERT_STREQ(testRoadOpendrive16.getName().c_str(), "");
-                ASSERT_STREQ(testRoadOpendrive16.getJunction().c_str(), "-1");
-                ASSERT_STREQ(testRoadOpendrive16.getId().c_str(), testRoadIdOpendrive16);
-                EXPECT_NEAR(testRoadOpendrive16.getLength(), 1.724448767048e+03, maxDifference);
+                ASSERT_STREQ(testRoadOpendrive16->getName().c_str(), "");
+                ASSERT_STREQ(testRoadOpendrive16->getJunction().c_str(), "-1");
+                ASSERT_STREQ(testRoadOpendrive16->getId().c_str(), testRoadIdOpendrive16);
+                EXPECT_NEAR(testRoadOpendrive16->getLength(), 1.724448767048e+03, maxDifference);
             }
 
             /**
              * Tests parsingthe test road type.
              */
             TEST_F(ParseOpendrive16Tests, testParsingType) {
-                auto type = *testRoadOpendrive16.getType().begin();
-                ASSERT_EQ(testRoadOpendrive16.getType().size(), 1);
+                auto type = *testRoadOpendrive16->getType().begin();
+                ASSERT_EQ(testRoadOpendrive16->getType().size(), 1);
 
                 EXPECT_NEAR(type.getS(), 0.0, maxDifference);
                 ASSERT_STREQ(type.getType().c_str(), "motorway");
@@ -84,7 +85,7 @@ namespace opendrive {
              * Tests parsing the test road plan view.
              */
             TEST_F(ParseOpendrive16Tests, testParsingPlanView) {
-                auto planView = testRoadOpendrive16.getPlanView();
+                auto planView = testRoadOpendrive16->getPlanView();
 
                 ASSERT_EQ(planView.size(), 30);
 
@@ -99,7 +100,7 @@ namespace opendrive {
              * Tests parsing the test road elevation profile.
              */
             TEST_F(ParseOpendrive16Tests, testParsingElevationProfile) {
-                auto elevationProfile = testRoadOpendrive16.getElevationProfile();
+                auto elevationProfile = testRoadOpendrive16->getElevationProfile();
                 ASSERT_EQ(elevationProfile.size(), 16);
 
                 EXPECT_NEAR(elevationProfile[0].getS(), 0.000000000000e+00, maxDifference);
@@ -113,13 +114,13 @@ namespace opendrive {
              * Tests parsing the test road lateral profile.
              */
             TEST_F(ParseOpendrive16Tests, testParsingLateralProfile) {
-                auto lateralProfile = testRoadOpendrive16.getLateralProfile<SuperElevation>();
+                auto lateralProfile = testRoadOpendrive16->getLateralProfile<SuperElevation>();
                 ASSERT_EQ(lateralProfile.size(), 12);
                 EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
                 EXPECT_EQ(lateralProfile[0].getPolynom(),
                           CubicPolynom(3.126709068491e-02, -1.122780414966e-04, 6.705325035129e-08,
                                        1.626353779681e-09));
-                ASSERT_EQ(testRoadOpendrive16.getLateralProfile<Shape>().size(), 0);
+                ASSERT_EQ(testRoadOpendrive16->getLateralProfile<Shape>().size(), 0);
 
                 auto roadWithShapeId = "3142050";
                 Road anotherRoad = testMapOpendrive16->getRoad(roadWithShapeId);
@@ -137,11 +138,11 @@ namespace opendrive {
              * Tests parsing the test road objects.
              */
             TEST_F(ParseOpendrive16Tests, testParsingObjects) {
-                auto objects = testRoadOpendrive16.getObjects();
+                auto objects = testRoadOpendrive16->getObjects();
                 ASSERT_EQ(objects.size(), 168);
 
                 std::string id = "4069001";
-                auto testObject = testRoadOpendrive16.getElement<Object>(id);
+                auto testObject = testRoadOpendrive16->getElement<Object>(id);
 
                 ASSERT_STREQ(testObject.getType().c_str(), "pole");
                 ASSERT_STREQ(testObject.getName().c_str(), "permanentDelineator");

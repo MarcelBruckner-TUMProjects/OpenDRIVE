@@ -9,7 +9,7 @@
 #include "OpenDRIVE/Object.hpp"
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "OpenDRIVE/Geometry.hpp"
-#include "OpenDRIVE/ElevationBase.hpp"
+#include "OpenDRIVE/CubicPolynomWrapper.hpp"
 #include "OpenDRIVE/Elevation.hpp"
 #include "OpenDRIVE/SuperElevation.hpp"
 #include "Shape.hpp"
@@ -18,17 +18,20 @@ namespace opendrive {
 
     /**
      * A wrapper for the OpenDRIVE road class.
+     *
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_roads
      */
     class Road : public OpenDriveWrapper {
     public:
         /**
          * Wrapper for the types of the road surface.
+         *
+         * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_road_type
          */
         class Type : public OpenDriveWrapper {
 
             /**
-             * The type name.
+             * Country code of the road, see ISO 3166-1, alpha-2 codes.
              */
             std::string type;
 
@@ -48,22 +51,22 @@ namespace opendrive {
     private:
 
         /**
-         * The id of the road.
+         * Unique ID within the database. If it represents an integer number, it should comply to uint32_t and stay within the given range.
          */
         std::string id;
 
         /**
-         * The name of the road.
+         * Name of the road. May be chosen freely.
          */
         std::string name;
 
         /**
-         * The length of the road in meters.
+         * Total length of the reference line in the xy-plane. Change in length due to elevation is not considered
          */
         double length;
 
         /**
-         * The id of the junction of the road.
+         * ID of the junction to which the road belongs as a connecting road (= -1 for none)
          */
         std::string junction;
 
@@ -123,12 +126,6 @@ namespace opendrive {
 
 
     public:
-
-
-        /**
-         * @constructor
-         */
-        explicit Road() = default;
 
         /**
          * @constructor

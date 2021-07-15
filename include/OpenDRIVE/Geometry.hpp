@@ -11,9 +11,10 @@
 
 namespace opendrive {
     /**
- * Wrapper for the OpenDRIVE geometry class.
- * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_geometry
- */
+     * Wrapper for the OpenDRIVE geometry class.
+     *
+     * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_geometry
+     */
     class Geometry : public OpenDriveWrapper {
 
     private:
@@ -22,6 +23,7 @@ namespace opendrive {
          * The polynom to calculate the u ccordinate.
          */
         CubicPolynom u;
+
         /**
          * The polynom to calculate the v ccordinate.
          */
@@ -74,11 +76,6 @@ namespace opendrive {
         Vector getUVCoordinate(double s) const;
 
     public:
-
-        /**
-        * @constructor
-        */
-        Geometry() = default;
 
         /**
         * @constructor
@@ -141,16 +138,6 @@ namespace opendrive {
          * @get
          */
         const CubicPolynom &getV() const;
-
-        /**
-         * @get
-         */
-        double getHeading() const;
-
-        /**
-         * @get
-         */
-        double getLength() const;
     };
 
 }

@@ -6,7 +6,7 @@
 
 namespace opendrive {
 
-    Shape::Shape(double s, double t, const CubicPolynom &polynom) : ElevationBase(s, polynom), t(t) {}
+    Shape::Shape(double s, double t, const CubicPolynom &polynom) : CubicPolynomWrapper(s, polynom), t(t) {}
 
     double Shape::getT() const {
         return t;

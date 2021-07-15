@@ -65,8 +65,8 @@ namespace opendrive {
                 };
 
                 int i = 0;
-                for (const auto &entry : roadTestMapOpenDrive14.getObjects()) {
-                    auto position = roadTestMapOpenDrive14.getWorldPosition(entry);
+                for (const auto &entry : roadTestMapOpenDrive14->getObjects()) {
+                    auto position = roadTestMapOpenDrive14->getWorldPosition(entry);
 //                    std::cout << "{" << position << "}," << std::endl;
                     EXPECT_NEAR(position.getX(), expected[i].getX(), maxDifference);
                     EXPECT_NEAR(position.getY(), expected[i].getY(), maxDifference);
@@ -122,8 +122,8 @@ namespace opendrive {
                 const char *type = "pole";
                 const char *name = "permanentDelineator";
                 int i = 0;
-                for (const auto &entry : roadTestMapOpenDrive14.filterObjects(type, name)) {
-                    auto projected = projector.project(roadTestMapOpenDrive14.getWorldPosition<Object>(entry));
+                for (const auto &entry : roadTestMapOpenDrive14->filterObjects(type, name)) {
+                    auto projected = projector.project(roadTestMapOpenDrive14->getWorldPosition<Object>(entry));
                     auto link = LongLatProjector::toGoogleMapsLink(projected);
 //                std::cout << "\"" << link << "\"," << std::endl;
                     ASSERT_STREQ(link.c_str(), expected[i].c_str());
@@ -138,7 +138,7 @@ namespace opendrive {
             TEST_F(ObjectTests, testFilterRelevantLandmarks) {
                 const char *type = "pole";
                 const char *name = "permanentDelineator";
-                auto landmarks = roadTestMapOpenDrive14.filterObjects(type, name);
+                auto landmarks = roadTestMapOpenDrive14->filterObjects(type, name);
                 ASSERT_EQ(landmarks.size(), 35);
 
                 for (const auto &entry : landmarks) {

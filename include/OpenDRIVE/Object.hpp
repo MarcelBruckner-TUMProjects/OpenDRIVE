@@ -14,6 +14,7 @@ namespace opendrive {
 
     /**
      * Wrapper for the OpenDRIVE object class.
+     *
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_objects
      */
     class Object : public OpenDriveWrapper {
@@ -29,22 +30,22 @@ namespace opendrive {
         std::string type;
 
         /**
-         *  Name of the object.
+         *  Name of the object. May be chosen freely.
          */
         std::string name;
 
         /**
-         *  Id of the object.
+         *  Unique ID within database.
          */
         std::string id;
 
         /**
-         *
+         * Height of the object’s bounding box. @height is defined in the local coordinate system u/v along the z-axis.
          */
         double height;
 
         /**
-         *  Height of the object’s bounding box. @height is defined in the local coordinate system u/v along the z-axis.
+         *  Heading angle of the object relative to road direction.
          */
         double hdg;
 
@@ -59,12 +60,12 @@ namespace opendrive {
         std::string orientation;
 
         /**
-         *  Pitch angle relative to the x/y-plane
+         *  Pitch angle relative to the x/y-plane.
          */
         double pitch;
 
         /**
-         *  Roll angle relative to the x/y-plane
+         *  Roll angle relative to the x/y-plane.
          */
         double roll;
 
@@ -177,6 +178,12 @@ namespace opendrive {
          */
         double getZOffset() const;
 
+        /**
+         * Helper function for printing the object as a valid C++ object initializer string.
+         * Only used for debugging in tests.
+         *
+         * @return C++ code to initialize this object.
+         */
         std::string toInitializer() const;
     };
 }

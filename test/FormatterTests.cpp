@@ -20,7 +20,21 @@ namespace opendrive {
 
             protected:
 
+                /**
+                 * Checks if the given node is a three elements sequence of scalar values.
+                 */
+                static bool isThreeLongSequence(const YAML::Node &node) {
+                    int i = 0;
+                    for (const auto &element : node) {
+                        if (!element.IsScalar()) {
+                            return false;
+                        }
+                        i++;
+                    }
+                    return i == 3;
+                }
             };
+
 
             /**
              * Tests formatting the objects to YAML.
@@ -28,12 +42,11 @@ namespace opendrive {
             TEST_F(FormatterTests, testToYAML) {
                 const std::string &formattedYaml = opendrive::objectsToYaml(*testMapOpenDrive14);
                 YAML::Node actual = YAML::Load(formattedYaml);
-                YAML::Node expected = YAML::LoadFile("../misc/objects.yaml");
 
-                ASSERT_STREQ(expected["geoReference"].as<std::string>().c_str(),
-                             actual["geoReference"].as<std::string>().c_str());
-                ASSERT_EQ(expected["objects"].IsSequence(), true);
-                ASSERT_EQ(expected["objects"].IsSequence(), expected["objects"].IsSequence());
+                ASSERT_EQ(actual["geoReference"].IsDefined(), true);
+                ASSERT_EQ(actual["objects"].IsSequence(), true);
+                ASSERT_EQ(actual["objects"].IsSequence(), true);
+                ASSERT_EQ(isThreeLongSequence(actual["origin"]), true);
 
                 for (const auto &object : actual["objects"]) {
                     ASSERT_EQ(object["id"].IsDefined(), true);
@@ -49,13 +62,8 @@ namespace opendrive {
                     ASSERT_EQ(object["width"].IsScalar(), true);
                     ASSERT_EQ(object["radius"].IsScalar(), true);
 
-                    ASSERT_EQ(object["utm_coord"].IsSequence(), true);
-                    int i = 0;
-                    for (const auto &element : object["utm_coord"]) {
-                        ASSERT_EQ(element.IsScalar(), true);
-                        i++;
-                    }
-                    ASSERT_EQ(i, 3);
+                    ASSERT_EQ(isThreeLongSequence(object["original_coord"]), true);
+                    ASSERT_EQ(isThreeLongSequence(object["shifted_coord"]), true);
 
                     ASSERT_EQ(object["googleMaps"].IsDefined(), true);
                 }

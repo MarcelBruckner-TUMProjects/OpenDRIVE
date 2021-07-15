@@ -162,8 +162,9 @@ namespace opendrive {
 
         template<>
         opendrive::Road create(const road &openDriveRoad) {
+            const char *roadId = openDriveRoad.id()->c_str();
             return opendrive::Road(
-                    openDriveRoad.id()->c_str(),
+                    roadId,
                     openDriveRoad.name()->c_str(),
                     openDriveRoad.length().get(),
                     openDriveRoad.junction().get().c_str(),

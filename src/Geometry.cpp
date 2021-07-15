@@ -72,12 +72,4 @@ namespace opendrive {
         return v;
     }
 
-    double Geometry::getHeading() const {
-        return heading;
-    }
-
-    double Geometry::getLength() const {
-        return length;
-    }
-
 }

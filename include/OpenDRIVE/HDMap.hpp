@@ -74,13 +74,6 @@ namespace opendrive {
         const Road &getRoad(const std::string &id) const;
 
         /**
-         * @get Tries to find an object with the given id in the OpenDRIVE HD map.
-         *
-         * @throws invalid_argument if no object with the given id is found.
-         */
-        const Object &getObject(const std::string &id) const;
-
-        /**
          * @get The PROJ projection string from the header.
          */
         std::string getGeoReference() const;
@@ -96,7 +89,7 @@ namespace opendrive {
         const std::string &getFilename() const;
 
         /**
-         * @get
+         * @get The position of the element with the given id.
          */
         template<typename T>
         Vector getPosition(const std::string &id) const;

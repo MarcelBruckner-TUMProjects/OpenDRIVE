@@ -30,7 +30,7 @@ namespace opendrive {
             /**
              * The test roads.
              */
-            Road roadTestMapOpenDrive14;
+            std::shared_ptr<Road> roadTestMapOpenDrive14;
 
             /**
              * The maximal difference after parsing.

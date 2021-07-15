@@ -13,16 +13,7 @@ namespace opendrive {
             return {0, 0};
         }
 
-        for (const auto &roadEntry : map.getRoads()) {
-            auto road = roadEntry.second;
-
-            for (const auto &object : road.getObjects()) {
-                if (object.getId() == id) {
-                    return road.getWorldPosition<Object>(object.getId());
-                }
-            }
-        }
-        return {0, 0};
+        return map.getPosition<Object>(id);
     }
 
 
@@ -33,6 +24,7 @@ namespace opendrive {
         yaml << YAML::BeginMap;
         yaml << YAML::Key << "mapFilename" << YAML::Value << map.getFilename();
         yaml << YAML::Key << "geoReference" << YAML::Value << map.getGeoReference();
+        yaml << YAML::Key << "origin" << YAML::Value << origin.getElements();
         yaml << YAML::Key << "objects" << YAML::Value;
 
         yaml << YAML::BeginSeq;
@@ -47,7 +39,9 @@ namespace opendrive {
                 yaml << YAML::Key << "name" << YAML::Value << object.getName();
 
                 auto worldPosition = road.getWorldPosition<Object>(object.getId());
-                yaml << YAML::Key << "utm_coord" << YAML::Value << YAML::Flow
+                yaml << YAML::Key << "original_coord" << YAML::Value << YAML::Flow
+                     << (worldPosition).getElements();
+                yaml << YAML::Key << "shifted_coord" << YAML::Value << YAML::Flow
                      << (worldPosition - origin).getElements();
 
                 yaml << YAML::Key << "validLength" << YAML::Value << object.getValidLength();

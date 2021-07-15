@@ -119,15 +119,16 @@ namespace opendrive {
         }
 
         void OpenDriveTests::SetUp() {
-            roadTestMapOpenDrive14 = opendrive::Road("0", "test", 1.724447338294e+03, "-1", {{0, "motorway"}},
-                                                     createMockObjects(),
-                                                     createMockPlanView(), createMockElevationProfile(),
-                                                     createMockLateralProfileSuperElevation(), {});
+            auto road = opendrive::Road("0", "test", 1.724447338294e+03, "-1", {{0, "motorway"}},
+                                        createMockObjects(),
+                                        createMockPlanView(), createMockElevationProfile(),
+                                        createMockLateralProfileSuperElevation(), {});
+            roadTestMapOpenDrive14 = std::make_shared<opendrive::Road>(road);
 
             testMapOpenDrive14 = std::make_shared<opendrive::HDMap>(
                     opendrive::HDMap{
                             "test.xodr",
-                            {{"", roadTestMapOpenDrive14}},
+                            {{"", road}},
                             {
                                     "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=500000 +y_0=0 +datum=WGS84 +units=m +no_defs",
                                     "3D Mapping Solutions",

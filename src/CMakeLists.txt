@@ -25,11 +25,14 @@ add_library(OpenDRIVE-lib
         Object.cpp
         OpenDriveWrapper.cpp
         Geometry.cpp
-        ElevationBase.cpp
+        CubicPolynomWrapper.cpp
         Elevation.cpp
         SuperElevation.cpp
         Shape.cpp
         HDMapFactory.cpp
+        Lane.cpp
+        Lanes.cpp
+        LaneSection.cpp
 
         utils/Formatter.cpp
         utils/CubicPolynom.cpp

@@ -58,8 +58,8 @@ namespace opendrive {
                 };
 
                 int i = 0;
-                for (const auto &s : roadTestMapOpenDrive14.getStartCoordinates<Geometry>()) {
-                    projected = projector->project(roadTestMapOpenDrive14.getElement<Geometry>(s).getStart());
+                for (const auto &s : roadTestMapOpenDrive14->getStartCoordinates<Geometry>()) {
+                    projected = projector->project(roadTestMapOpenDrive14->getElement<Geometry>(s).getStart());
 //                std::cout << "{" << projected << "}," << std::endl;
                     EXPECT_NEAR(projected.distance(expected[i++]), 0, maxDifference);
                 }
@@ -80,8 +80,8 @@ namespace opendrive {
                 };
 
                 int i = 0;
-                for (const auto &s : roadTestMapOpenDrive14.getStartCoordinates<Geometry>()) {
-                    projected = projector->project(roadTestMapOpenDrive14.getElement<Geometry>(s).getStart());
+                for (const auto &s : roadTestMapOpenDrive14->getStartCoordinates<Geometry>()) {
+                    projected = projector->project(roadTestMapOpenDrive14->getElement<Geometry>(s).getStart());
                     auto actual = LongLatProjector::toGoogleMapsLink(projected);
 //                std::cout << actual << std::endl;
                     ASSERT_STREQ(actual.c_str(), expected[i++].c_str());

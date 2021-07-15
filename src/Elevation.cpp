@@ -6,5 +6,5 @@
 
 namespace opendrive {
 
-    Elevation::Elevation(double s, const CubicPolynom &polynom) : ElevationBase(s, polynom) {}
+    Elevation::Elevation(double s, const CubicPolynom &polynom) : CubicPolynomWrapper(s, polynom) {}
 }

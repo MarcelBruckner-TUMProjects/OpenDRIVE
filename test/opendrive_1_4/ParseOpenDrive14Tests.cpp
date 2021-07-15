@@ -27,7 +27,7 @@ namespace opendrive {
                 /**
                  * The test roads.
                  */
-                Road testRoadOpenDrive14;
+                std::shared_ptr<Road> testRoadOpenDrive14;
 
                 /**
                  * The maximal difference after parsing.
@@ -45,7 +45,8 @@ namespace opendrive {
                 void SetUp() override {
                     testMapOpenDrive14 = std::make_shared<HDMap>(
                             opendrive::createHDMap("../../misc/test_map_opendrive_1_4.xodr"));
-                    testRoadOpenDrive14 = testMapOpenDrive14->getRoad(testRoadIdOpenDrive14);
+                    testRoadOpenDrive14 = std::make_shared<opendrive::Road>(
+                            testMapOpenDrive14->getRoad(testRoadIdOpenDrive14));
                 };
             };
 
@@ -64,28 +65,28 @@ namespace opendrive {
              * Tests parsing the test road basic attributes.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingRoadAttributes) {
-                ASSERT_STREQ(testRoadOpenDrive14.getName().c_str(), "");
-                ASSERT_STREQ(testRoadOpenDrive14.getJunction().c_str(), "-1");
-                ASSERT_STREQ(testRoadOpenDrive14.getId().c_str(), testRoadIdOpenDrive14);
-                EXPECT_NEAR(testRoadOpenDrive14.getLength(), 1.724447338294e+03, maxDifference);
+                ASSERT_STREQ(testRoadOpenDrive14->getName().c_str(), "");
+                ASSERT_STREQ(testRoadOpenDrive14->getJunction().c_str(), "-1");
+                ASSERT_STREQ(testRoadOpenDrive14->getId().c_str(), testRoadIdOpenDrive14);
+                EXPECT_NEAR(testRoadOpenDrive14->getLength(), 1.724447338294e+03, maxDifference);
             }
 
             /**
-             * Tests parsingthe test road type.
+             * Tests parsing the test road type.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingType) {
-//            auto type = testRoadOpenDrive14.type[0];
-                ASSERT_EQ(testRoadOpenDrive14.getType().size(), 1);
+                auto type = testRoadOpenDrive14->getType()[0];
+                ASSERT_EQ(testRoadOpenDrive14->getType().size(), 1);
 
-//            EXPECT_NEAR(type.first, 0.0, maxDifference);
-//            ASSERT_STREQ(type.second.c_str(), "motorway");
+                EXPECT_NEAR(type.getS(), 0.0, maxDifference);
+                ASSERT_STREQ(type.getType().c_str(), "motorway");
             }
 
             /**
              * Tests parsing the test road plan view.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingPlanView) {
-                auto planView = testRoadOpenDrive14.getPlanView();
+                auto planView = testRoadOpenDrive14->getPlanView();
 
                 ASSERT_EQ(planView.size(), 4);
 
@@ -107,7 +108,7 @@ namespace opendrive {
              * Tests parsing the test road elevation profile.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingElevationProfile) {
-                auto elevationProfile = testRoadOpenDrive14.getElevationProfile();
+                auto elevationProfile = testRoadOpenDrive14->getElevationProfile();
                 ASSERT_EQ(elevationProfile.size(), 12);
 
                 EXPECT_NEAR(elevationProfile[0].getS(), 0.000000000000e+00, maxDifference);
@@ -122,7 +123,7 @@ namespace opendrive {
              * Tests parsing the test road lateral profile.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingLateralProfile) {
-                auto lateralProfile = testRoadOpenDrive14.getLateralProfile<SuperElevation>();
+                auto lateralProfile = testRoadOpenDrive14->getLateralProfile<SuperElevation>();
                 ASSERT_EQ(lateralProfile.size(), 9);
 
                 EXPECT_NEAR(lateralProfile[0].getS(), 0.000000000000e+00, maxDifference);
@@ -137,11 +138,11 @@ namespace opendrive {
              * Tests parsing the test road objects.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingObjects) {
-                auto objects = testRoadOpenDrive14.getObjects();
+                auto objects = testRoadOpenDrive14->getObjects();
                 ASSERT_EQ(objects.size(), 52);
 
                 std::string id = "4007953";
-                auto testObject = testRoadOpenDrive14.getElement<Object>(id);
+                auto testObject = testRoadOpenDrive14->getElement<Object>(id);
 
                 ASSERT_STREQ(testObject.getType().c_str(), "pole");
                 ASSERT_STREQ(testObject.getName().c_str(), "permanentDelineator");
@@ -155,7 +156,7 @@ namespace opendrive {
                 EXPECT_NEAR(testObject.getHeight(), 7.705e-01, maxDifference);
                 EXPECT_NEAR(testObject.getHdg(), 0.0000e+00, maxDifference);
 
-//                for (const auto &object : testRoadOpenDrive14.filterObjects("pole", "permanentDelineator")) {
+//                for (const auto &object : testRoadOpenDrive14->filterObjects("pole", "permanentDelineator")) {
 //                    std::cout << object.second.toInitializer() << "," << std::endl;
 //                }
             }
