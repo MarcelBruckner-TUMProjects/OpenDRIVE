@@ -3,3 +3,7 @@
 //
 
 #include "OpenDRIVE/Lanes.hpp"
+
+namespace opendrive {
+
+}
