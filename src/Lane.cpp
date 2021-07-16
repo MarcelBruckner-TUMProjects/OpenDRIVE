@@ -5,6 +5,7 @@
 #include "OpenDRIVE/Lane.hpp"
 
 #include <utility>
+#include <algorithm>
 
 namespace opendrive {
     Lane::Lane(int id, std::string laneType, bool level, std::vector<Height> heights,
@@ -13,7 +14,17 @@ namespace opendrive {
                                                                       level(level),
                                                                       heights(std::move(heights)),
                                                                       widths(std::move(widths)),
-                                                                      borders(std::move(borders)) {}
+                                                                      borders(std::move(borders)) {
+        std::sort(heights.begin(), heights.end(), [](const Height &lhs, const Height &rhs) {
+            return lhs.getS() < rhs.getS();
+        });
+        std::sort(widths.begin(), widths.end(), [](const CubicPolynomWrapper &lhs, const CubicPolynomWrapper &rhs) {
+            return lhs.getS() < rhs.getS();
+        });
+        std::sort(borders.begin(), borders.end(), [](const CubicPolynomWrapper &lhs, const CubicPolynomWrapper &rhs) {
+            return lhs.getS() < rhs.getS();
+        });
+    }
 
     int Lane::getId() const {
         return id;
