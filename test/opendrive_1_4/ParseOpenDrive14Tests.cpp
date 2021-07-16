@@ -177,7 +177,7 @@ namespace opendrive {
             }
 
             /**
-             * Tests parsing the test road objects.
+             * Tests parsing the test road lanes.
              */
             TEST_F(ParseOpenDrive14Tests, testParsingLanes) {
                 auto lanes = testRoadOpenDrive14->getLanes();
