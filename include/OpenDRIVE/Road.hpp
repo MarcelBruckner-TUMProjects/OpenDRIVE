@@ -258,6 +258,10 @@ namespace opendrive {
          */
         const std::vector<Road::Type> &getType() const;
 
+        /**
+         * @get
+         */
+        const Lanes &getLanes() const;
     };
 }
 

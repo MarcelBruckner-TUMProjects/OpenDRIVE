@@ -161,6 +161,65 @@ namespace opendrive {
 //                }
             }
 
+
+            /**
+             * Asserts that the given lane has the given lane properties set.
+             */
+            void assertBasicLaneProperties(const opendrive::Lane &lane, int id, const std::string &type, bool level,
+                                           int widthsSize,
+                                           int heightsSize, int bordersSize) {
+                ASSERT_EQ(lane.getId(), id);
+                ASSERT_EQ(lane.getType(), type);
+                ASSERT_EQ(lane.getLevel(), level);
+                ASSERT_EQ(lane.getBorders().size(), bordersSize);
+                ASSERT_EQ(lane.getHeights().size(), heightsSize);
+                ASSERT_EQ(lane.getWidths().size(), widthsSize);
+            }
+
+            /**
+             * Tests parsing the test road objects.
+             */
+            TEST_F(ParseOpenDrive14Tests, testParsingLanes) {
+                auto lanes = testRoadOpenDrive14->getLanes();
+                auto laneOffsets = lanes.getLaneOffsets();
+                auto laneSections = lanes.getLaneSections();
+
+                ASSERT_EQ(laneOffsets.size(), 134);
+                ASSERT_EQ(laneSections.size(), 19);
+
+                auto laneOffset = laneOffsets[1];
+                ASSERT_EQ(laneOffset.getS(), 22.6999904090);
+                ASSERT_EQ(laneOffset.getPolynom(),
+                          CubicPolynom(1.823477504728e+00, 9.794341324697e-04, 1.242681575038e-04, -3.618877182703e-06)
+                );
+
+                auto laneSection = laneSections[1];
+                ASSERT_EQ(laneSection.getS(), 50.6432349799);
+                ASSERT_EQ(laneSection.getSingleSide(), false);
+                ASSERT_EQ(laneSection.getLeft().size(), 2);
+                ASSERT_EQ(laneSection.getRight().size(), 7);
+
+                auto lane = laneSection.getCenter();
+                assertBasicLaneProperties(lane, 0, "none", false, 0, 0, 0);
+
+                lane = laneSection.getLeft()[1];
+                assertBasicLaneProperties(lane, 1, "shoulder", false, 32, 0, 0);
+                CubicPolynomWrapper width = lane.getWidths()[1];
+                ASSERT_EQ(width.getS(), 8.999987120617e+00);
+                ASSERT_EQ(width.getPolynom(),
+                          CubicPolynom(4.842894418816e-01, 3.677476466731e-03, 1.318781841080e-03, -8.442551396173e-05)
+                );
+
+                lane = laneSection.getRight()[0];
+                assertBasicLaneProperties(lane, -1, "driving", false, 10, 0, 0);
+                width = lane.getWidths()[1];
+                ASSERT_EQ(width.getS(), 2.710000324784e+01);
+                ASSERT_EQ(width.getPolynom(),
+                          CubicPolynom(3.655760640140e+00, -3.708509612515e-04, -1.551918803442e-04, 6.621513573606e-06)
+                );
+
+            }
+
         }// namespace tests
     }// namespace opendrive
 }

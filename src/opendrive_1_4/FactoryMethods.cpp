@@ -160,9 +160,93 @@ namespace opendrive {
             return result;
         }
 
+
+        template<>
+        opendrive::Lane create(const lane &laneNode) {
+            std::vector<CubicPolynomWrapper> widths, borders;
+            std::vector<opendrive::Lane::Height> heights;
+
+            for (const auto &widthNode : laneNode.width()) {
+                widths.emplace_back(
+                        widthNode.sOffset().get(),
+                        widthNode.a().get(), widthNode.b().get(), widthNode.c().get(), widthNode.d().get()
+                );
+            }
+            for (const auto &borderNode : laneNode.border()) {
+                widths.emplace_back(
+                        borderNode.sOffset().get(),
+                        borderNode.a().get(), borderNode.b().get(), borderNode.c().get(), borderNode.d().get()
+                );
+            }
+
+            for (const auto &heightNode : laneNode.height()) {
+                heights.emplace_back(
+                        heightNode.sOffset().get(),
+                        heightNode.inner().get(), heightNode.outer().get()
+                );
+            }
+
+
+            return opendrive::Lane(
+                    laneNode.id().get(),
+                    laneNode.type().get().c_str(),
+                    laneNode.level().get() == "true",
+                    heights,
+                    widths,
+                    borders
+            );
+        }
+
+        template<>
+        opendrive::Lane create(const centerLane &laneNode) {
+            return opendrive::Lane(
+                    laneNode.id().get(),
+                    laneNode.type().get().c_str(),
+                    laneNode.level().get() == "true",
+                    {},
+                    {},
+                    {}
+            );
+        }
+
+        template<>
+        opendrive::LaneSection create(const laneSection &laneSectionNode) {
+            std::vector<opendrive::Lane> right, left;
+
+            for (const auto &laneNode : laneSectionNode.left().get().lane()) {
+                left.emplace_back(create<opendrive::Lane>(laneNode));
+            }
+            for (const auto &laneNode : laneSectionNode.right().get().lane()) {
+                right.emplace_back(create<opendrive::Lane>(laneNode));
+            }
+
+            return opendrive::LaneSection(
+                    laneSectionNode.s().get(),
+                    laneSectionNode.singleSide().get() == "true",
+                    left,
+                    create<opendrive::Lane>(laneSectionNode.center().lane().get()),
+                    right
+            );
+        }
+
         opendrive::Lanes extractLanes(const road &openDriveObject) {
-            // TODO Extract Lanes
-            return opendrive::Lanes({}, {});
+            std::vector<opendrive::CubicPolynomWrapper> laneOffsets;
+            for (const auto &laneOffsetNode : openDriveObject.lanes().laneOffset()) {
+                laneOffsets.emplace_back(opendrive::CubicPolynomWrapper(
+                        (double) laneOffsetNode.s().get(),
+                        (double) laneOffsetNode.a().get(),
+                        (double) laneOffsetNode.b().get(),
+                        (double) laneOffsetNode.c().get(),
+                        (double) laneOffsetNode.d().get()
+                ));
+            }
+
+            std::vector<opendrive::LaneSection> laneSections;
+            for (const auto &laneSectionNode : openDriveObject.lanes().laneSection()) {
+                laneSections.emplace_back(create<opendrive::LaneSection>(laneSectionNode));
+            }
+
+            return opendrive::Lanes(laneOffsets, laneSections);
         }
 
         template<>

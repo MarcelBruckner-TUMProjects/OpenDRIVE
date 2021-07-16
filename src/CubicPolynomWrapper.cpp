@@ -28,4 +28,6 @@ namespace opendrive {
     CubicPolynomWrapper::CubicPolynomWrapper(double s, const CubicPolynom &polynom) : OpenDriveWrapper(s),
                                                                                       polynom(polynom) {}
 
+    CubicPolynomWrapper::CubicPolynomWrapper(double s, double a, double b, double c, double d) :
+            CubicPolynomWrapper(s, {a, b, c, d}) {}
 }

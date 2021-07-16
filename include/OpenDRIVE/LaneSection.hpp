@@ -51,6 +51,26 @@ namespace opendrive {
                     std::vector<opendrive::Lane> right);
 
         ~LaneSection() override = default;
+
+        /**
+         * @get
+         */
+        bool getSingleSide() const;
+
+        /**
+         * @get
+         */
+        const std::vector<opendrive::Lane> &getLeft() const;
+
+        /**
+         * @get
+         */
+        const Lane &getCenter() const;
+
+        /**
+         * @get
+         */
+        const std::vector<opendrive::Lane> &getRight() const;
     };
 }
 

@@ -325,6 +325,10 @@ namespace opendrive {
         return type;
     }
 
+    const Lanes &Road::getLanes() const {
+        return lanes;
+    }
+
 
 #pragma endregion Calculations
 

@@ -11,4 +11,20 @@ namespace opendrive {
                              std::vector<opendrive::Lane> right) : opendrive::OpenDriveWrapper(s),
                                                                    singleSide(singleSide), left(std::move(left)),
                                                                    center(center), right(std::move(right)) {}
+
+    bool LaneSection::getSingleSide() const {
+        return singleSide;
+    }
+
+    const std::vector<opendrive::Lane> &LaneSection::getLeft() const {
+        return left;
+    }
+
+    const Lane &LaneSection::getCenter() const {
+        return center;
+    }
+
+    const std::vector<opendrive::Lane> &LaneSection::getRight() const {
+        return right;
+    }
 }

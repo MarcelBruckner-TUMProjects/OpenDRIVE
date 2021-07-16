@@ -37,6 +37,11 @@ namespace opendrive {
         explicit CubicPolynomWrapper(double s, const CubicPolynom &polynom);
 
         /**
+         * @constructor
+         */
+        explicit CubicPolynomWrapper(double s, double a, double b, double c, double d);
+
+        /**
          * @destructor
          */
         ~CubicPolynomWrapper() override = default;

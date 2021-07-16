@@ -40,6 +40,16 @@ namespace opendrive {
               std::vector<opendrive::LaneSection> laneSections);
 
         virtual ~Lanes() = default;
+
+        /**
+         * @get
+         */
+        const std::vector<opendrive::CubicPolynomWrapper> &getLaneOffsets() const;
+
+        /**
+         * @get
+         */
+        const std::vector<opendrive::LaneSection> &getLaneSections() const;
     };
 }
 

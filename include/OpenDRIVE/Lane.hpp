@@ -19,24 +19,7 @@ namespace opendrive {
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_lanes
      */
     class Lane {
-
-        /**
-         * Lanes with positive ID run on the left side of the center lane, while lanes with negative ID run on the right side of the center lane.
-         */
-        int id;
-
-        /**
-         * A lane type defines the main purpose of a lane and its corresponding traffic rules.
-         *
-         * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_lane_type
-         */
-        std::string laneType;
-
-        /**
-         * "true" = keep lane on level, that is, do not apply superelevation; "false" = apply superelevation to this lane (default, also used if attribute level is missing).
-         */
-        bool level = false;
-
+    public:
         /**
          * Wrapper for the OpenDRIVE height class.
          *
@@ -53,7 +36,31 @@ namespace opendrive {
              * Inner offset from road level.
              */
             double outer;
+
+        public:
+            /**
+             * @constructor
+             */
+            Height(double s, double inner, double outer);
         };
+
+    private:
+        /**
+         * Lanes with positive ID run on the left side of the center lane, while lanes with negative ID run on the right side of the center lane.
+         */
+        int id;
+
+        /**
+         * A lane type defines the main purpose of a lane and its corresponding traffic rules.
+         *
+         * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_lane_type
+         */
+        std::string type;
+
+        /**
+         * "true" = keep lane on level, that is, do not apply superelevation; "false" = apply superelevation to this lane (default, also used if attribute level is missing).
+         */
+        bool level = false;
 
         /**
          * The lane heights.
@@ -94,6 +101,36 @@ namespace opendrive {
         }
 
         virtual ~Lane() = default;
+
+        /**
+         * @get
+         */
+        int getId() const;
+
+        /**
+         * @get
+         */
+        const std::string &getType() const;
+
+        /**
+         * @get
+         */
+        bool getLevel() const;
+
+        /**
+         * @get
+         */
+        const std::vector<Height> &getHeights() const;
+
+        /**
+         * @get
+         */
+        const std::vector<opendrive::CubicPolynomWrapper> &getWidths() const;
+
+        /**
+         * @get
+         */
+        const std::vector<opendrive::CubicPolynomWrapper> &getBorders() const;
     };
 
 }
