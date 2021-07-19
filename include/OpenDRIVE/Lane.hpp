@@ -42,6 +42,21 @@ namespace opendrive {
              * @constructor
              */
             Height(double s, double inner, double outer);
+
+            /**
+             * @destructor
+             */
+            ~Height() override = default;
+
+            /**
+             * @get
+             */
+            double getInner() const;
+
+            /**
+             * @get
+             */
+            double getOuter() const;
         };
 
     private:
@@ -83,6 +98,11 @@ namespace opendrive {
          * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_lane_borders
          */
         std::vector<opendrive::CubicPolynomWrapper> borders;
+
+        /**
+         * Sampled points along the lane.
+         */
+        std::vector<Vector> sampledPoints;
 
     public:
 
@@ -131,6 +151,10 @@ namespace opendrive {
          * @get
          */
         const std::vector<opendrive::CubicPolynomWrapper> &getBorders() const;
+
+        void addSample(const Vector &sample) {
+            sampledPoints.emplace_back(sample);
+        }
     };
 
 }

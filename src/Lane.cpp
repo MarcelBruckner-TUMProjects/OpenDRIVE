@@ -51,4 +51,13 @@ namespace opendrive {
     }
 
     Lane::Height::Height(double s, double inner, double outer) : OpenDriveWrapper(s), inner(inner), outer(outer) {}
+
+    double Lane::Height::getInner() const {
+        return inner;
+    }
+
+    double Lane::Height::getOuter() const {
+        return outer;
+    }
+
 }

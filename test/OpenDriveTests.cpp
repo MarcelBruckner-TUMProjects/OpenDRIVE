@@ -8,10 +8,11 @@
 namespace opendrive {
     namespace tests {
 
-        std::vector<opendrive::Geometry> createMockPlanView(double sectionLength) {
+        std::vector<opendrive::Geometry> createMockPlanView(int sections, double sectionLength) {
             std::vector<opendrive::Geometry> result;
 
-            for (int i = 0; i <= 10; i++) {
+            result.reserve(sections);
+            for (int i = 0; i < sections; i++) {
                 result.emplace_back(opendrive::Geometry{
                                             i * sectionLength,
                                             {sectionLength * i, 0},
@@ -26,10 +27,11 @@ namespace opendrive {
         }
 
 
-        std::vector<opendrive::Elevation> createMockElevationProfile(double sectionLength) {
+        std::vector<opendrive::Elevation> createMockElevationProfile(int sections, double sectionLength) {
             std::vector<opendrive::Elevation> result;
 
-            for (int i = 0; i <= 10; i++) {
+            result.reserve(sections);
+            for (int i = 0; i < sections; i++) {
                 result.emplace_back(opendrive::Elevation{
                                             i * sectionLength,
                                             {i * sectionLength, 1, 0, 0}
@@ -39,11 +41,13 @@ namespace opendrive {
             return result;
         }
 
-        std::vector<opendrive::SuperElevation> createMockLateralProfileSuperElevation(double sectionLength) {
+        std::vector<opendrive::SuperElevation>
+        createMockLateralProfileSuperElevation(int sections, double sectionLength) {
             std::vector<opendrive::SuperElevation> result;
 
             double quarterPi = M_PI / 4.;
-            for (int i = 0; i <= 10; i++) {
+            result.reserve(sections);
+            for (int i = 0; i < sections; i++) {
                 result.emplace_back(opendrive::SuperElevation{
                                             i * sectionLength,
                                             {quarterPi, 0, 0, 0}
@@ -53,10 +57,10 @@ namespace opendrive {
             return result;
         }
 
-        std::vector<opendrive::Shape> createMockLateralProfileShape(double sectionLength) {
+        std::vector<opendrive::Shape> createMockLateralProfileShape(int sections, double sectionLength) {
             std::vector<opendrive::Shape> result;
 
-            for (int i = 0; i <= 10; i++) {
+            for (int i = 0; i < sections; i++) {
                 result.emplace_back(opendrive::Shape{
                                             i * sectionLength,
                                             0,
@@ -86,15 +90,15 @@ namespace opendrive {
                     };
         }
 
-        std::vector<opendrive::CubicPolynomWrapper> createMockLaneOffsets(double sectionLength) {
+        std::vector<opendrive::CubicPolynomWrapper> createMockLaneOffsets(int sections, double sectionLength) {
             std::vector<opendrive::CubicPolynomWrapper> result;
             return result;
         }
 
-        std::vector<opendrive::LaneSection> createMockLaneSections(double sectionLength) {
+        std::vector<opendrive::LaneSection> createMockLaneSections(int sections, double sectionLength) {
             std::vector<opendrive::LaneSection> result;
             int numLanesPerSide = 5;
-            for (int i = 0; i <= 10; i++) {
+            for (int i = 0; i < sections; i++) {
                 std::vector<Lane> right;
                 std::vector<Lane> left;
                 for (int id = 1; id <= numLanesPerSide; id++) {
@@ -118,18 +122,19 @@ namespace opendrive {
             return result;
         }
 
-        opendrive::Lanes createMockLanes(double sectionLength) {
-            return opendrive::Lanes(createMockLaneOffsets(sectionLength), createMockLaneSections(sectionLength));
+        opendrive::Lanes createMockLanes(int sections, double sectionLength) {
+            return opendrive::Lanes(createMockLaneOffsets(sections, sectionLength),
+                                    createMockLaneSections(sections, sectionLength));
         }
 
         void OpenDriveTests::SetUp() {
-            double sectionLength = 10;
-            auto road = opendrive::Road("0", "test", 1.724447338294e+03, "-1", {{0, "motorway"}},
+            auto road = opendrive::Road("0", "test", sections * sectionLength, "-1", {{0, "motorway"}},
                                         createMockObjects(),
-                                        createMockPlanView(sectionLength),
-                                        createMockElevationProfile(sectionLength),
-                                        createMockLateralProfileSuperElevation(sectionLength),
-                                        createMockLateralProfileShape(sectionLength), createMockLanes(sectionLength));
+                                        createMockPlanView(sections, sectionLength),
+                                        createMockElevationProfile(sections, sectionLength),
+                                        createMockLateralProfileSuperElevation(sections, sectionLength),
+                                        createMockLateralProfileShape(sections, sectionLength),
+                                        createMockLanes(sections, sectionLength));
             mockTestRoad = std::make_shared<opendrive::Road>(road);
 
             mockTestMap = std::make_shared<opendrive::HDMap>(

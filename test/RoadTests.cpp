@@ -40,7 +40,7 @@ namespace opendrive {
              * Tests finding the correct geometry for a given s value.
              */
             TEST_F(RoadTests, testFindCorrectGeometry) {
-                ASSERT_EQ(mockTestRoad->getPlanView().size(), 11);
+                ASSERT_EQ(mockTestRoad->getPlanView().size(), 10);
                 double expected;
 
                 for (int i = 0; i < 10; ++i) {

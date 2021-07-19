@@ -39,6 +39,7 @@ add_library(OpenDRIVE-lib
         utils/Vector.cpp
         utils/Projector.cpp
         utils/LongLatProjector.cpp
+        utils/ArrayUtils.cpp
 
         ${opendrive_1_4}
         ${opendrive_1_6}

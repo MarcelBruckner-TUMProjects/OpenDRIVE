@@ -71,6 +71,17 @@ namespace opendrive {
          * @get
          */
         const std::vector<opendrive::Lane> &getRight() const;
+
+        /**
+         * Samples points along the lanes of the lane section.
+         *
+         * @param interval The interval size.
+         */
+        void sample(double endS, double interval = 100) const {
+            for (const auto &lane : left) {
+
+            }
+        }
     };
 }
 

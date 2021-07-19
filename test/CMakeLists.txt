@@ -33,6 +33,8 @@ add_executable(Tests
         ObjectTests.cpp
         ProjectorTests.cpp
         RoadTests.cpp
+        LanesTests.cpp
+        ArrayUtilsTests.cpp
         )
 
 target_link_libraries(Tests PUBLIC OpenDRIVE-lib gtest_main yaml-cpp)

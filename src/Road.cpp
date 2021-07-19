@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <utility>
 #include<algorithm>
+#include <OpenDRIVE/utils/ArrayUtils.hpp>
 
 namespace opendrive {
 
@@ -135,37 +136,14 @@ namespace opendrive {
             throw std::invalid_argument(std::to_string(s) + " is not on the road.");
         }
 
-        double upperBound = std::numeric_limits<double>::max();
-        double lowerBound = -upperBound;
-
-        for (int i = 0; i < map.size(); i++) {
-            auto current = map[i].getS();
-            if (current > lowerBound && current <= s) {
-                lowerBound = current;
-                continue;
-            }
-            if (current <= upperBound && current > s) {
-                upperBound = current;
-                continue;
-            }
-            break;
-        }
+        auto indices = opendrive::utils::getNextSmallerElementsIndices<T, double>(map, s, [](const T &element) {
+            return element.getS();
+        });
 
         std::vector<T> result;
-        for (int i = 0; i < map.size(); i++) {
-            if (lowerBound <= map[i].getS() && map[i].getS() < upperBound) {
-                result.template emplace_back(map[i]);
-            }
-        }
-
-        if (result.empty()) {
-            int i = map.size() - 1;
-            result.template emplace_back(map[i]);
-            while (i-- >= 0 && map[i].getS() == result[0].getS()) {
-                result.template emplace_back(map[i]);
-            }
-            std::reverse(result.begin(), result.end());
-        }
+        std::transform(indices.begin(), indices.end(), std::back_inserter(result), [&map](int index) {
+            return map[index];
+        });
         return result;
     }
 
@@ -329,6 +307,38 @@ namespace opendrive {
         return lanes;
     }
 
+    std::vector<double> Road::sampleSCoordinates(double interval) {
+        if (length < interval) {
+            return {0, length};
+        }
+
+        std::vector<double> result;
+        int steps = (int) (length / interval);
+        for (int step = 0; step < steps; step++) {
+            double s = step * interval;
+            result.emplace_back(s);
+        }
+
+        if (*result.end() != length) {
+            result.emplace_back(length);
+        }
+
+        return result;
+    }
+
+    void Road::sampleLanes(double interval) {
+        auto sCoordinates = sampleSCoordinates(interval);
+
+        for (const auto &s : sCoordinates) {
+            std::cout << s << std::endl;
+            auto indices = opendrive::utils::getNextSmallerElementsIndices<LaneSection, double>(
+                    lanes.getLaneSections(), s, [](const LaneSection &laneSection) { return laneSection.getS(); });
+            for (const auto &index : indices) {
+                std::cout << "\t" << lanes.getLaneSections()[index].getS() << std::endl;
+            }
+        }
+    }
+
 
 #pragma endregion Calculations
 
@@ -337,4 +347,5 @@ namespace opendrive {
     const std::string &Road::Type::getType() const {
         return type;
     }
+
 }

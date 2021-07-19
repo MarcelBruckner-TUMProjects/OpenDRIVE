@@ -6,6 +6,7 @@
 #define OPENDRIVE_ROAD_H
 
 #include <map>
+#include <OpenDRIVE/utils/ArrayUtils.hpp>
 #include "OpenDRIVE/Object.hpp"
 #include "OpenDRIVE/OpenDriveWrapper.hpp"
 #include "OpenDRIVE/Geometry.hpp"
@@ -234,6 +235,15 @@ namespace opendrive {
         Vector interpolate(double s, double t = 0) const;
 
         /**
+         * Samples points on the lanes along the road.
+         *
+         * @param interval The distance between two samples [m].
+         *
+         * @return
+         */
+        void sampleLanes(double interval = 1);
+
+        /**
          * @get
          */
         const std::string &getId() const;
@@ -262,6 +272,8 @@ namespace opendrive {
          * @get
          */
         const Lanes &getLanes() const;
+
+        std::vector<double> sampleSCoordinates(double interval);
     };
 }
 

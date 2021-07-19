@@ -38,6 +38,16 @@ namespace opendrive {
             double maxDifference = 1e-15;
 
             /**
+             * The length of the sections along the road, e.g. the geometries, shapes, etc.
+             */
+            double sectionLength = 10;
+
+            /**
+             * The number of sections along the road, e.g. the geometries, shapes, etc.
+             */
+            int sections = 10;
+
+            /**
              * @destructor
              */
             ~OpenDriveTests() override = default;
