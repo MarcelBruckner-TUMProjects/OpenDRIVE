@@ -6,6 +6,7 @@
 
 #include <utility>
 #include <algorithm>
+#include <OpenDRIVE/utils/ArrayUtils.hpp>
 
 namespace opendrive {
 
@@ -25,6 +26,16 @@ namespace opendrive {
 
     const std::vector<opendrive::LaneSection> &Lanes::getLaneSections() const {
         return laneSections;
+    }
+
+    const opendrive::CubicPolynomWrapper &Lanes::getLaneOffset(double s) const {
+        return laneOffsets[opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
+                laneOffsets, s, true)[0]];
+    }
+
+    const LaneSection &Lanes::getLaneSection(double s) const {
+        return laneSections[opendrive::utils::getNextSmallerElementsIndices<opendrive::LaneSection, double>(
+                laneSections, s, true)[0]];
     }
 
 }

@@ -8,6 +8,8 @@
 #include <vector>
 #include <limits>
 #include <algorithm>
+#include <OpenDRIVE/OpenDriveWrapper.hpp>
+#include <OpenDRIVE/CubicPolynomWrapper.hpp>
 
 namespace opendrive {
     namespace utils {
@@ -25,7 +27,8 @@ namespace opendrive {
          * @return The elements that are infima to the value.
          */
         template<typename T, typename V>
-        std::vector<int> getNextSmallerElementsIndices(const std::vector<T> &elements, V value, V (*func)(const T &)) {
+        std::vector<int> getNextSmallerElementsIndices(const std::vector<T> &elements, V value, V (*func)(const T &),
+                                                       bool assertSingleElement = false) {
             if (elements.empty()) {
                 return {};
             }
@@ -64,7 +67,25 @@ namespace opendrive {
                 }
                 std::reverse(result.begin(), result.end());
             }
+
+            if (assertSingleElement) {
+                if (result.size() != 1) {
+                    throw std::invalid_argument(
+                            "Found invalid number of indices for " + std::to_string(value) + ". Expected 1, got " +
+                            std::to_string(result.size()));
+                }
+            }
+
             return result;
+        }
+
+        template<typename T, typename V>
+        std::vector<int>
+        getNextSmallerElementsIndices(const std::vector<T> &elements, V value, bool assertSingleElement = false) {
+            return opendrive::utils::getNextSmallerElementsIndices<T, double>(
+                    elements, value, [](const T &element) {
+                        return element.getS();
+                    }, assertSingleElement);
         }
     }
 }

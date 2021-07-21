@@ -77,6 +77,11 @@ namespace opendrive {
          */
         std::vector<Type> type;
 
+        /**
+         * Points sampled along the lanes, grouped by lane id.
+         */
+        std::map<int, std::vector<Vector>> sampledLanePoints;
+
     protected:
         /**
          * The objects along the road.
@@ -273,7 +278,27 @@ namespace opendrive {
          */
         const Lanes &getLanes() const;
 
-        std::vector<double> sampleSCoordinates(double interval);
+        /**
+         * @get
+         */
+        const std::map<int, std::vector<Vector>> &getSampledLanePoints() const;
+
+        /**
+         * Samples s coordinates in [0, length].
+         *
+         * @param interval The distance between two samples.
+         *
+         * @return The sampled s coordinates.
+         */
+        std::vector<double> sampleSCoordinates(double interval) const;
+
+        /**
+         * Adds a sampled point.
+         *
+         * @param laneId The id of the lane the point is sampled from.
+         * @param sample The sample.
+         */
+        void addSample(int laneId, const Vector &sample);
     };
 }
 

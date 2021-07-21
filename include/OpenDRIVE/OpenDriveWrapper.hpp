@@ -39,6 +39,13 @@ namespace opendrive {
          */
         double getS() const;
 
+        friend bool operator<(const OpenDriveWrapper &lhs, const OpenDriveWrapper &rhs);
+
+        friend bool operator>(const OpenDriveWrapper &lhs, const OpenDriveWrapper &rhs);
+
+        static bool compare(const OpenDriveWrapper &lhs, const OpenDriveWrapper &rhs) {
+            return lhs < rhs;
+        };
     };
 }
 

@@ -28,7 +28,7 @@ namespace opendrive {
         return left;
     }
 
-    const Lane &LaneSection::getCenter() const {
+    Lane LaneSection::getCenter() const {
         return center;
     }
 

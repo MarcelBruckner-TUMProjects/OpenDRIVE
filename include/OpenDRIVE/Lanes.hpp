@@ -36,6 +36,8 @@ namespace opendrive {
          */
         std::vector<double> laneSectionsSCoordinates;
 
+        std::map<int, std::vector<Vector>> sampledPoints;
+
     public:
 
         /**
@@ -57,19 +59,14 @@ namespace opendrive {
         const std::vector<opendrive::LaneSection> &getLaneSections() const;
 
         /**
-         * Samples points along the lanes.
-         *
-         * @param interval The interval size.
+         * @get The lane section that the given s coordinate falls into.
          */
-        void sample(double roadLength, double interval = 100) const {
-            for (int i = 0; i < laneSections.size() - 1; i++) {
-                laneSections[i].sample(laneSections[i + 1].getS() - laneSections[i].getS(), interval);
-            }
-            laneSections[laneSections.size() - 2].sample(
-                    laneSections[laneSections.size() - 1].getS() - roadLength,
-                    interval
-            );
-        }
+        const LaneSection &getLaneSection(double s) const;
+
+        /**
+         * @get The lane offset that the given s coordinate falls into.
+         */
+        const opendrive::CubicPolynomWrapper &getLaneOffset(double s) const;
     };
 }
 

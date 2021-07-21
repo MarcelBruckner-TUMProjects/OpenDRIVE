@@ -13,4 +13,12 @@ namespace opendrive {
     double OpenDriveWrapper::getS() const {
         return s;
     }
+
+    bool operator<(const OpenDriveWrapper &lhs, const OpenDriveWrapper &rhs) {
+        return lhs.getS() < rhs.getS();
+    }
+
+    bool operator>(const OpenDriveWrapper &lhs, const OpenDriveWrapper &rhs) {
+        return rhs < lhs;
+    }
 }

@@ -307,7 +307,7 @@ namespace opendrive {
         return lanes;
     }
 
-    std::vector<double> Road::sampleSCoordinates(double interval) {
+    std::vector<double> Road::sampleSCoordinates(double interval) const {
         if (length < interval) {
             return {0, length};
         }
@@ -326,17 +326,43 @@ namespace opendrive {
         return result;
     }
 
+    void Road::addSample(int laneId, const Vector &sample) {
+        if (sampledLanePoints.find(laneId) == sampledLanePoints.end()) {
+            sampledLanePoints[laneId] = {};
+        }
+        sampledLanePoints[laneId].emplace_back(sample);
+    }
+
     void Road::sampleLanes(double interval) {
         auto sCoordinates = sampleSCoordinates(interval);
 
         for (const auto &s : sCoordinates) {
-            std::cout << s << std::endl;
-            auto indices = opendrive::utils::getNextSmallerElementsIndices<LaneSection, double>(
-                    lanes.getLaneSections(), s, [](const LaneSection &laneSection) { return laneSection.getS(); });
-            for (const auto &index : indices) {
-                std::cout << "\t" << lanes.getLaneSections()[index].getS() << std::endl;
+//            std::cout << s << std::endl;
+
+            auto laneSection = lanes.getLaneSection(s);
+            double ds = s - laneSection.getS();
+//            std::cout << "\t" << laneSection.getS() << std::endl;
+//            std::cout << "\t\t" << ds << std::endl;
+
+
+            auto vector = interpolate(s, 0);
+            addSample(0, vector);
+
+            double accumulatedWidth = 0;
+            for (const Lane &lane : laneSection.getLeft()) {
+                accumulatedWidth += lane.interpolate(ds);
+                addSample(lane.getId(), interpolate(s, accumulatedWidth));
+            }
+            accumulatedWidth = 0;
+            for (const auto &lane : laneSection.getRight()) {
+                accumulatedWidth -= lane.interpolate(ds);
+                addSample(lane.getId(), interpolate(s, accumulatedWidth));
             }
         }
+    }
+
+    const std::map<int, std::vector<Vector>> &Road::getSampledLanePoints() const {
+        return sampledLanePoints;
     }
 
 

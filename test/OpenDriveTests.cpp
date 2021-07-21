@@ -95,9 +95,9 @@ namespace opendrive {
             return result;
         }
 
-        std::vector<opendrive::LaneSection> createMockLaneSections(int sections, double sectionLength) {
+        std::vector<opendrive::LaneSection>
+        createMockLaneSections(int sections, double sectionLength, int numLanesPerSide) {
             std::vector<opendrive::LaneSection> result;
-            int numLanesPerSide = 5;
             for (int i = 0; i < sections; i++) {
                 std::vector<Lane> right;
                 std::vector<Lane> left;
@@ -122,9 +122,9 @@ namespace opendrive {
             return result;
         }
 
-        opendrive::Lanes createMockLanes(int sections, double sectionLength) {
+        opendrive::Lanes createMockLanes(int sections, double sectionLength, int numLanesPerSide) {
             return opendrive::Lanes(createMockLaneOffsets(sections, sectionLength),
-                                    createMockLaneSections(sections, sectionLength));
+                                    createMockLaneSections(sections, sectionLength, numLanesPerSide));
         }
 
         void OpenDriveTests::SetUp() {
@@ -134,7 +134,7 @@ namespace opendrive {
                                         createMockElevationProfile(sections, sectionLength),
                                         createMockLateralProfileSuperElevation(sections, sectionLength),
                                         createMockLateralProfileShape(sections, sectionLength),
-                                        createMockLanes(sections, sectionLength));
+                                        createMockLanes(sections, sectionLength, numLanesPerSide));
             mockTestRoad = std::make_shared<opendrive::Road>(road);
 
             mockTestMap = std::make_shared<opendrive::HDMap>(

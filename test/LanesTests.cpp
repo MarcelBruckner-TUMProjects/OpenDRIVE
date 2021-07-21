@@ -48,9 +48,15 @@ namespace opendrive {
              * Tests finding the correct geometry for a given s value.
              */
             TEST_F(LanesTests, testSampleLanes) {
-                mockTestRoad->sampleLanes(1.5);
-            }
+                mockTestRoad->sampleLanes(1);
+                auto sampledLanePoints = mockTestRoad->getSampledLanePoints();
 
+                ASSERT_EQ(sampledLanePoints.size(), numLanesPerSide * 2 + 1);
+                for (const auto &entry : sampledLanePoints) {
+                    ASSERT_EQ(entry.second.size(), sections * sectionLength + 1);
+                }
+
+            }
         }// namespace tests
     }// namespace opendrive
 }

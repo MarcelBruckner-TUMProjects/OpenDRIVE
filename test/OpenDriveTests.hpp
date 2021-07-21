@@ -48,6 +48,11 @@ namespace opendrive {
             int sections = 10;
 
             /**
+             * The number of mock lanes per side.
+             */
+            int numLanesPerSide = 5;
+
+            /**
              * @destructor
              */
             ~OpenDriveTests() override = default;

@@ -10,6 +10,7 @@
 #include <OpenDRIVE/utils/CubicPolynom.hpp>
 #include "OpenDriveWrapper.hpp"
 #include "CubicPolynomWrapper.hpp"
+#include "OpenDRIVE/utils/ArrayUtils.hpp"
 
 namespace opendrive {
 
@@ -154,6 +155,22 @@ namespace opendrive {
 
         void addSample(const Vector &sample) {
             sampledPoints.emplace_back(sample);
+        }
+
+        const opendrive::CubicPolynomWrapper &getWidth(double s) const {
+            auto indices = opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
+                    widths, s, true);
+            return widths[indices[0]];
+        }
+
+        double interpolate(double s) const {
+            // TODO implement borders
+            // TODO implement heights
+            // TODO implement level="true"
+
+            const auto &width = getWidth(s);
+            double ds = s - width.getS();
+            return width.interpolate(ds);
         }
     };
 
