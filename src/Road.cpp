@@ -344,16 +344,21 @@ namespace opendrive {
 //            std::cout << "\t" << laneSection.getS() << std::endl;
 //            std::cout << "\t\t" << ds << std::endl;
 
+            double offset = 0;
+            auto offsetPolynom = lanes.getLaneOffset(s);
+            if (offsetPolynom != nullptr) {
+                offset = offsetPolynom->interpolate(s - offsetPolynom->getS());
+            }
 
-            auto vector = interpolate(s, 0);
-            addSample(0, vector);
+            addSample(laneSection.getCenter().getId(),
+                      interpolate(s, offset + laneSection.getCenter().interpolate(ds)));
 
-            double accumulatedWidth = 0;
+            double accumulatedWidth = offset;
             for (const Lane &lane : laneSection.getLeft()) {
                 accumulatedWidth += lane.interpolate(ds);
                 addSample(lane.getId(), interpolate(s, accumulatedWidth));
             }
-            accumulatedWidth = 0;
+            accumulatedWidth = offset;
             for (const auto &lane : laneSection.getRight()) {
                 accumulatedWidth -= lane.interpolate(ds);
                 addSample(lane.getId(), interpolate(s, accumulatedWidth));

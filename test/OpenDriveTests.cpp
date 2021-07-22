@@ -92,6 +92,13 @@ namespace opendrive {
 
         std::vector<opendrive::CubicPolynomWrapper> createMockLaneOffsets(int sections, double sectionLength) {
             std::vector<opendrive::CubicPolynomWrapper> result;
+            result.reserve(sections);
+            for (int i = 0; i < sections; i++) {
+                result.emplace_back(opendrive::CubicPolynomWrapper(
+                        i * sectionLength,
+                        1, 0, 0, 0
+                ));
+            }
             return result;
         }
 

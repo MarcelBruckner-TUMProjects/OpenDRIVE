@@ -28,9 +28,13 @@ namespace opendrive {
         return laneSections;
     }
 
-    const opendrive::CubicPolynomWrapper &Lanes::getLaneOffset(double s) const {
-        return laneOffsets[opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
-                laneOffsets, s, true)[0]];
+    const CubicPolynomWrapper *Lanes::getLaneOffset(double s) const {
+        const std::vector<int> &indices = opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
+                laneOffsets, s, false);
+        if (indices.empty()) {
+            return nullptr;
+        }
+        return &laneOffsets[indices[0]];
     }
 
     const LaneSection &Lanes::getLaneSection(double s) const {

@@ -51,11 +51,25 @@ namespace opendrive {
                 mockTestRoad->sampleLanes(1);
                 auto sampledLanePoints = mockTestRoad->getSampledLanePoints();
 
+                auto oneOverSqrtTwo = 1.0 / std::sqrt(2);
+                double numSamples = sections * sectionLength + 1;
+
                 ASSERT_EQ(sampledLanePoints.size(), numLanesPerSide * 2 + 1);
                 for (const auto &entry : sampledLanePoints) {
-                    ASSERT_EQ(entry.second.size(), sections * sectionLength + 1);
-                }
+                    ASSERT_EQ(entry.second.size(), numSamples);
 
+                    double offsetFromShape = 0;
+                    if (entry.first == numLanesPerSide) {
+                        offsetFromShape = oneOverSqrtTwo;
+                    }
+
+                    for (int i = 0; i < numSamples; i++) {
+                        ASSERT_EQ(entry.second[i][0], i);
+                        ASSERT_NEAR(entry.second[i][1], oneOverSqrtTwo * (entry.first * 2 + 1) + offsetFromShape, 1e-8);
+                        ASSERT_NEAR(entry.second[i][2], oneOverSqrtTwo * (entry.first * 2 + 1) + i - offsetFromShape,
+                                    1e-8);
+                    }
+                }
             }
         }// namespace tests
     }// namespace opendrive

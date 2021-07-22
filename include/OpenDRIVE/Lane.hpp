@@ -153,22 +153,18 @@ namespace opendrive {
          */
         const std::vector<opendrive::CubicPolynomWrapper> &getBorders() const;
 
-        void addSample(const Vector &sample) {
-            sampledPoints.emplace_back(sample);
-        }
-
-        const opendrive::CubicPolynomWrapper &getWidth(double s) const {
-            auto indices = opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
-                    widths, s, true);
-            return widths[indices[0]];
-        }
-
         double interpolate(double s) const {
-            // TODO implement borders
+            // TODO implement borders. Maybe skip, as not used.
             // TODO implement heights
             // TODO implement level="true"
 
-            const auto &width = getWidth(s);
+            if (id == 0) {
+                return 0;
+            }
+
+            auto indices = opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
+                    widths, s, true);
+            const auto &width = widths[indices[0]];
             double ds = s - width.getS();
             return width.interpolate(ds);
         }

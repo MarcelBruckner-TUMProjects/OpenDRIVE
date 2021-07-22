@@ -75,6 +75,11 @@ namespace opendrive {
         friend Vector operator-(const Vector &lhs, const Vector &rhs);
 
         /**
+         * Gets the i-th element of the vector.
+         */
+        double operator[](int i) const;
+
+        /**
          * Rotates the vector around the given axis using the Rodriguez formula.
          * https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
          *

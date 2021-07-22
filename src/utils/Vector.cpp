@@ -140,4 +140,8 @@ namespace opendrive {
         return elements;
     }
 
+    double Vector::operator[](int i) const {
+        return elements[i];
+    }
+
 }
