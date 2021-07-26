@@ -213,13 +213,16 @@ namespace opendrive {
         opendrive::LaneSection create(const laneSection &laneSectionNode) {
             std::vector<opendrive::Lane> right, left;
 
-            for (const auto &laneNode : laneSectionNode.left().get().lane()) {
-                left.emplace_back(create<opendrive::Lane>(laneNode));
+            if (laneSectionNode.left().present()) {
+                for (const auto &laneNode : laneSectionNode.left().get().lane()) {
+                    left.emplace_back(create<opendrive::Lane>(laneNode));
+                }
             }
-            for (const auto &laneNode : laneSectionNode.right().get().lane()) {
-                right.emplace_back(create<opendrive::Lane>(laneNode));
+            if (laneSectionNode.right().present()) {
+                for (const auto &laneNode : laneSectionNode.right().get().lane()) {
+                    right.emplace_back(create<opendrive::Lane>(laneNode));
+                }
             }
-
             return opendrive::LaneSection(
                     laneSectionNode.s().get(),
                     laneSectionNode.singleSide().get() == "true",

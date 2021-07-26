@@ -299,6 +299,11 @@ namespace opendrive {
          * @param sample The sample.
          */
         void addSample(int laneId, const Vector &sample);
+
+        /**
+         * @get
+         */
+        int getNumberOfSampledLanePoints();
     };
 }
 

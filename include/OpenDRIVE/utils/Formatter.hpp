@@ -48,6 +48,8 @@ namespace opendrive {
      */
     std::string
     objectsToYaml(const HDMap &map, const std::string &worldOriginId = "");
+
+    std::string roadsToPLY(HDMap &map, const std::string &worldOriginId = "");
 }
 
 

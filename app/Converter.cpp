@@ -16,8 +16,10 @@ int main(int argc, char **argv) {
             ("help,h", "produce help message")
             ("input,i", po::value<std::string>(),
              "The input HD map file. Must be *.xodr and in the OpenDRIVE V1.4 standard.")
-            ("output,o", po::value<std::string>()->default_value("<input>.yaml"),
-             "The output YAML file that contains the objects.")
+            ("objects,o", po::value<std::string>()->default_value("<input>.yaml"),
+             "The objects YAML file that contains the objects.")
+            ("roads,r", po::value<std::string>()->default_value("<input>.ply"),
+             "The objects PLY file that contains the roads.")
             ("long_lat_origin,l", po::value<std::string>()->default_value(""),
              "The origin coordinate of the global reference frame in <longitude,latitude> format.")
             ("world_origin_id,w", po::value<std::string>()->default_value(""),
@@ -42,19 +44,28 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    std::string output = vm["output"].as<std::string>();
-    if (output == "<input>.yaml") {
-        output = input + ".yaml";
+    std::string objects = vm["objects"].as<std::string>();
+    if (objects == "<input>.yaml") {
+        objects = input + ".yaml";
+    }
+
+    std::string roads = vm["roads"].as<std::string>();
+    if (roads == "<input>.ply") {
+        roads = input + ".ply";
     }
 
     opendrive::HDMap hdMap = opendrive::createHDMap(input);
+    hdMap.sampleLanes(1);
+
     std::string long_lat_origin_str = vm["long_lat_origin"].as<std::string>();
     std::string content;
+    std::string ply;
 
     auto worldOriginID = vm["world_origin_id"].as<std::string>();
 
     if (!worldOriginID.empty()) {
         content = opendrive::objectsToYaml(hdMap, worldOriginID);
+        ply = opendrive::roadsToPLY(hdMap, worldOriginID);
     } else if (!long_lat_origin_str.empty()) {
         std::regex long_lat_regex(R"(-?(\d+)\.(\d+))");
         auto words_begin = std::sregex_iterator(long_lat_origin_str.begin(), long_lat_origin_str.end(), long_lat_regex);
@@ -69,8 +80,12 @@ int main(int argc, char **argv) {
         double latitude = std::strtod((++words_begin)->str().c_str(), nullptr);
 
         content = opendrive::objectsToYAML(hdMap, longitude, latitude);
+        ply = opendrive::roadsToPLY(hdMap);
     } else {
         content = opendrive::objectsToYaml(hdMap);
+        ply = opendrive::roadsToPLY(hdMap);
     }
-    opendrive::writeToFile(output + ".yaml", content);
+
+    opendrive::writeToFile(objects, content);
+    opendrive::writeToFile(roads, ply);
 }

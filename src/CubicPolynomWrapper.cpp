@@ -9,7 +9,8 @@
 namespace opendrive {
 
     double CubicPolynomWrapper::interpolate(double ss) const {
-        double ds = ss - getS();
+        double get_s = getS();
+        double ds = ss - get_s;
 
         double elev = polynom(ds);
         return elev;

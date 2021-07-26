@@ -99,6 +99,21 @@ namespace opendrive {
          */
         const Header &getHeader() const;
 
+        /**
+         * @get The sum of all sampled points of the lanes.
+         */
+        int getNumberOfSampledLanePoints();
+
+        /**
+         * Samples points on the lanes along the roads.
+         *
+         * @param interval The distance between two samples [m].
+         */
+        void sampleLanes(double interval) {
+            for (auto &road : roads) {
+                road.second.sampleLanes(interval);
+            }
+        }
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

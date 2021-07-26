@@ -147,7 +147,7 @@ namespace opendrive {
             mockTestMap = std::make_shared<opendrive::HDMap>(
                     opendrive::HDMap{
                             "test.xodr",
-                            {{"", road}},
+                            {{mockTestRoadId, road}},
                             {
                                     "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=500000 +y_0=0 +datum=WGS84 +units=m +no_defs",
                                     "3D Mapping Solutions",

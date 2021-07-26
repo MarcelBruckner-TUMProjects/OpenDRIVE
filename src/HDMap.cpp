@@ -48,4 +48,12 @@ namespace opendrive {
     const HDMap::Header &HDMap::getHeader() const {
         return header;
     }
+
+    int HDMap::getNumberOfSampledLanePoints() {
+        int sum = 0;
+        for (auto &road : roads) {
+            sum += road.second.getNumberOfSampledLanePoints();
+        }
+        return sum;
+    }
 }

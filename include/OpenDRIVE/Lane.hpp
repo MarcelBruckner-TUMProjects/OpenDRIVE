@@ -165,8 +165,8 @@ namespace opendrive {
             auto indices = opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
                     widths, s, true);
             const auto &width = widths[indices[0]];
-            double ds = s - width.getS();
-            return width.interpolate(ds);
+//            double ds = s - width.getS();
+            return width.interpolate(s);
         }
     };
 

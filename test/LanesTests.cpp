@@ -48,12 +48,13 @@ namespace opendrive {
              * Tests finding the correct geometry for a given s value.
              */
             TEST_F(LanesTests, testSampleLanes) {
-                mockTestRoad->sampleLanes(1);
-                auto sampledLanePoints = mockTestRoad->getSampledLanePoints();
+                mockTestMap->sampleLanes(1);
+                auto sampledLanePoints = mockTestMap->getRoad(mockTestRoadId).getSampledLanePoints();
 
                 auto oneOverSqrtTwo = 1.0 / std::sqrt(2);
                 double numSamples = sections * sectionLength + 1;
 
+                ASSERT_EQ(mockTestMap->getNumberOfSampledLanePoints(), numSamples * (numLanesPerSide * 2 + 1));
                 ASSERT_EQ(sampledLanePoints.size(), numLanesPerSide * 2 + 1);
                 for (const auto &entry : sampledLanePoints) {
                     ASSERT_EQ(entry.second.size(), numSamples);

@@ -196,7 +196,7 @@ namespace opendrive {
     template<>
     Geometry Road::getElement<Geometry>(double s) const {
         auto geometry = getElements<Geometry>(planView, s);
-        if (s > geometry[0].getEndSCoordinate()) {
+        if (s > geometry[0].getEndSCoordinate() + 1e-8) {
             throw std::invalid_argument(std::to_string(s) + " is not on the road.");
         }
         return geometry[0];
@@ -241,6 +241,7 @@ namespace opendrive {
 #pragma region Calculations
 
     Vector Road::interpolate(double s, double t) const {
+
         Geometry geometry = getElement<Geometry>(s);
 
         Vector tangent = geometry.calculateTangent(s);
@@ -261,7 +262,10 @@ namespace opendrive {
         normal = normal.rotate(tangent, roll);
 //        std::cout << normal.length() << std::endl;
 
-        return geometry.interpolate(s) + normal + Vector{0, 0, 1} * height;
+        auto result = geometry.interpolate(s) + normal + Vector{0, 0, 1} * height;
+//        std::cout << s << " x " << t << " -> " << result << std::endl;
+
+        return result;
     }
 
 
@@ -327,6 +331,13 @@ namespace opendrive {
     }
 
     void Road::addSample(int laneId, const Vector &sample) {
+//        std::cout << sample << std::endl;
+        for (const auto &s : sample.getElements()) {
+            if (s != s) {
+                // s is NaN
+                return;
+            }
+        }
         if (sampledLanePoints.find(laneId) == sampledLanePoints.end()) {
             sampledLanePoints[laneId] = {};
         }
@@ -347,7 +358,7 @@ namespace opendrive {
             double offset = 0;
             auto offsetPolynom = lanes.getLaneOffset(s);
             if (offsetPolynom != nullptr) {
-                offset = offsetPolynom->interpolate(s - offsetPolynom->getS());
+                offset = offsetPolynom->interpolate(s);
             }
 
             addSample(laneSection.getCenter().getId(),
@@ -355,12 +366,14 @@ namespace opendrive {
 
             double accumulatedWidth = offset;
             for (const Lane &lane : laneSection.getLeft()) {
-                accumulatedWidth += lane.interpolate(ds);
+                double t = lane.interpolate(ds);
+                accumulatedWidth += t;
                 addSample(lane.getId(), interpolate(s, accumulatedWidth));
             }
             accumulatedWidth = offset;
             for (const auto &lane : laneSection.getRight()) {
-                accumulatedWidth -= lane.interpolate(ds);
+                double t = lane.interpolate(ds);
+                accumulatedWidth -= t;
                 addSample(lane.getId(), interpolate(s, accumulatedWidth));
             }
         }
@@ -368,6 +381,14 @@ namespace opendrive {
 
     const std::map<int, std::vector<Vector>> &Road::getSampledLanePoints() const {
         return sampledLanePoints;
+    }
+
+    int Road::getNumberOfSampledLanePoints() {
+        int sum = 0;
+        for (const auto &entry : sampledLanePoints) {
+            sum += int(entry.second.size());
+        }
+        return sum;
     }
 
 
