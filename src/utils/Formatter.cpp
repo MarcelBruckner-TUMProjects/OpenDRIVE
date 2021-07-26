@@ -70,11 +70,11 @@ namespace opendrive {
         return yaml.c_str();
     }
 
-    std::string objectsToYaml(const HDMap &map, const std::string &zOffsetId) {
+    std::string objectsToYAML(const HDMap &map, const std::string &zOffsetId) {
         return objectsToYAML(map, getWorldOriginById(map, zOffsetId));
     }
 
-    std::string objectsToYAML(const HDMap &map, double longitude, double latitude) {
+    Vector longLatToVector(const HDMap &map, double longitude, double latitude) {
         Vector origin{latitude, longitude};
         if (std::abs(latitude) <= 90. && std::abs(longitude) <= 180.) {
             LongLatProjector longLatProjector = LongLatProjector(map.getGeoReference());
@@ -82,7 +82,11 @@ namespace opendrive {
         } else {
             origin = {0, 0};
         }
-        return objectsToYAML(map, origin);
+        return origin;
+    }
+
+    std::string objectsToYAML(const HDMap &map, double longitude, double latitude) {
+        return objectsToYAML(map, longLatToVector(map, longitude, latitude));
     }
 
     void writeToFile(const std::string &filename, const std::string &content) {
@@ -92,9 +96,7 @@ namespace opendrive {
         file.close();
     }
 
-    std::string roadsToPLY(HDMap &map, const std::string &worldOriginId) {
-        auto origin = getWorldOriginById(map, worldOriginId);
-
+    std::string roadsToPLY(HDMap &map, const Vector &origin) {
         std::default_random_engine generator(0);
         std::uniform_int_distribution<int> distribution(0, 255);
         auto colorGenerator = std::bind(distribution, generator);
@@ -111,16 +113,6 @@ namespace opendrive {
                 bool isFirstInLane = true;
                 for (const auto &sample : laneSamples.second) {
                     auto shiftedSample = sample - origin;
-
-                    bool invalid = false;
-                    for (const auto &s : shiftedSample.getElements()) {
-//                        if (std::abs(s) > 2000) {
-//                            invalid = true;
-//                        }
-                    }
-                    if (invalid) {
-                        continue;
-                    }
 
                     vertexSS << shiftedSample[0] << " " << shiftedSample[1] << " " << shiftedSample[2];
                     vertexSS << " ";
@@ -173,6 +165,58 @@ namespace opendrive {
 
 
         return ss.str();
+    }
+
+    std::string roadsToPLY(HDMap &map, const std::string &worldOriginId) {
+        return roadsToPLY(map, getWorldOriginById(map, worldOriginId));
+    }
+
+    std::string roadsToPLY(HDMap &map, double longitude, double latitude) {
+        return roadsToPLY(map, longLatToVector(map, longitude, latitude));
+    }
+
+    std::string roadsToYAML(HDMap &map, const Vector &origin) {
+        YAML::Emitter yaml;
+        yaml << YAML::BeginMap;
+        yaml << YAML::Key << "mapFilename" << YAML::Value << map.getFilename();
+        yaml << YAML::Key << "geoReference" << YAML::Value << map.getGeoReference();
+        yaml << YAML::Key << "origin" << YAML::Value << YAML::Flow << origin.getElements();
+        yaml << YAML::Key << "roads" << YAML::Value;
+
+        yaml << YAML::BeginSeq;
+        for (const auto &roadEntry : map.getRoads()) {
+            auto road = roadEntry.second;
+            yaml << YAML::BeginMap;
+            yaml << YAML::Key << "road" << YAML::Value << road.getId();
+            yaml << YAML::Key << "lanes" << YAML::Value;
+
+            yaml << YAML::BeginSeq;
+            for (const auto &lane : road.getSampledLanePoints()) {
+                yaml << YAML::BeginMap;
+                yaml << YAML::Key << "lane" << YAML::Value << lane.first;
+                yaml << YAML::Key << "samples" << YAML::Value;
+                yaml << YAML::BeginSeq;
+                for (const auto &sample : lane.second) {
+                    yaml << YAML::Flow << sample.getElements();
+                }
+                yaml << YAML::EndSeq;
+                yaml << YAML::EndMap;
+            }
+            yaml << YAML::EndSeq;
+            yaml << YAML::EndMap;
+        }
+//        assert(yaml.good());
+        yaml << YAML::EndSeq;
+        yaml << YAML::EndMap;
+        return yaml.c_str();
+    }
+
+    std::string roadsToYAML(HDMap &map, const std::string &worldOriginId) {
+        return roadsToYAML(map, getWorldOriginById(map, worldOriginId));
+    }
+
+    std::string roadsToYAML(HDMap &map, double longitude, double latitude) {
+        return roadsToYAML(map, longLatToVector(map, longitude, latitude));
     }
 }
 

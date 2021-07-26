@@ -47,9 +47,15 @@ namespace opendrive {
      * @return A string in the YAML format representing the objects.
      */
     std::string
-    objectsToYaml(const HDMap &map, const std::string &worldOriginId = "");
+    objectsToYAML(const HDMap &map, const std::string &worldOriginId = "");
 
     std::string roadsToPLY(HDMap &map, const std::string &worldOriginId = "");
+
+    std::string roadsToPLY(HDMap &map, double longitude, double latitude);
+
+    std::string roadsToYAML(HDMap &map, const std::string &worldOriginId = "");
+
+    std::string roadsToYAML(HDMap &map, double longitude, double latitude);
 }
 
 

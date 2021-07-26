@@ -39,12 +39,11 @@ namespace opendrive {
             /**
              * Tests formatting the objects to YAML.
              */
-            TEST_F(FormatterTests, testToYAML) {
-                const std::string &formattedYaml = opendrive::objectsToYaml(*mockTestMap);
+            TEST_F(FormatterTests, testObjectsToYAML) {
+                const std::string &formattedYaml = opendrive::objectsToYAML(*mockTestMap);
                 YAML::Node actual = YAML::Load(formattedYaml);
 
                 ASSERT_EQ(actual["geoReference"].IsDefined(), true);
-                ASSERT_EQ(actual["objects"].IsSequence(), true);
                 ASSERT_EQ(actual["objects"].IsSequence(), true);
                 ASSERT_EQ(isThreeLongSequence(actual["origin"]), true);
 
@@ -82,6 +81,32 @@ namespace opendrive {
                 plyFile.open("test.ply");
                 plyFile << ply;
                 plyFile.close();
+            }
+
+
+            /**
+             * Tests formatting the objects to YAML.
+             */
+            TEST_F(FormatterTests, testRoadsToYAML) {
+                const std::string &formattedYaml = opendrive::roadsToYAML(*mockTestMap);
+                YAML::Node actual = YAML::Load(formattedYaml);
+
+                ASSERT_EQ(actual["geoReference"].IsDefined(), true);
+                ASSERT_EQ(actual["roads"].IsSequence(), true);
+
+                for (const auto &roadNode : actual["roads"]) {
+                    ASSERT_EQ(roadNode["road"].IsDefined(), true);
+                    ASSERT_EQ(roadNode["lanes"].IsSequence(), true);
+
+                    for (const auto &laneNode : roadNode["lanes"]) {
+                        ASSERT_EQ(laneNode["lane"].IsDefined(), true);
+                        ASSERT_EQ(laneNode["samples"].IsSequence(), true);
+
+                        for (const auto &sampleNode : laneNode["samples"]) {
+                            ASSERT_EQ(sampleNode.IsSequence(), true);
+                        }
+                    }
+                }
             }
         }// namespace tests
     }// namespace opendrive
