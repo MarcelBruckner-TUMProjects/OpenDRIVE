@@ -49,12 +49,46 @@ namespace opendrive {
     std::string
     objectsToYAML(const HDMap &map, const std::string &worldOriginId = "");
 
+    /**
+     * Converts the samples of the road in the HD map to the PLY 3D object format.
+     *
+     * @param map The HD map.
+     * @param worldOriginId The id of the object used as the world origin.
+     *
+     * @return A string in the PLY format representing the roads.
+     */
     std::string roadsToPLY(HDMap &map, const std::string &worldOriginId = "");
 
+    /**
+     * Converts the samples of the road in the HD map to the PLY 3D object format.
+     *
+     * @param map The HD map.
+     * @param longitude The longitude coordinate of the origin.
+     * @param latitude The latitude coordinate of the origin.
+     *
+     * @return A string in the PLY format representing the roads.
+     */
     std::string roadsToPLY(HDMap &map, double longitude, double latitude);
 
+    /**
+     * Converts the samples of the road in the HD map to the YAML format.
+     *
+     * @param map The HD map.
+     * @param worldOriginId The id of the object used as the world origin.
+     *
+     * @return A string in the YAML format representing the roads.
+     */
     std::string roadsToYAML(HDMap &map, const std::string &worldOriginId = "");
 
+    /**
+     * Converts the samples of the road in the HD map to the YAML format.
+     *
+     * @param map The HD map.
+     * @param longitude The longitude coordinate of the origin.
+     * @param latitude The latitude coordinate of the origin.
+     *
+     * @return A string in the YAML format representing the roads.
+     */
     std::string roadsToYAML(HDMap &map, double longitude, double latitude);
 }
 
