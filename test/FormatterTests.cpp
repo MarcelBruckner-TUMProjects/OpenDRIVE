@@ -68,15 +68,13 @@ namespace opendrive {
                 }
             }
 
-
             /**
              * Tests formatting the roads to PLY.
              */
-            TEST_F(FormatterTests, testRoadsToPLY) {
+            TEST_F(FormatterTests, DISABLED_testRoadsToPLY) {
                 mockTestMap->sampleLanes(1);
                 const std::string &ply = opendrive::roadsToPLY(*mockTestMap);
                 std::cout << ply << std::endl;
-
                 std::ofstream plyFile;
                 plyFile.open("test.ply");
                 plyFile << ply;

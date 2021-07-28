@@ -57,7 +57,7 @@ namespace opendrive {
                 );
                 const clock_t end_time = clock();
                 auto seconds = float(end_time - begin_time) / CLOCKS_PER_SEC;
-                std::cout << seconds << std::endl;
+//                std::cout << seconds << std::endl;
 
                 ASSERT_EQ(nextSmallerElements.size(), 2);
             }

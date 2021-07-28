@@ -43,7 +43,7 @@ add_library(OpenDRIVE-lib
 
         ${opendrive_1_4}
         ${opendrive_1_6}
-        )
+        RoadMark.cpp ../include/OpenDRIVE/RoadMark.hpp)
 
 target_include_directories(OpenDRIVE-lib
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}

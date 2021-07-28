@@ -193,9 +193,110 @@ namespace opendrive {
             return result;
         }
 
+        template<typename T>
+        opendrive::Lane createLane(const T &laneNode) {
+            std::vector<CubicPolynomWrapper> widths, borders;
+            std::vector<opendrive::Lane::Height> heights;
+
+            for (const auto &widthNode : laneNode.width()) {
+                widths.emplace_back(
+                        widthNode.sOffset(),
+                        widthNode.a(), widthNode.b(), widthNode.c(), widthNode.d()
+                );
+            }
+            for (const auto &borderNode : laneNode.border()) {
+                widths.emplace_back(
+                        borderNode.sOffset(),
+                        borderNode.a(), borderNode.b(), borderNode.c(), borderNode.d()
+                );
+            }
+
+            for (const auto &heightNode : laneNode.height()) {
+                heights.emplace_back(
+                        heightNode.sOffset(),
+                        heightNode.inner(), heightNode.outer()
+                );
+            }
+
+
+            return opendrive::Lane(
+                    (int) laneNode.id(),
+                    laneNode.type().c_str(),
+                    laneNode.level().get() == "true",
+                    heights,
+                    widths,
+                    borders
+            );
+        }
+
+
+        template<>
+        opendrive::Lane
+        create(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_left_lane &laneNode) {
+            return createLane(laneNode);
+        }
+
+        template<>
+        opendrive::Lane
+        create(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_right_lane &laneNode) {
+            return createLane(laneNode);
+        }
+
+        template<>
+        opendrive::Lane
+        create(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_center_lane &laneNode) {
+            return opendrive::Lane(
+                    laneNode.id(),
+                    laneNode.type().c_str(),
+                    laneNode.level().get() == "true",
+                    {},
+                    {},
+                    {}
+            );
+        }
+
+        template<>
+        opendrive::LaneSection
+        create(const simulation::standard::opendrive_schema::t_road_lanes_laneSection &laneSectionNode) {
+            std::vector<opendrive::Lane> right, left;
+
+            if (laneSectionNode.left().present()) {
+                for (const auto &laneNode : laneSectionNode.left().get().lane()) {
+                    left.emplace_back(create<opendrive::Lane>(laneNode));
+                }
+            }
+            if (laneSectionNode.right().present()) {
+                for (const auto &laneNode : laneSectionNode.right().get().lane()) {
+                    right.emplace_back(create<opendrive::Lane>(laneNode));
+                }
+            }
+            return opendrive::LaneSection(
+                    laneSectionNode.s(),
+                    laneSectionNode.singleSide().get() == "true",
+                    left,
+                    create<opendrive::Lane>(laneSectionNode.center().lane()[0]),
+                    right
+            );
+        }
+
         opendrive::Lanes extractLanes(const simulation::standard::opendrive_schema::t_road &openDriveObject) {
-            // TODO Extract Lanes
-            return opendrive::Lanes({}, {});
+            std::vector<opendrive::CubicPolynomWrapper> laneOffsets;
+            for (const auto &laneOffsetNode : openDriveObject.lanes().laneOffset()) {
+                laneOffsets.emplace_back(opendrive::CubicPolynomWrapper(
+                        (double) laneOffsetNode.s(),
+                        (double) laneOffsetNode.a(),
+                        (double) laneOffsetNode.b(),
+                        (double) laneOffsetNode.c(),
+                        (double) laneOffsetNode.d()
+                ));
+            }
+
+            std::vector<opendrive::LaneSection> laneSections;
+            for (const auto &laneSectionNode : openDriveObject.lanes().laneSection()) {
+                laneSections.emplace_back(create<opendrive::LaneSection>(laneSectionNode));
+            }
+
+            return opendrive::Lanes(laneOffsets, laneSections);
         }
 
         template<>
