@@ -193,7 +193,9 @@ namespace opendrive {
                     laneNode.level().get() == "true",
                     heights,
                     widths,
-                    borders
+                    borders,
+                    // TODO extract road marks
+                    {}
             );
         }
 
@@ -205,6 +207,8 @@ namespace opendrive {
                     laneNode.level().get() == "true",
                     {},
                     {},
+                    {},
+                    // TODO extract road marks
                     {}
             );
         }

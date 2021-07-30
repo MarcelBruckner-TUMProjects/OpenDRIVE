@@ -43,6 +43,8 @@ namespace opendrive {
         std::sort(lateralProfileShapes.begin(), lateralProfileShapes.end(), [](const Shape &lhs, const Shape &rhs) {
             return lhs.getS() < rhs.getS() || lhs.getT() < rhs.getT();
         });
+
+        extractExplicitRoadMarks();
     }
 
 
@@ -330,16 +332,14 @@ namespace opendrive {
         return result;
     }
 
-    void Road::addSample(int laneId, const Vector &sample) {
-//        std::cout << sample << std::endl;
-        for (const auto &s : sample.getElements()) {
-            if (s != s) {
+    void Road::addSample(int laneId, double s, double t) {
+        auto sample = interpolate(s, t);
+//        std::cout << s << " x " << t << " -> " << sample << std::endl;
+        for (const auto &element : sample.getElements()) {
+            if (element != element) {
                 // s is NaN
                 return;
             }
-        }
-        if (sampledLanePoints.find(laneId) == sampledLanePoints.end()) {
-            sampledLanePoints[laneId] = {};
         }
         sampledLanePoints[laneId].emplace_back(sample);
     }
@@ -348,33 +348,8 @@ namespace opendrive {
         auto sCoordinates = sampleSCoordinates(interval);
 
         for (const auto &s : sCoordinates) {
-//            std::cout << s << std::endl;
-
-            auto laneSection = lanes.getLaneSection(s);
-            double ds = s - laneSection.getS();
-//            std::cout << "\t" << laneSection.getS() << std::endl;
-//            std::cout << "\t\t" << ds << std::endl;
-
-            double offset = 0;
-            auto offsetPolynom = lanes.getLaneOffset(s);
-            if (offsetPolynom != nullptr) {
-                offset = offsetPolynom->interpolate(s);
-            }
-
-            addSample(laneSection.getCenter().getId(),
-                      interpolate(s, offset + laneSection.getCenter().interpolate(ds)));
-
-            double accumulatedWidth = offset;
-            for (const Lane &lane : laneSection.getLeft()) {
-                double t = lane.interpolate(ds);
-                accumulatedWidth += t;
-                addSample(lane.getId(), interpolate(s, accumulatedWidth));
-            }
-            accumulatedWidth = offset;
-            for (const auto &lane : laneSection.getRight()) {
-                double t = lane.interpolate(ds);
-                accumulatedWidth -= t;
-                addSample(lane.getId(), interpolate(s, accumulatedWidth));
+            for (const auto &width : lanes.calculateLaneTOffsets(s)) {
+                addSample(width.first, s, width.second);
             }
         }
     }
@@ -391,10 +366,31 @@ namespace opendrive {
         return sum;
     }
 
+    void Road::addExplicitRoadMarks(int laneId, double startS, double endS, double startT, double endT) {
+        auto start = interpolate(startS, startT);
+        auto end = interpolate(endS, endT);
+        explicitRoadMarks[laneId].emplace_back(std::make_pair(start, end));
+    }
+
+    void Road::extractExplicitRoadMarks() {
+        for (const auto &lane : lanes.calculateExplicitRoadMarks()) {
+            for (const auto &explicitRoadMark : lane.second) {
+                addExplicitRoadMarks(lane.first, explicitRoadMark[0], explicitRoadMark[1],
+                                     explicitRoadMark[2], explicitRoadMark[3]);
+            }
+        }
+    }
+
+    const std::map<int, std::vector<std::pair<Vector, Vector>>> &Road::getExplicitRoadMarks() const {
+        return explicitRoadMarks;
+    }
+
 
 #pragma endregion Calculations
 
-    Road::Type::Type(const double s, std::string type) : OpenDriveWrapper(s), type(std::move(type)) {}
+    Road::Type::Type(
+            const double s, std::string
+    type) : OpenDriveWrapper(s), type(std::move(type)) {}
 
     const std::string &Road::Type::getType() const {
         return type;

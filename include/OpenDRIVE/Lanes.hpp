@@ -64,7 +64,48 @@ namespace opendrive {
         /**
          * @get The lane offset that the given s coordinate falls into.
          */
-        const CubicPolynomWrapper *getLaneOffset(double s) const;
+        template<typename T>
+        T getLaneOffset(double s) const;
+
+        /**
+         * Calculates the t offsets of the lanes, i.e. the distance of the lane border from the reference lane.
+         *
+         * @param s The s-coordinate along the reference line.
+         *
+         * @return The t offsets, grouped by the lane id.
+         */
+        std::map<int, double> calculateLaneTOffsets(double s) const;
+
+        /**
+         * Calculates the t offsets of the lane, i.e. the distance of the lane border from the reference lane.
+         *
+         * @param s The s-coordinate along the reference line.
+         * @param laneId The id of the lane of interest.
+         *
+         * @return The t offset.
+         */
+        double calculateLaneTOffset(double s, int laneId) const;
+
+        std::map<int, std::vector<std::vector<double>>> calculateExplicitRoadMarks() const {
+            std::map<int, std::vector<std::vector<double>>> result;
+
+            for (const auto &laneSection : getLaneSections()) {
+                double laneSectionS = laneSection.getS();
+
+                for (const auto &lane : laneSection.calculateExplicitRoadMarks()) {
+                    for (const auto &explicitRoadMark : lane.second) {
+                        double startS = explicitRoadMark[0];
+                        double endS = explicitRoadMark[1];
+
+                        double startT = calculateLaneTOffset(startS - laneSectionS, lane.first) + explicitRoadMark[2];
+                        double endT = calculateLaneTOffset(endS - laneSectionS, lane.first) + explicitRoadMark[3];
+                        result[lane.first].emplace_back(std::vector<double>{startS, endS, startT, endT});
+                    }
+                }
+            }
+
+            return result;
+        }
     };
 }
 

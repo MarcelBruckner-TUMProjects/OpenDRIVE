@@ -28,6 +28,7 @@ namespace opendrive {
         return laneSections;
     }
 
+    template<>
     const CubicPolynomWrapper *Lanes::getLaneOffset(double s) const {
         const std::vector<int> &indices = opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
                 laneOffsets, s, false);
@@ -37,9 +38,35 @@ namespace opendrive {
         return &laneOffsets[indices[0]];
     }
 
+    template<>
+    double Lanes::getLaneOffset(double s) const {
+        auto offset = getLaneOffset<const CubicPolynomWrapper *>(s);
+        if (offset != nullptr) {
+            return offset->interpolate(s);
+        }
+        return 0;
+    }
+
     const LaneSection &Lanes::getLaneSection(double s) const {
         return laneSections[opendrive::utils::getNextSmallerElementsIndices<opendrive::LaneSection, double>(
                 laneSections, s, true)[0]];
+    }
+
+    double Lanes::calculateLaneTOffset(double s, int laneId) const {
+        return calculateLaneTOffsets(s)[laneId];
+    }
+
+    std::map<int, double> Lanes::calculateLaneTOffsets(double s) const {
+        auto laneSection = getLaneSection(s);
+        auto offset = getLaneOffset<double>(s);
+        double ds = s - laneSection.getS();
+        auto accumulatedWidths = laneSection.calculateLaneTOffsets(ds);
+
+        std::map<int, double> result;
+        for (const auto &width : accumulatedWidths) {
+            result[width.first] = offset + width.second;
+        }
+        return result;
     }
 
 }

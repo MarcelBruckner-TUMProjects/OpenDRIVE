@@ -82,6 +82,11 @@ namespace opendrive {
          */
         std::map<int, std::vector<Vector>> sampledLanePoints;
 
+        /**
+         * Start and end of explicitly defined road marks along the lanes, grouped by lane id.
+         */
+        std::map<int, std::vector<std::pair<Vector, Vector>>> explicitRoadMarks;
+
     protected:
         /**
          * The objects along the road.
@@ -136,6 +141,18 @@ namespace opendrive {
          */
         std::vector<Shape> getElements(const std::vector<Shape> &map, double s, double t) const;
 
+        /**
+         * Adds a sampled point.
+         *
+         * @param laneId The id of the lane the point is sampled from.
+         * @param s The s coordinate of the sample
+         * @param t The t coordinate of the sample
+         */
+        void addSample(int laneId, double s, double t);
+
+        void extractExplicitRoadMarks();
+
+        void addExplicitRoadMarks(int laneId, double startS, double endS, double startT, double endT);
 
     public:
 
@@ -249,6 +266,15 @@ namespace opendrive {
         void sampleLanes(double interval = 1);
 
         /**
+         * Samples s coordinates in [0, length].
+         *
+         * @param interval The distance between two samples.
+         *
+         * @return The sampled s coordinates.
+         */
+        std::vector<double> sampleSCoordinates(double interval) const;
+
+        /**
          * @get
          */
         const std::string &getId() const;
@@ -284,26 +310,14 @@ namespace opendrive {
         const std::map<int, std::vector<Vector>> &getSampledLanePoints() const;
 
         /**
-         * Samples s coordinates in [0, length].
-         *
-         * @param interval The distance between two samples.
-         *
-         * @return The sampled s coordinates.
+         * @get
          */
-        std::vector<double> sampleSCoordinates(double interval) const;
-
-        /**
-         * Adds a sampled point.
-         *
-         * @param laneId The id of the lane the point is sampled from.
-         * @param sample The sample.
-         */
-        void addSample(int laneId, const Vector &sample);
+        int getNumberOfSampledLanePoints();
 
         /**
          * @get
          */
-        int getNumberOfSampledLanePoints();
+        const std::map<int, std::vector<std::pair<Vector, Vector>>> &getExplicitRoadMarks() const;
     };
 }
 

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include "OpenDriveWrapper.hpp"
 
 namespace opendrive {
 
@@ -15,19 +16,14 @@ namespace opendrive {
      *
      * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_road_markings
      */
-    class RoadMark {
+    class RoadMark : public opendrive::OpenDriveWrapper {
     public:
         /**
          * Wrapper for the OpenDRIVE road marking line class.
          *
          * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_road_markings_types_and_lines
          */
-        class Line {
-
-            /**
-             * Flag if the line is explicitly defined.
-             */
-            bool isExplicit;
+        class Line : public opendrive::OpenDriveWrapper {
 
             /**
              * Length of the visible part.
@@ -43,11 +39,6 @@ namespace opendrive {
              * Lateral offset from the lane border. If <sway> element is present, the lateral offset follows the sway.
              */
             double tOffset;
-
-            /**
-             * Initial longitudinal offset of the line definition from the start of the road mark definition
-             */
-            double sOffset;
 
             /**
              * Rule that must be observed when passing the line from inside, for example, from the lane with the lower absolute ID to the lane with the higher absolute ID. For values see UML Model.
@@ -68,8 +59,38 @@ namespace opendrive {
             /**
              * @constructor
              */
-            Line(double length, double space, double tOffset, double sOffset,
-                 std::string rule, double width, std::string color, bool isExplicit);
+            Line(double sOffset, double length, double space, double tOffset, std::string rule, double width,
+                 std::string color);
+
+            /**
+             * @get
+             */
+            double getLength() const;
+
+            /**
+             * @get
+             */
+            double getSpace() const;
+
+            /**
+             * @get
+             */
+            double getTOffset() const;
+
+            /**
+             * @get
+             */
+            const std::string &getRule() const;
+
+            /**
+             * @get
+             */
+            double getWidth() const;
+
+            /**
+             * @get
+             */
+            const std::string &getColor() const;
         };
 
         /**
@@ -98,13 +119,24 @@ namespace opendrive {
              * @constructor
              */
             Type(std::string name, double width, std::vector<Line> lines);
+
+            /**
+             * @get
+             */
+            const std::string &getName() const;
+
+            /**
+             * @get
+             */
+            double getWidth() const;
+
+            /**
+             * @get
+             */
+            const std::vector<Line> &getLines() const;
         };
 
     private:
-        /**
-         * s-coordinate of start position of the <roadMark> element, relative to the position of the preceding <laneSection> element.
-         */
-        double sOffset;
 
         /**
          * Type of the road mark. For values see UML model.
@@ -153,6 +185,46 @@ namespace opendrive {
         RoadMark(double sOffset, std::string type, std::string color, std::string material,
                  double width, std::string laneChange, double height, std::vector<Type> types,
                  std::vector<Line> explicitLines);
+
+        /**
+         * @get
+         */
+        const std::string &getType() const;
+
+        /**
+         * @get
+         */
+        const std::string &getColor() const;
+
+        /**
+         * @get
+         */
+        const std::string &getMaterial() const;
+
+        /**
+         * @get
+         */
+        double getWidth() const;
+
+        /**
+         * @get
+         */
+        const std::string &getLaneChange() const;
+
+        /**
+         * @get
+         */
+        double getHeight() const;
+
+        /**
+         * @get
+         */
+        const std::vector<Type> &getTypes() const;
+
+        /**
+         * @get
+         */
+        const std::vector<Line> &getExplicitLines() const;
     };
 }
 

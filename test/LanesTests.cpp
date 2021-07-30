@@ -22,7 +22,7 @@ namespace opendrive {
 
 
             /**
-             * Tests finding the correct geometry for a given s value.
+             * Tests sampling s coordinates along the road.
              */
             TEST_F(LanesTests, testSampleSCoordinates) {
                 auto sCoordinates = mockTestRoad->sampleSCoordinates(1.5);
@@ -45,7 +45,18 @@ namespace opendrive {
             }
 
             /**
-             * Tests finding the correct geometry for a given s value.
+             * Tests sampling s coordinates along the road.
+             */
+            TEST_F(LanesTests, testCalculateLaneTOffsets) {
+                auto allT = mockTestMap->getRoad(mockTestRoadId).getLanes().calculateLaneTOffsets(0);
+
+                for (const auto &entry : allT) {
+                    ASSERT_EQ(2 * entry.first + 1, entry.second);
+                }
+            }
+
+            /**
+             * Tests sampling the lanes.
              */
             TEST_F(LanesTests, testSampleLanes) {
                 mockTestMap->sampleLanes(1);
@@ -72,6 +83,50 @@ namespace opendrive {
                     }
                 }
             }
-        }// namespace tests
-    }// namespace opendrive
-}
+
+            /**
+             * Tests for the explicit road marks.
+             */
+            TEST_F(LanesTests, testExplicitRoadMarks) {
+                for (const auto &road : mockTestMap->getRoads()) {
+                    for (const auto &laneRoadMarks : road.second.getExplicitRoadMarks()) {
+                        ASSERT_EQ(laneRoadMarks.second.size(), 2 * sections);
+
+                        bool first = true;
+                        for (const auto &roadMark : laneRoadMarks.second) {
+                            // TODO implement real test!!!
+                            auto start = roadMark.first;
+                            auto end = roadMark.second;
+
+                            std::cout << roadMark.first << std::endl;
+                            std::cout << roadMark.second << std::endl;
+
+                            int ds = 3;
+                            double y = std::sqrt(2);
+                            if (!first) {
+                                ds = 5;
+                                y *= 2;
+                            }
+                            first = !first;
+
+                            ASSERT_EQ(end.distance(start), std::sqrt(2));
+
+                            ASSERT_NEAR(start[0] + 1, end[0], 1e-10);
+                            ASSERT_EQ(trunc(start[0]), start[0]);
+                            ASSERT_EQ(int(start[0] -ds) % 10, 0);
+
+                            ASSERT_EQ(start[1], end[1]);
+                            ASSERT_EQ(start[1], y);
+
+                            ASSERT_NEAR(start[2] + 1, end[2], 1e-10);
+                            ASSERT_NEAR(start[2] - start[0], y, 1e-10);
+
+
+                            std::cout << std::endl;
+                        }
+                    }
+                }
+            }
+        }
+    }// namespace tests
+}// namespace opendrive

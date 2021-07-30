@@ -11,6 +11,7 @@
 #include "OpenDriveWrapper.hpp"
 #include "CubicPolynomWrapper.hpp"
 #include "OpenDRIVE/utils/ArrayUtils.hpp"
+#include "RoadMark.hpp"
 
 namespace opendrive {
 
@@ -101,9 +102,11 @@ namespace opendrive {
         std::vector<opendrive::CubicPolynomWrapper> borders;
 
         /**
-         * Sampled points along the lane.
+         * The road marks of the lane.
+         *
+         * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_road_markings
          */
-        std::vector<Vector> sampledPoints;
+        std::vector<opendrive::RoadMark> roadMarks;
 
     public:
 
@@ -112,16 +115,15 @@ namespace opendrive {
          */
         Lane(int id, std::string laneType, bool level, std::vector<Height> heights,
              std::vector<opendrive::CubicPolynomWrapper> widths,
-             std::vector<opendrive::CubicPolynomWrapper> borders);
-
-        /**
-         * Factory for the default center lane.
-         */
-        static Lane getCenterLane() {
-            return Lane(0, "none", false, {}, {}, {});
-        }
+             std::vector<opendrive::CubicPolynomWrapper> borders,
+             std::vector<opendrive::RoadMark> roadMarks);
 
         virtual ~Lane() = default;
+
+        /**
+         * Interpolates the t coordinate of the lane based on the s coordinate.
+         */
+        double interpolate(double s) const;
 
         /**
          * @get
@@ -153,21 +155,24 @@ namespace opendrive {
          */
         const std::vector<opendrive::CubicPolynomWrapper> &getBorders() const;
 
-        double interpolate(double s) const {
-            // TODO implement borders. Maybe skip, as not used.
-            // TODO implement heights
-            // TODO implement level="true"
+        /**
+         * @get
+         */
+        const std::vector<opendrive::RoadMark> &getRoadMarks() const;
 
-            if (id == 0) {
-                return 0;
+        std::vector<std::vector<double>> getExplicitRoadMarks() const {
+            std::vector<std::vector<double>> result;
+            for (const auto &roadMark : getRoadMarks()) {
+                for (const auto &explicitLine : roadMark.getExplicitLines()) {
+                    double start = roadMark.getS() + explicitLine.getS();
+                    result.emplace_back(
+                            std::vector<double>{start, start + explicitLine.getLength(),
+                                                explicitLine.getTOffset(), explicitLine.getTOffset()}
+                    );
+                }
             }
-
-            auto indices = opendrive::utils::getNextSmallerElementsIndices<opendrive::CubicPolynomWrapper, double>(
-                    widths, s, true);
-            const auto &width = widths[indices[0]];
-//            double ds = s - width.getS();
-            return width.interpolate(s);
-        }
+            return result;
+        };
     };
 
 }

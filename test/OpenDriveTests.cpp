@@ -102,6 +102,27 @@ namespace opendrive {
             return result;
         }
 
+        std::vector<opendrive::RoadMark> createMockRoadMarks() {
+            double width = 0.15;
+            return {
+                    opendrive::RoadMark(
+                            1,
+                            "solid",
+                            "standard",
+                            "standard",
+                            width,
+                            "both",
+                            0,
+                            // TODO add for type
+                            {},
+                            {
+                                    opendrive::RoadMark::Line(2, 1, 0, -1, "standard", width, "standard"),
+                                    opendrive::RoadMark::Line(4, 1, 0, 1, "standard", width, "standard"),
+                            }
+                    )
+            };
+        }
+
         std::vector<opendrive::LaneSection>
         createMockLaneSections(int sections, double sectionLength, int numLanesPerSide) {
             std::vector<opendrive::LaneSection> result;
@@ -111,19 +132,26 @@ namespace opendrive {
                 for (int id = 1; id <= numLanesPerSide; id++) {
                     left.emplace_back(
                             opendrive::Lane(id, "driving", false, {}, {
-                                    opendrive::CubicPolynomWrapper{0,
-                                                                   {sectionLength / numLanesPerSide,
-                                                                    0, 0, 0}}
-                            }, {}));
+                                                    opendrive::CubicPolynomWrapper{0,
+                                                                                   {sectionLength / numLanesPerSide,
+                                                                                    0, 0, 0}}
+                                            }, {},
+//                                            createMockRoadMarks()
+                                            {}
+                            ));
                     right.emplace_back(
                             opendrive::Lane(-id, "driving", false, {}, {
-                                    opendrive::CubicPolynomWrapper{0,
-                                                                   {sectionLength / numLanesPerSide,
-                                                                    0, 0, 0}}
-                            }, {}));
+                                                    opendrive::CubicPolynomWrapper{0,
+                                                                                   {sectionLength / numLanesPerSide,
+                                                                                    0, 0, 0}}
+                                            }, {},
+//                                            createMockRoadMarks()
+                                            {}
+                            ));
                 }
                 result.emplace_back(
-                        opendrive::LaneSection(i * sectionLength, false, left, opendrive::Lane::getCenterLane(),
+                        opendrive::LaneSection(i * sectionLength, false, left,
+                                               opendrive::Lane(0, "none", false, {}, {}, {}, createMockRoadMarks()),
                                                right));
             }
             return result;
