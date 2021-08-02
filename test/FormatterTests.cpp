@@ -71,9 +71,9 @@ namespace opendrive {
             /**
              * Tests formatting the roads to PLY.
              */
-            TEST_F(FormatterTests, DISABLED_testRoadsToPLY) {
+            TEST_F(FormatterTests, /*DISABLED_*/testRoadsToPLY) {
                 mockTestMap->sampleLanes(1);
-                const std::string &ply = opendrive::roadsToPLY(*mockTestMap);
+                const std::string &ply = opendrive::laneSamplesToPLY(*mockTestMap);
                 std::cout << ply << std::endl;
                 std::ofstream plyFile;
                 plyFile.open("test.ply");
@@ -86,7 +86,7 @@ namespace opendrive {
              * Tests formatting the objects to YAML.
              */
             TEST_F(FormatterTests, testRoadsToYAML) {
-                const std::string &formattedYaml = opendrive::roadsToYAML(*mockTestMap);
+                const std::string &formattedYaml = opendrive::laneSamplesToYAML(*mockTestMap);
                 YAML::Node actual = YAML::Load(formattedYaml);
 
                 ASSERT_EQ(actual["geoReference"].IsDefined(), true);

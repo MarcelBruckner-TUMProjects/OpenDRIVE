@@ -116,7 +116,7 @@ namespace opendrive {
             for (const auto &roadMark : getCenter().getExplicitRoadMarks()) {
                 result[getCenter().getId()].emplace_back(std::vector<double>{
                         getS() + roadMark[0], getS() + roadMark[1],
-                        roadMark[2], roadMark[3]}
+                        roadMark[2]}
                 );
             }
 
@@ -124,7 +124,7 @@ namespace opendrive {
                 for (const auto &roadMark : lane.getExplicitRoadMarks()) {
                     result[lane.getId()].emplace_back(std::vector<double>{
                             getS() + roadMark[0], getS() + roadMark[1],
-                            roadMark[2], roadMark[3]}
+                            roadMark[2]}
                     );
                 }
             }
@@ -132,7 +132,7 @@ namespace opendrive {
                 for (const auto &roadMark : lane.getExplicitRoadMarks()) {
                     result[lane.getId()].emplace_back(std::vector<double>{
                             getS() + roadMark[0], getS() + roadMark[1],
-                            roadMark[2], roadMark[3]}
+                            roadMark[2]}
                     );
                 }
             }

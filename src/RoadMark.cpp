@@ -58,10 +58,11 @@ opendrive {
         return lines;
     }
 
-    RoadMark::RoadMark(double sOffset, std::string type, std::string color, std::string material,
+    RoadMark::RoadMark(double sOffset, std::string type, std::string weight, std::string color, std::string material,
                        double width, std::string laneChange, double height, std::vector<Type> types,
                        std::vector<Line> explicitLines) : opendrive::OpenDriveWrapper(sOffset),
                                                           type(std::move(type)),
+                                                          weight(std::move(weight)),
                                                           color(std::move(color)),
                                                           material(std::move(material)),
                                                           width(width),
@@ -100,5 +101,9 @@ opendrive {
 
     const std::vector<opendrive::RoadMark::Line> &RoadMark::getExplicitLines() const {
         return explicitLines;
+    }
+
+    const std::string &RoadMark::getWeight() const {
+        return weight;
     }
 }

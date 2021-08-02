@@ -167,7 +167,7 @@ namespace opendrive {
                     double start = roadMark.getS() + explicitLine.getS();
                     result.emplace_back(
                             std::vector<double>{start, start + explicitLine.getLength(),
-                                                explicitLine.getTOffset(), explicitLine.getTOffset()}
+                                                explicitLine.getTOffset()}
                     );
                 }
             }

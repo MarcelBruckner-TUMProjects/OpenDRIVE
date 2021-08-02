@@ -15,6 +15,6 @@ int main(int argc, char **argv) {
     std::string filename = "test_map_opendrive_1_4";
     opendrive::HDMap hdMap = opendrive::createHDMap(dir + filename + ".xodr");
     hdMap.sampleLanes(10);
-    std::string ply = opendrive::roadsToPLY(hdMap);
+    std::string ply = opendrive::laneSamplesToPLY(hdMap);
     opendrive::writeToFile(filename + ".ply", ply);
 }

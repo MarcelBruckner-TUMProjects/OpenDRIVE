@@ -144,6 +144,11 @@ namespace opendrive {
         std::string type;
 
         /**
+         * Weight of the road mark. This attribute is optional if detailed definition is given below. For values see UML model.
+         */
+        std::string weight;
+
+        /**
          * Color of the road mark. For values see UML model.
          */
         std::string color;
@@ -182,7 +187,7 @@ namespace opendrive {
         /**
          * @constructor
          */
-        RoadMark(double sOffset, std::string type, std::string color, std::string material,
+        RoadMark(double sOffset, std::string type, std::string weight, std::string color, std::string material,
                  double width, std::string laneChange, double height, std::vector<Type> types,
                  std::vector<Line> explicitLines);
 
@@ -215,6 +220,11 @@ namespace opendrive {
          * @get
          */
         double getHeight() const;
+
+        /**
+         * @get
+         */
+        const std::string &getWeight() const;
 
         /**
          * @get

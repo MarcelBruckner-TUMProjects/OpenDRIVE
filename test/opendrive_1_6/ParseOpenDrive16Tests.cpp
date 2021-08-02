@@ -1,4 +1,5 @@
 #include <OpenDRIVE/HDMapFactory.hpp>
+#include <OpenDRIVE/utils/Formatter.hpp>
 #include "gtest/gtest.h"
 
 #include "OpenDRIVE/HDMap.hpp"
@@ -213,6 +214,54 @@ namespace opendrive {
                           CubicPolynom(3.631794570105e+00, 1.956389195528e-03, -7.741618172488e-05, 1.030750933316e-06)
                 );
             }
-        }// namespace tests
-    }// namespace opendrive
-}
+
+
+            /**
+             * Tests parsing the test road marks.
+             */
+            TEST_F(ParseOpenDrive16Tests, testParsingRoadMarks) {
+                auto lane = testRoadOpenDrive16->getLanes().getLaneSection(0).getRight()[0];
+                ASSERT_EQ(lane.getRoadMarks().size(), 1);
+                auto roadMark = lane.getRoadMarks()[0];
+
+                ASSERT_EQ(roadMark.getType(), "broken");
+                ASSERT_EQ(roadMark.getWeight(), "standard");
+                ASSERT_EQ(roadMark.getColor(), "standard");
+                ASSERT_EQ(roadMark.getMaterial(), "standard");
+                ASSERT_EQ(roadMark.getWidth(), 0.15);
+                ASSERT_EQ(roadMark.getS(), 0.0000);
+
+                auto explicitRoadMarks = lane.getExplicitRoadMarks();
+
+                ASSERT_EQ(explicitRoadMarks.size(), 3);
+
+                ASSERT_EQ(explicitRoadMarks[0][0], 0);
+                ASSERT_EQ(explicitRoadMarks[0][1], explicitRoadMarks[0][0] + 3.141181e+00);
+                ASSERT_EQ(explicitRoadMarks[0][2], 0);
+
+                ASSERT_EQ(explicitRoadMarks[1][0], 1.499541e+01);
+                ASSERT_EQ(explicitRoadMarks[1][1], explicitRoadMarks[1][0] + 6.157269e+00);
+                ASSERT_EQ(explicitRoadMarks[1][2], 0);
+
+                ASSERT_EQ(explicitRoadMarks[2][0], 3.300062e+01);
+                ASSERT_EQ(explicitRoadMarks[2][1], explicitRoadMarks[2][0] + 5.976855e+00);
+                ASSERT_EQ(explicitRoadMarks[2][2], 0);
+
+                std::cout << std::endl;
+            }
+
+            /**
+             * Tests formatting the roads to PLY.
+             */
+            TEST_F(ParseOpenDrive16Tests, /*DISABLED_*/testRoadsToPLY) {
+                testMapOpendrive16->sampleLanes(1);
+                const std::string &ply = opendrive::laneSamplesToPLY(*testMapOpendrive16);
+                std::cout << ply << std::endl;
+                std::ofstream plyFile;
+                plyFile.open("test.ply");
+                plyFile << ply;
+                plyFile.close();
+            }
+        }
+    }// namespace tests
+}// namespace opendrive

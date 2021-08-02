@@ -108,7 +108,7 @@ These dependencies are pulled by CMake when the project is built. You `do not` h
 ### XMLNS Attribute
 
 OpenDRIVE 1.4: The parser may fail if the `xmlns` attribute **is** set.  
-OpenDRIVE 1.4: The parser may fail if the `xmlns` attribute **is not exactly** set.
+OpenDRIVE 1.6: The parser may fail if the `xmlns` attribute **is not exactly** set.
 
 ### Workaround
 
@@ -116,3 +116,17 @@ OpenDRIVE 1.4: Change `<OpenDRIVE xmlns="http://www.opendrive.org">` to `<OpenDR
 OpenDRIVE 1.6: The `xmlns` attribute **must** be `xmlns="http://code.asam.net/simulation/standard/opendrive_schema"`.
 
 ***
+
+### OpenDRIVE 1.6:
+
+Problem
+
+```
+terminate called after throwing an instance of 'xsd::cxx::tree::unexpected_enumerator<char>'
+  what():  unexpected enumerator encountered
+```
+
+Solution:
+
+Sometimes there are invalid objects that have the `type` set to `portal`. This type is not valid in the standard.  
+Change all `type="portal"` to `type="none"`.

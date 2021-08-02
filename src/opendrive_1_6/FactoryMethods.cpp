@@ -6,6 +6,7 @@
 #include <map>
 #include <opendrive_1_6/opendrive_16_core.hxx>
 #include <tinyxml2.h>
+#include <boost/lexical_cast.hpp>
 #include "OpenDRIVE/HDMap.hpp"
 #include "OpenDRIVE/Road.hpp"
 
@@ -193,6 +194,111 @@ namespace opendrive {
             return result;
         }
 
+        template<>
+        opendrive::RoadMark::Line
+        create(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_lcr_lane_roadMark_explicit_line &lineNode) {
+            double sOffset = lineNode.sOffset();
+            double length = boost::lexical_cast<double>(lineNode.length());
+//            if (length < 0.1) {
+//                std::cout << length << std::endl;
+//            }
+            double space = -1;
+            double tOffset = lineNode.tOffset();
+            std::string rule = "";
+            if (lineNode.rule().present()) {
+                rule = lineNode.rule().get();
+            }
+            double width = -1;
+            if (lineNode.width().present()) {
+                width = boost::lexical_cast<double>(lineNode.width().get());
+            }
+            std::string color = "";
+            return {sOffset, length, space, tOffset, rule, width, color};
+        }
+
+        std::vector<opendrive::RoadMark::Line> extractExplicitLines(
+                const simulation::standard::opendrive_schema::t_road_lanes_laneSection_lcr_lane_roadMark &roadMarkNode) {
+            if (!roadMarkNode.explicit_().present()) {
+                return {};
+            }
+            std::vector<opendrive::RoadMark::Line> result;
+
+            for (const auto &explicitLineNode : roadMarkNode.explicit_().get().line()) {
+                result.emplace_back(create<opendrive::RoadMark::Line>(explicitLineNode));
+            }
+
+            return result;
+        }
+
+        template<>
+        opendrive::RoadMark
+        create(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_lcr_lane_roadMark &roadMarkNode) {
+            const std::string &type = roadMarkNode.type1();
+            const std::string &color = roadMarkNode.color();
+
+            std::string weight = "standard";
+            std::string material = "standard";
+            std::string laneChange = "both";
+            if (roadMarkNode.weight().present()) {
+                weight = roadMarkNode.weight().get();
+            }
+            if (roadMarkNode.material().present()) {
+                material = roadMarkNode.material().get();
+            }
+            if (roadMarkNode.laneChange().present()) {
+                laneChange = std::to_string(roadMarkNode.laneChange().get());
+            }
+
+            auto explicitLines = extractExplicitLines(roadMarkNode);
+
+            double width = -1;
+            if (roadMarkNode.width().present()) {
+                width = roadMarkNode.width().get();
+            }
+            double height = -1;
+            if (roadMarkNode.height().present()) {
+                width = roadMarkNode.height().get();
+            }
+            return {
+                    (double) roadMarkNode.sOffset(),
+                    type,
+                    weight,
+                    color,
+                    material,
+                    width,
+                    laneChange,
+                    height,
+                    // TODO extract types
+                    {},
+                    explicitLines
+            };
+        }
+
+        template<typename T>
+        std::vector<opendrive::RoadMark>
+        _extractRoadMarks(const T &laneNode) {
+            std::vector<opendrive::RoadMark> result;
+            for (const auto &roadMarkNode : laneNode.roadMark()) {
+                result.emplace_back(create<opendrive::RoadMark>(roadMarkNode));
+            }
+            return result;
+        }
+
+        std::vector<opendrive::RoadMark>
+        extractRoadMarks(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_left_lane &laneNode) {
+            return _extractRoadMarks(laneNode);
+        }
+
+        std::vector<opendrive::RoadMark>
+        extractRoadMarks(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_right_lane &laneNode) {
+            return _extractRoadMarks(laneNode);
+        }
+
+        std::vector<opendrive::RoadMark>
+        extractRoadMarks(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_center_lane &laneNode) {
+            return _extractRoadMarks(laneNode);
+        }
+
         template<typename T>
         opendrive::Lane createLane(const T &laneNode) {
             std::vector<CubicPolynomWrapper> widths, borders;
@@ -218,6 +324,7 @@ namespace opendrive {
                 );
             }
 
+            auto roadMarks = extractRoadMarks(laneNode);
 
             return opendrive::Lane(
                     (int) laneNode.id(),
@@ -226,8 +333,7 @@ namespace opendrive {
                     heights,
                     widths,
                     borders,
-                    // TODO extract road marks
-                    {}
+                    roadMarks
             );
         }
 
@@ -247,6 +353,8 @@ namespace opendrive {
         template<>
         opendrive::Lane
         create(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_center_lane &laneNode) {
+            auto roadMarks = extractRoadMarks(laneNode);
+
             return opendrive::Lane(
                     laneNode.id(),
                     laneNode.type().c_str(),
@@ -254,8 +362,7 @@ namespace opendrive {
                     {},
                     {},
                     {},
-                    // TODO extract road marks
-                    {}
+                    roadMarks
             );
         }
 

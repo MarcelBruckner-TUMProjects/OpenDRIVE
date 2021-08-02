@@ -194,7 +194,7 @@ namespace opendrive {
                     heights,
                     widths,
                     borders,
-                    // TODO extract road marks
+                    // TODO extract road marks. Might skip as no explicit in 1.4
                     {}
             );
         }
@@ -208,7 +208,7 @@ namespace opendrive {
                     {},
                     {},
                     {},
-                    // TODO extract road marks
+                    // TODO extract road marks. Might skip as no explicit in 1.4
                     {}
             );
         }
