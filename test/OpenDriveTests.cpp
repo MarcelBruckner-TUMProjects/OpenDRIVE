@@ -137,8 +137,8 @@ namespace opendrive {
                                                                                    {sectionLength / numLanesPerSide,
                                                                                     0, 0, 0}}
                                             }, {},
-                                            createMockRoadMarks()
-//                                            {}
+//                                            createMockRoadMarks()
+                                            {}
                             ));
                     right.emplace_back(
                             opendrive::Lane(-id, "driving", false, {}, {
@@ -146,8 +146,8 @@ namespace opendrive {
                                                                                    {sectionLength / numLanesPerSide,
                                                                                     0, 0, 0}}
                                             }, {},
-                                            createMockRoadMarks()
-//                                            {}
+//                                            createMockRoadMarks()
+                                            {}
                             ));
                 }
                 result.emplace_back(

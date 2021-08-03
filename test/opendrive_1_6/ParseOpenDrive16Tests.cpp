@@ -250,18 +250,18 @@ namespace opendrive {
                 std::cout << std::endl;
             }
 
-            /**
-             * Tests formatting the roads to PLY.
-             */
-            TEST_F(ParseOpenDrive16Tests, /*DISABLED_*/testRoadsToPLY) {
-                testMapOpendrive16->sampleLanes(1);
-                const std::string &ply = opendrive::laneSamplesToPLY(*testMapOpendrive16);
-                std::cout << ply << std::endl;
-                std::ofstream plyFile;
-                plyFile.open("test.ply");
-                plyFile << ply;
-                plyFile.close();
-            }
+//            /**
+//             * Tests formatting the roads to PLY.
+//             */
+//            TEST_F(ParseOpenDrive16Tests, testRoadsToPLY) {
+//                testMapOpendrive16->sampleLanes(1);
+//                const std::string &ply = opendrive::laneSamplesToPLY(*testMapOpendrive16);
+//                std::cout << ply << std::endl;
+//                std::ofstream plyFile;
+//                plyFile.open("test.ply");
+//                plyFile << ply;
+//                plyFile.close();
+//            }
         }
     }// namespace tests
 }// namespace opendrive

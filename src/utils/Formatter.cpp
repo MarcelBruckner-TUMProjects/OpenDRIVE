@@ -18,15 +18,18 @@ namespace opendrive {
         return map.getPosition<Object>(id);
     }
 
+    void addGenericAttributes(const HDMap &map, YAML::Emitter &yaml, const Vector &origin) {
+        yaml << YAML::Key << "mapFilename" << YAML::Value << map.getFilename();
+        yaml << YAML::Key << "geoReference" << YAML::Value << map.getGeoReference();
+        yaml << YAML::Key << "origin" << YAML::Value << YAML::Flow << origin.getElements();
+    }
 
     std::string objectsToYAML(const HDMap &map, const Vector &origin) {
         LongLatProjector longLatProjector = LongLatProjector(map.getGeoReference());
 
         YAML::Emitter yaml;
         yaml << YAML::BeginMap;
-        yaml << YAML::Key << "mapFilename" << YAML::Value << map.getFilename();
-        yaml << YAML::Key << "geoReference" << YAML::Value << map.getGeoReference();
-        yaml << YAML::Key << "origin" << YAML::Value << YAML::Flow << origin.getElements();
+        addGenericAttributes(map, yaml, origin);
         yaml << YAML::Key << "objects" << YAML::Value;
 
         yaml << YAML::BeginSeq;
@@ -257,15 +260,12 @@ namespace opendrive {
     std::string laneSamplesToYAML(HDMap &map, const Vector &origin) {
         YAML::Emitter yaml;
         yaml << YAML::BeginMap;
-        yaml << YAML::Key << "mapFilename" << YAML::Value << map.getFilename();
-        yaml << YAML::Key << "geoReference" << YAML::Value << map.getGeoReference();
-        yaml << YAML::Key << "origin" << YAML::Value << YAML::Flow << origin.getElements();
+        addGenericAttributes(map, yaml, origin);
         yaml << YAML::Key << "roads" << YAML::Value;
 
         yaml << YAML::BeginSeq;
         for (const auto &roadEntry : map.getRoads()) {
             auto road = roadEntry.second;
-            std::map<int, std::vector<std::pair<Vector, Vector>>> marks = roadEntry.second.getExplicitRoadMarks();
 
             yaml << YAML::BeginMap;
             yaml << YAML::Key << "road" << YAML::Value << road.getId();
@@ -280,15 +280,6 @@ namespace opendrive {
                 yaml << YAML::BeginSeq;
                 for (const auto &sample : lane.second) {
                     yaml << YAML::Flow << sample.getElements();
-                }
-                yaml << YAML::EndSeq;
-                yaml << YAML::Key << "explicitRoadMarks" << YAML::Value;
-                yaml << YAML::BeginSeq;
-                for (const auto &explicitRoadMark : marks[i]) {
-                    yaml << YAML::BeginSeq;
-                    yaml << YAML::Flow << explicitRoadMark.first.getElements();
-                    yaml << YAML::Flow << explicitRoadMark.second.getElements();
-                    yaml << YAML::EndSeq;
                 }
                 yaml << YAML::EndSeq;
                 yaml << YAML::EndMap;
@@ -308,6 +299,52 @@ namespace opendrive {
 
     std::string laneSamplesToYAML(HDMap &map, double longitude, double latitude) {
         return laneSamplesToYAML(map, longLatToVector(map, longitude, latitude));
+    }
+
+    std::string explicitRoadMarksToYAML(HDMap &map, const Vector &origin) {
+        YAML::Emitter yaml;
+        yaml << YAML::BeginMap;
+        addGenericAttributes(map, yaml, origin);
+        yaml << YAML::Key << "roads" << YAML::Value;
+
+        yaml << YAML::BeginSeq;
+        for (const auto &roadEntry : map.getRoads()) {
+            auto road = roadEntry.second;
+
+            yaml << YAML::BeginMap;
+            yaml << YAML::Key << "road" << YAML::Value << road.getId();
+            yaml << YAML::Key << "lanes" << YAML::Value;
+
+            yaml << YAML::BeginSeq;
+            for (const auto &explicitRoadMarks : road.getExplicitRoadMarks()) {
+                yaml << YAML::BeginMap;
+                yaml << YAML::Key << "lane" << YAML::Value << explicitRoadMarks.first;
+                yaml << YAML::Key << "explicitRoadMarks" << YAML::Value;
+                yaml << YAML::BeginSeq;
+                for (const auto &explicitRoadMark : explicitRoadMarks.second) {
+                    yaml << YAML::BeginSeq;
+                    yaml << YAML::Flow << explicitRoadMark.first.getElements();
+                    yaml << YAML::Flow << explicitRoadMark.second.getElements();
+                    yaml << YAML::EndSeq;
+                }
+                yaml << YAML::EndSeq;
+                yaml << YAML::EndMap;
+            }
+            yaml << YAML::EndSeq;
+            yaml << YAML::EndMap;
+        }
+        //        assert(yaml.good());
+        yaml << YAML::EndSeq;
+        yaml << YAML::EndMap;
+        return yaml.c_str();
+    }
+
+    std::string explicitRoadMarksToYAML(HDMap &map, double longitude, double latitude) {
+        return explicitRoadMarksToYAML(map, longLatToVector(map, longitude, latitude));
+    }
+
+    std::string explicitRoadMarksToYAML(HDMap &map, const std::string &worldOriginId) {
+        return explicitRoadMarksToYAML(map, getWorldOriginById(map, worldOriginId));
     }
 }
 

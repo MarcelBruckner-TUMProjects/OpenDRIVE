@@ -68,25 +68,28 @@ namespace opendrive {
                 }
             }
 
-            /**
-             * Tests formatting the roads to PLY.
-             */
-            TEST_F(FormatterTests, /*DISABLED_*/testRoadsToPLY) {
-                mockTestMap->sampleLanes(1);
-                const std::string &ply = opendrive::laneSamplesToPLY(*mockTestMap);
-                std::cout << ply << std::endl;
-                std::ofstream plyFile;
-                plyFile.open("test.ply");
-                plyFile << ply;
-                plyFile.close();
-            }
-
+//            /**
+//             * Tests formatting the roads to PLY.
+//             */
+//            TEST_F(FormatterTests, testLaneSamplesToPLY) {
+//                mockTestMap->sampleLanes(1);
+//                const std::string &ply = opendrive::laneSamplesToPLY(*mockTestMap);
+//                std::cout << ply << std::endl;
+//                std::ofstream plyFile;
+//                plyFile.open("test.ply");
+//                plyFile << ply;
+//                plyFile.close();
+//            }
 
             /**
              * Tests formatting the objects to YAML.
              */
-            TEST_F(FormatterTests, testRoadsToYAML) {
+            TEST_F(FormatterTests, testLaneSamplesToYAML) {
+                mockTestMap->sampleLanes(10);
+
                 const std::string &formattedYaml = opendrive::laneSamplesToYAML(*mockTestMap);
+//                std::cout << formattedYaml << std::endl;
+
                 YAML::Node actual = YAML::Load(formattedYaml);
 
                 ASSERT_EQ(actual["geoReference"].IsDefined(), true);
@@ -102,6 +105,37 @@ namespace opendrive {
 
                         for (const auto &sampleNode : laneNode["samples"]) {
                             ASSERT_EQ(sampleNode.IsSequence(), true);
+                        }
+                    }
+                }
+            }
+
+            /**
+             * Tests formatting the objects to YAML.
+             */
+            TEST_F(FormatterTests, testExplicitRoadMarksToYAML) {
+                const std::string &formattedYaml = opendrive::explicitRoadMarksToYAML(*mockTestMap);
+//                std::cout << formattedYaml << std::endl;
+
+                YAML::Node actual = YAML::Load(formattedYaml);
+
+                ASSERT_EQ(actual["geoReference"].IsDefined(), true);
+                ASSERT_EQ(actual["roads"].IsSequence(), true);
+
+                for (const auto &roadNode : actual["roads"]) {
+                    ASSERT_EQ(roadNode["road"].IsDefined(), true);
+                    ASSERT_EQ(roadNode["lanes"].IsSequence(), true);
+
+                    for (const auto &laneNode : roadNode["lanes"]) {
+                        ASSERT_EQ(laneNode["lane"].IsDefined(), true);
+                        ASSERT_EQ(laneNode["explicitRoadMarks"].IsSequence(), true);
+
+                        for (const auto &explicitRoadMarksNode : laneNode["explicitRoadMarks"]) {
+                            ASSERT_EQ(explicitRoadMarksNode.IsSequence(), true);
+
+                            for (const auto &explicitRoadMark : explicitRoadMarksNode) {
+                                ASSERT_EQ(explicitRoadMark.IsSequence(), true);
+                            }
                         }
                     }
                 }

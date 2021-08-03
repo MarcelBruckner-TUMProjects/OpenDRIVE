@@ -111,6 +111,27 @@ namespace opendrive {
      * @return A string in the YAML format representing the roads.
      */
     std::string explicitRoadMarksToPLY(HDMap &map, double longitude, double latitude);
+
+    /**
+     * Converts the samples of the road in the HD map to the YAML format.
+     *
+     * @param map The HD map.
+     * @param worldOriginId The id of the object used as the world origin.
+     *
+     * @return A string in the YAML format representing the roads.
+     */
+    std::string explicitRoadMarksToYAML(HDMap &map, const std::string &worldOriginId = "");
+
+    /**
+     * Converts the samples of the road in the HD map to the YAML format.
+     *
+     * @param map The HD map.
+     * @param longitude The longitude coordinate of the origin.
+     * @param latitude The latitude coordinate of the origin.
+     *
+     * @return A string in the YAML format representing the roads.
+     */
+    std::string explicitRoadMarksToYAML(HDMap &map, double longitude, double latitude);
 }
 
 
