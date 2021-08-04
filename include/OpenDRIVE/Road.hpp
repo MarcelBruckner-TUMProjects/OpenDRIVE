@@ -80,12 +80,12 @@ namespace opendrive {
         /**
          * Points sampled along the lanes, grouped by lane id.
          */
-        std::map<int, std::vector<Vector>> sampledLanePoints;
+        std::map<double, std::map<int, std::vector<Vector>>> sampledLanePoints;
 
         /**
          * Start and end of explicitly defined road marks along the lanes, grouped by lane id.
          */
-        std::map<int, std::vector<std::pair<Vector, Vector>>> explicitRoadMarks;
+        std::map<double, std::map<int, std::vector<std::pair<Vector, Vector>>>> explicitRoadMarks;
 
     protected:
         /**
@@ -148,11 +148,12 @@ namespace opendrive {
          * @param s The s coordinate of the sample
          * @param t The t coordinate of the sample
          */
-        void addSample(int laneId, double s, double t);
+        void addSample(double laneSectionS, int laneId, double s, double t);
 
         void extractExplicitRoadMarks();
 
-        void addExplicitRoadMarks(int laneId, double startS, double endS, double startT, double endT);
+        void
+        addExplicitRoadMarks(double laneSectionS, int laneId, double startS, double endS, double startT, double endT);
 
     public:
 
@@ -307,7 +308,7 @@ namespace opendrive {
         /**
          * @get
          */
-        const std::map<int, std::vector<Vector>> &getSampledLanePoints() const;
+        const std::map<double, std::map<int, std::vector<Vector>>> &getSampledLanePoints() const;
 
         /**
          * @get
@@ -317,7 +318,7 @@ namespace opendrive {
         /**
          * @get
          */
-        const std::map<int, std::vector<std::pair<Vector, Vector>>> &getExplicitRoadMarks() const;
+        const std::map<double, std::map<int, std::vector<std::pair<Vector, Vector>>>> &getExplicitRoadMarks() const;
     };
 }
 

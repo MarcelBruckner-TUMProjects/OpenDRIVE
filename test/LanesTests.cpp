@@ -60,7 +60,9 @@ namespace opendrive {
              */
             TEST_F(LanesTests, testSampleLanes) {
                 mockTestMap->sampleLanes(1);
-                auto sampledLanePoints = mockTestMap->getRoad(mockTestRoadId).getSampledLanePoints();
+                std::map<double, std::map<int, std::vector<Vector>>> laneSections = mockTestMap->getRoad(
+                        mockTestRoadId).getSampledLanePoints();
+                std::map<int, std::vector<Vector>> sampledLanePoints = laneSections[0];
 
                 auto oneOverSqrtTwo = 1.0 / std::sqrt(2);
                 double numSamples = sections * sectionLength + 1;
@@ -68,14 +70,14 @@ namespace opendrive {
                 ASSERT_EQ(mockTestMap->getNumberOfSampledLanePoints(), numSamples * (numLanesPerSide * 2 + 1));
                 ASSERT_EQ(sampledLanePoints.size(), numLanesPerSide * 2 + 1);
                 for (const auto &entry : sampledLanePoints) {
-                    ASSERT_EQ(entry.second.size(), numSamples);
+                    ASSERT_EQ(entry.second.size(), 10);
 
                     double offsetFromShape = 0;
                     if (entry.first == numLanesPerSide) {
                         offsetFromShape = oneOverSqrtTwo;
                     }
 
-                    for (int i = 0; i < numSamples; i++) {
+                    for (int i = 0; i < entry.second.size(); i++) {
                         ASSERT_EQ(entry.second[i][0], i);
                         ASSERT_NEAR(entry.second[i][1], oneOverSqrtTwo * (entry.first * 2 + 1) + offsetFromShape, 1e-8);
                         ASSERT_NEAR(entry.second[i][2], oneOverSqrtTwo * (entry.first * 2 + 1) + i - offsetFromShape,
@@ -89,36 +91,38 @@ namespace opendrive {
              */
             TEST_F(LanesTests, testExplicitRoadMarks) {
                 for (const auto &road : mockTestMap->getRoads()) {
-                    for (const auto &laneRoadMarks : road.second.getExplicitRoadMarks()) {
-                        ASSERT_EQ(laneRoadMarks.second.size(), 2 * sections);
+                    for (const auto &laneSection : road.second.getExplicitRoadMarks()) {
+                        for (const auto &laneRoadMarks : laneSection.second) {
+                            ASSERT_EQ(laneRoadMarks.second.size(), 2);
 
-                        bool first = true;
-                        for (const auto &roadMark : laneRoadMarks.second) {
-                            auto start = roadMark.first;
-                            auto end = roadMark.second;
+                            bool first = true;
+                            for (const auto &roadMark : laneRoadMarks.second) {
+                                auto start = roadMark.first;
+                                auto end = roadMark.second;
 
 //                            std::cout << roadMark.first << std::endl;
 //                            std::cout << roadMark.second << std::endl;
 
-                            int ds = 3;
-                            if (!first) {
-                                ds = 5;
-                            }
-                            first = !first;
+                                int ds = 3;
+                                if (!first) {
+                                    ds = 5;
+                                }
+                                first = !first;
 
-                            ASSERT_EQ(end.distance(start), std::sqrt(2));
+                                ASSERT_EQ(end.distance(start), std::sqrt(2));
 
-                            ASSERT_NEAR(start[0] + 1, end[0], 1e-10);
-                            ASSERT_EQ(trunc(start[0]), start[0]);
-                            ASSERT_EQ(int(start[0] -ds) % 10, 0);
+                                ASSERT_NEAR(start[0] + 1, end[0], 1e-10);
+                                ASSERT_EQ(trunc(start[0]), start[0]);
+                                ASSERT_EQ(int(start[0] -ds) % 10, 0);
 
-                            ASSERT_EQ(start[1], end[1]);
-                            // TODO improve test
+                                ASSERT_EQ(start[1], end[1]);
+                                // TODO improve test
 //                            ASSERT_EQ(start[1], y);
 
-                            ASSERT_NEAR(start[2] + 1, end[2], 1e-10);
-                            // TODO improve test
+                                ASSERT_NEAR(start[2] + 1, end[2], 1e-10);
+                                // TODO improve test
 //                            ASSERT_NEAR(start[2] - start[0], 0, 1e-10);
+                            }
                         }
                     }
                 }

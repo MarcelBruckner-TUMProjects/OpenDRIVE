@@ -332,7 +332,7 @@ namespace opendrive {
         return result;
     }
 
-    void Road::addSample(int laneId, double s, double t) {
+    void Road::addSample(double laneSectionS, int laneId, double s, double t) {
         auto sample = interpolate(s, t);
 //        std::cout << s << " x " << t << " -> " << sample << std::endl;
         for (const auto &element : sample.getElements()) {
@@ -341,50 +341,56 @@ namespace opendrive {
                 return;
             }
         }
-        sampledLanePoints[laneId].emplace_back(sample);
+        sampledLanePoints[laneSectionS][laneId].emplace_back(sample);
     }
 
     void Road::sampleLanes(double interval) {
         auto sCoordinates = sampleSCoordinates(interval);
 
         for (const auto &s : sCoordinates) {
+            double laneSectionS = lanes.getLaneSection(s).getS();
             for (const auto &width : lanes.calculateLaneTOffsets(s)) {
-                addSample(width.first, s, width.second);
+                addSample(laneSectionS, width.first, s, width.second);
             }
         }
-    }
-
-    const std::map<int, std::vector<Vector>> &Road::getSampledLanePoints() const {
-        return sampledLanePoints;
     }
 
     int Road::getNumberOfSampledLanePoints() {
         int sum = 0;
-        for (const auto &entry : sampledLanePoints) {
-            sum += int(entry.second.size());
+        for (const auto &laneSection : sampledLanePoints) {
+            for (const auto &entry : laneSection.second) {
+                sum += int(entry.second.size());
+            }
         }
         return sum;
     }
 
-    void Road::addExplicitRoadMarks(int laneId, double startS, double endS, double startT, double endT) {
+    void Road::addExplicitRoadMarks(double laneSectionS, int laneId, double startS, double endS, double startT,
+                                    double endT) {
         auto start = interpolate(startS, startT);
         auto end = interpolate(endS, endT);
-        explicitRoadMarks[laneId].emplace_back(std::make_pair(start, end));
+        explicitRoadMarks[laneSectionS][laneId].emplace_back(std::make_pair(start, end));
     }
 
     void Road::extractExplicitRoadMarks() {
-        for (const auto &lane : lanes.calculateExplicitRoadMarks()) {
-            for (const auto &explicitRoadMark : lane.second) {
-                addExplicitRoadMarks(lane.first, explicitRoadMark[0], explicitRoadMark[1],
-                                     explicitRoadMark[2], explicitRoadMark[3]);
+        for (const auto &laneSection : lanes.calculateExplicitRoadMarks()) {
+            for (const auto &lane : laneSection.second) {
+                for (const auto &explicitRoadMark : lane.second) {
+                    addExplicitRoadMarks(laneSection.first, lane.first, explicitRoadMark[0], explicitRoadMark[1],
+                                         explicitRoadMark[2], explicitRoadMark[3]);
+                }
             }
         }
     }
 
-    const std::map<int, std::vector<std::pair<Vector, Vector>>> &Road::getExplicitRoadMarks() const {
+    const std::map<double, std::map<int, std::vector<std::pair<Vector, Vector>>>> &
+    Road::getExplicitRoadMarks() const {
         return explicitRoadMarks;
     }
 
+    const std::map<double, std::map<int, std::vector<Vector>>> &Road::getSampledLanePoints() const {
+        return sampledLanePoints;
+    }
 
 #pragma endregion Calculations
 

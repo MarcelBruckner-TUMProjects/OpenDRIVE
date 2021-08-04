@@ -148,29 +148,31 @@ namespace opendrive {
 
         int vertexIndex = -1;
         for (const auto &road : map.getRoads()) {
-            for (const auto &laneSamples : road.second.getSampledLanePoints()) {
-                Vector color(colorGenerator(), colorGenerator(), colorGenerator());
-                bool isFirstInLane = true;
-                for (const auto &sample : laneSamples.second) {
-                    auto shiftedSample = sample - origin;
+            for (const auto &laneSection : road.second.getSampledLanePoints()) {
+                for (const auto &laneSamples : laneSection.second) {
+                    Vector color(colorGenerator(), colorGenerator(), colorGenerator());
+                    bool isFirstInLane = true;
+                    for (const auto &sample : laneSamples.second) {
+                        auto shiftedSample = sample - origin;
 
-                    vertexSS << shiftedSample[0] << " " << shiftedSample[1] << " " << shiftedSample[2];
-                    vertexSS << " ";
-                    vertexSS << (int) color[0] << " " << (int) color[1] << " " << (int) color[2];
-                    vertexIndex++;
-                    if (withIndices) {
-                        vertexSS << " " << "{ " << vertexIndex << " }";
-                    }
-                    vertexSS << std::endl;
+                        vertexSS << shiftedSample[0] << " " << shiftedSample[1] << " " << shiftedSample[2];
+                        vertexSS << " ";
+                        vertexSS << (int) color[0] << " " << (int) color[1] << " " << (int) color[2];
+                        vertexIndex++;
+                        if (withIndices) {
+                            vertexSS << " " << "{ " << vertexIndex << " }";
+                        }
+                        vertexSS << std::endl;
 
-                    if (isFirstInLane) {
-                        isFirstInLane = false;
-                        continue;
+                        if (isFirstInLane) {
+                            isFirstInLane = false;
+                            continue;
+                        }
+                        edges.emplace_back(std::make_pair(
+                                std::make_pair(vertexIndex - 1, vertexIndex),
+                                color
+                        ));
                     }
-                    edges.emplace_back(std::make_pair(
-                            std::make_pair(vertexIndex - 1, vertexIndex),
-                            color
-                    ));
                 }
             }
         }
@@ -206,34 +208,36 @@ namespace opendrive {
         int vertexIndex = -1;
         for (const auto &road : map.getRoads()) {
             Vector shifted;
-            for (const auto &laneRoadMarks : road.second.getExplicitRoadMarks()) {
-                for (const auto &roadMark : laneRoadMarks.second) {
-                    shifted = roadMark.first - origin;
-                    vertexIndex++;
-                    vertexSS << shifted[0] << " " << shifted[1] << " " << shifted[2];
-                    vertexSS << " ";
-                    vertexSS << 255 << " " << 255 << " " << 255;
-                    if (withIndices) {
-                        vertexSS << " " << "{ " << vertexIndex << " }";
+            for (const auto &laneSection : road.second.getExplicitRoadMarks()) {
+                for (const auto &laneRoadMarks : laneSection.second) {
+                    for (const auto &roadMark : laneRoadMarks.second) {
+                        shifted = roadMark.first - origin;
+                        vertexIndex++;
+                        vertexSS << shifted[0] << " " << shifted[1] << " " << shifted[2];
+                        vertexSS << " ";
+                        vertexSS << 255 << " " << 255 << " " << 255;
+                        if (withIndices) {
+                            vertexSS << " " << "{ " << vertexIndex << " }";
+                        }
+                        vertexSS << std::endl;
+
+                        shifted = roadMark.second - origin;
+                        vertexIndex++;
+                        vertexSS << shifted[0] << " " << shifted[1] << " " << shifted[2];
+                        vertexSS << " ";
+                        vertexSS << 255 << " " << 255 << " " << 255;
+                        if (withIndices) {
+                            vertexSS << " " << "{ " << vertexIndex << " }";
+                        }
+                        vertexSS << std::endl;
+
+                        //                    std::cout << vertexSS.str() << " " << std::endl;
+
+                        edges.emplace_back(std::make_pair(
+                                std::make_pair(vertexIndex - 1, vertexIndex),
+                                Vector(255, 255, 255)
+                        ));
                     }
-                    vertexSS << std::endl;
-
-                    shifted = roadMark.second - origin;
-                    vertexIndex++;
-                    vertexSS << shifted[0] << " " << shifted[1] << " " << shifted[2];
-                    vertexSS << " ";
-                    vertexSS << 255 << " " << 255 << " " << 255;
-                    if (withIndices) {
-                        vertexSS << " " << "{ " << vertexIndex << " }";
-                    }
-                    vertexSS << std::endl;
-
-                    //                    std::cout << vertexSS.str() << " " << std::endl;
-
-                    edges.emplace_back(std::make_pair(
-                            std::make_pair(vertexIndex - 1, vertexIndex),
-                            Vector(255, 255, 255)
-                    ));
                 }
             }
         }
@@ -269,17 +273,26 @@ namespace opendrive {
 
             yaml << YAML::BeginMap;
             yaml << YAML::Key << "road" << YAML::Value << road.getId();
-            yaml << YAML::Key << "lanes" << YAML::Value;
+            yaml << YAML::Key << "laneSections" << YAML::Value;
 
             yaml << YAML::BeginSeq;
-            for (const auto &lane : road.getSampledLanePoints()) {
+            for (const auto &laneSection : roadEntry.second.getSampledLanePoints()) {
                 yaml << YAML::BeginMap;
-                int i = lane.first;
-                yaml << YAML::Key << "lane" << YAML::Value << i;
-                yaml << YAML::Key << "samples" << YAML::Value;
+                yaml << YAML::Key << "laneSection" << YAML::Value << laneSection.first;
+                yaml << YAML::Key << "lanes" << YAML::Value;
+
                 yaml << YAML::BeginSeq;
-                for (const auto &sample : lane.second) {
-                    yaml << YAML::Flow << (sample - origin).getElements();
+                for (const auto &lane : laneSection.second) {
+                    yaml << YAML::BeginMap;
+                    int i = lane.first;
+                    yaml << YAML::Key << "lane" << YAML::Value << i;
+                    yaml << YAML::Key << "samples" << YAML::Value;
+                    yaml << YAML::BeginSeq;
+                    for (const auto &sample : lane.second) {
+                        yaml << YAML::Flow << (sample - origin).getElements();
+                    }
+                    yaml << YAML::EndSeq;
+                    yaml << YAML::EndMap;
                 }
                 yaml << YAML::EndSeq;
                 yaml << YAML::EndMap;
@@ -313,19 +326,29 @@ namespace opendrive {
 
             yaml << YAML::BeginMap;
             yaml << YAML::Key << "road" << YAML::Value << road.getId();
-            yaml << YAML::Key << "lanes" << YAML::Value;
+            yaml << YAML::Key << "laneSections" << YAML::Value;
 
             yaml << YAML::BeginSeq;
-            for (const auto &explicitRoadMarks : road.getExplicitRoadMarks()) {
+
+            for (const auto &laneSection : roadEntry.second.getExplicitRoadMarks()) {
                 yaml << YAML::BeginMap;
-                yaml << YAML::Key << "lane" << YAML::Value << explicitRoadMarks.first;
-                yaml << YAML::Key << "explicitRoadMarks" << YAML::Value;
+                yaml << YAML::Key << "laneSection" << YAML::Value << laneSection.first;
+                yaml << YAML::Key << "lanes" << YAML::Value;
+
                 yaml << YAML::BeginSeq;
-                for (const auto &explicitRoadMark : explicitRoadMarks.second) {
+                for (const auto &explicitRoadMarks : laneSection.second) {
+                    yaml << YAML::BeginMap;
+                    yaml << YAML::Key << "lane" << YAML::Value << explicitRoadMarks.first;
+                    yaml << YAML::Key << "explicitRoadMarks" << YAML::Value;
                     yaml << YAML::BeginSeq;
-                    yaml << YAML::Flow << (explicitRoadMark.first - origin).getElements();
-                    yaml << YAML::Flow << (explicitRoadMark.second - origin).getElements();
+                    for (const auto &explicitRoadMark : explicitRoadMarks.second) {
+                        yaml << YAML::BeginSeq;
+                        yaml << YAML::Flow << (explicitRoadMark.first - origin).getElements();
+                        yaml << YAML::Flow << (explicitRoadMark.second - origin).getElements();
+                        yaml << YAML::EndSeq;
+                    }
                     yaml << YAML::EndSeq;
+                    yaml << YAML::EndMap;
                 }
                 yaml << YAML::EndSeq;
                 yaml << YAML::EndMap;

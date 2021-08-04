@@ -85,7 +85,7 @@ namespace opendrive {
              * Tests formatting the objects to YAML.
              */
             TEST_F(FormatterTests, testLaneSamplesToYAML) {
-                mockTestMap->sampleLanes(10);
+                mockTestMap->sampleLanes(1);
 
                 const std::string &formattedYaml = opendrive::laneSamplesToYAML(*mockTestMap);
 //                std::cout << formattedYaml << std::endl;
@@ -95,19 +95,40 @@ namespace opendrive {
                 ASSERT_EQ(actual["geoReference"].IsDefined(), true);
                 ASSERT_EQ(actual["roads"].IsSequence(), true);
 
+                int numRoads = 0;
                 for (const auto &roadNode : actual["roads"]) {
+                    numRoads++;
                     ASSERT_EQ(roadNode["road"].IsDefined(), true);
-                    ASSERT_EQ(roadNode["lanes"].IsSequence(), true);
+                    ASSERT_EQ(roadNode["laneSections"].IsSequence(), true);
 
-                    for (const auto &laneNode : roadNode["lanes"]) {
-                        ASSERT_EQ(laneNode["lane"].IsDefined(), true);
-                        ASSERT_EQ(laneNode["samples"].IsSequence(), true);
+                    int numLaneSections = 0;
+                    for (const auto &laneSectionNode : roadNode["laneSections"]) {
+                        numLaneSections++;
+                        ASSERT_EQ(laneSectionNode["laneSection"].IsDefined(), true);
+                        ASSERT_EQ(laneSectionNode["lanes"].IsSequence(), true);
 
-                        for (const auto &sampleNode : laneNode["samples"]) {
-                            ASSERT_EQ(sampleNode.IsSequence(), true);
+                        int numLanes = 0;
+                        for (const auto &laneNode : laneSectionNode["lanes"]) {
+                            numLanes++;
+                            ASSERT_EQ(laneNode["lane"].IsDefined(), true);
+                            ASSERT_EQ(laneNode["samples"].IsSequence(), true);
+
+                            int numSamples = 0;
+                            for (const auto &sampleNode : laneNode["samples"]) {
+                                numSamples++;
+                                ASSERT_EQ(sampleNode.IsSequence(), true);
+                            }
+                            if (numLaneSections == 10) {
+                                ASSERT_EQ(numSamples, 11);
+                            } else {
+                                ASSERT_EQ(numSamples, 10);
+                            }
                         }
+                        ASSERT_EQ(numLanes, 2 * numLanesPerSide + 1);
                     }
+                    ASSERT_EQ(numLaneSections, sections);
                 }
+                ASSERT_EQ(numRoads, 1);
             }
 
             /**
@@ -122,23 +143,43 @@ namespace opendrive {
                 ASSERT_EQ(actual["geoReference"].IsDefined(), true);
                 ASSERT_EQ(actual["roads"].IsSequence(), true);
 
+                int numRoads = 0;
                 for (const auto &roadNode : actual["roads"]) {
+                    numRoads++;
                     ASSERT_EQ(roadNode["road"].IsDefined(), true);
-                    ASSERT_EQ(roadNode["lanes"].IsSequence(), true);
+                    ASSERT_EQ(roadNode["laneSections"].IsSequence(), true);
 
-                    for (const auto &laneNode : roadNode["lanes"]) {
-                        ASSERT_EQ(laneNode["lane"].IsDefined(), true);
-                        ASSERT_EQ(laneNode["explicitRoadMarks"].IsSequence(), true);
+                    int numLaneSections = 0;
+                    for (const auto &laneSectionNode : roadNode["laneSections"]) {
+                        numLaneSections++;
+                        ASSERT_EQ(laneSectionNode["laneSection"].IsDefined(), true);
+                        ASSERT_EQ(laneSectionNode["lanes"].IsSequence(), true);
 
-                        for (const auto &explicitRoadMarksNode : laneNode["explicitRoadMarks"]) {
-                            ASSERT_EQ(explicitRoadMarksNode.IsSequence(), true);
+                        int numLanes = 0;
+                        for (const auto &laneNode : laneSectionNode["lanes"]) {
+                            numLanes++;
+                            ASSERT_EQ(laneNode["lane"].IsDefined(), true);
+                            ASSERT_EQ(laneNode["explicitRoadMarks"].IsSequence(), true);
 
-                            for (const auto &explicitRoadMark : explicitRoadMarksNode) {
-                                ASSERT_EQ(explicitRoadMark.IsSequence(), true);
+                            int numRoadMarks = 0;
+                            for (const auto &explicitRoadMarksNode : laneNode["explicitRoadMarks"]) {
+                                numRoadMarks++;
+                                ASSERT_EQ(explicitRoadMarksNode.IsSequence(), true);
+
+                                int numCoordinates = 0;
+                                for (const auto &explicitRoadMark : explicitRoadMarksNode) {
+                                    numCoordinates++;
+                                    ASSERT_EQ(explicitRoadMark.IsSequence(), true);
+                                }
+                                ASSERT_EQ(numCoordinates, 2);
                             }
+                            ASSERT_EQ(numRoadMarks, 2);
                         }
+                        ASSERT_EQ(numLanes, 1);
                     }
+                    ASSERT_EQ(numLaneSections, sections);
                 }
+                ASSERT_EQ(numRoads, 1);
             }
         }// namespace tests
     }// namespace opendrive
