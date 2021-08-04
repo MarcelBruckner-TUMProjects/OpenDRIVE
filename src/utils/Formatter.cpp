@@ -279,7 +279,7 @@ namespace opendrive {
                 yaml << YAML::Key << "samples" << YAML::Value;
                 yaml << YAML::BeginSeq;
                 for (const auto &sample : lane.second) {
-                    yaml << YAML::Flow << sample.getElements();
+                    yaml << YAML::Flow << (sample - origin).getElements();
                 }
                 yaml << YAML::EndSeq;
                 yaml << YAML::EndMap;
@@ -323,8 +323,8 @@ namespace opendrive {
                 yaml << YAML::BeginSeq;
                 for (const auto &explicitRoadMark : explicitRoadMarks.second) {
                     yaml << YAML::BeginSeq;
-                    yaml << YAML::Flow << explicitRoadMark.first.getElements();
-                    yaml << YAML::Flow << explicitRoadMark.second.getElements();
+                    yaml << YAML::Flow << (explicitRoadMark.first - origin).getElements();
+                    yaml << YAML::Flow << (explicitRoadMark.second - origin).getElements();
                     yaml << YAML::EndSeq;
                 }
                 yaml << YAML::EndSeq;
