@@ -186,11 +186,15 @@ namespace opendrive {
                 );
             }
 
+            int id = laneNode.id().get();
+            std::string type = laneNode.type().get().c_str();
+            std::string side = laneNode.level().get();
 
+//            std::cout << id << " " << type << " " << side << std::endl;
             return opendrive::Lane(
-                    laneNode.id().get(),
-                    laneNode.type().get().c_str(),
-                    laneNode.level().get() == "true",
+                    id,
+                    type,
+                    side == "true",
                     heights,
                     widths,
                     borders,
@@ -201,10 +205,15 @@ namespace opendrive {
 
         template<>
         opendrive::Lane create(const centerLane &laneNode) {
+            int id = laneNode.id().get();
+            std::string type = laneNode.type().get().c_str();
+            std::string side = laneNode.level().get();
+
+//            std::cout << id << " " << type << " " << side << std::endl;
             return opendrive::Lane(
-                    laneNode.id().get(),
-                    laneNode.type().get().c_str(),
-                    laneNode.level().get() == "true",
+                    id,
+                    type,
+                    side == "true",
                     {},
                     {},
                     {},

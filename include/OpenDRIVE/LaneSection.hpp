@@ -110,34 +110,9 @@ namespace opendrive {
             return calculateLaneTOffsets(s)[laneId];
         }
 
-        std::map<int, std::vector<std::vector<double>>> calculateExplicitRoadMarks() const {
-            std::map<int, std::vector<std::vector<double>>> result;
+        std::map<int, std::vector<std::vector<double>>> calculateExplicitRoadMarks() const;
 
-            for (const auto &roadMark : getCenter().getExplicitRoadMarks()) {
-                result[getCenter().getId()].emplace_back(std::vector<double>{
-                        getS() + roadMark[0], getS() + roadMark[1],
-                        roadMark[2]}
-                );
-            }
-
-            for (const auto &lane : getRight()) {
-                for (const auto &roadMark : lane.getExplicitRoadMarks()) {
-                    result[lane.getId()].emplace_back(std::vector<double>{
-                            getS() + roadMark[0], getS() + roadMark[1],
-                            roadMark[2]}
-                    );
-                }
-            }
-            for (const auto &lane : getLeft()) {
-                for (const auto &roadMark : lane.getExplicitRoadMarks()) {
-                    result[lane.getId()].emplace_back(std::vector<double>{
-                            getS() + roadMark[0], getS() + roadMark[1],
-                            roadMark[2]}
-                    );
-                }
-            }
-            return result;
-        }
+        void sort();
     };
 }
 

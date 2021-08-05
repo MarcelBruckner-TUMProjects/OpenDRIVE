@@ -198,7 +198,7 @@ namespace opendrive {
                 auto lane = laneSection.getCenter();
                 assertBasicLaneProperties(lane, 0, "none", false, 0, 0, 0);
 
-                lane = laneSection.getLeft()[1];
+                lane = laneSection.getLeft()[0];
                 assertBasicLaneProperties(lane, 1, "shoulder", false, 8, 0, 0);
                 CubicPolynomWrapper width = lane.getWidths()[1];
                 ASSERT_EQ(width.getS(), 2.650002706167e+01);

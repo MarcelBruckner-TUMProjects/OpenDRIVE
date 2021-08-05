@@ -160,19 +160,7 @@ namespace opendrive {
          */
         const std::vector<opendrive::RoadMark> &getRoadMarks() const;
 
-        std::vector<std::vector<double>> getExplicitRoadMarks() const {
-            std::vector<std::vector<double>> result;
-            for (const auto &roadMark : getRoadMarks()) {
-                for (const auto &explicitLine : roadMark.getExplicitLines()) {
-                    double start = roadMark.getS() + explicitLine.getS();
-                    result.emplace_back(
-                            std::vector<double>{start, start + explicitLine.getLength(),
-                                                explicitLine.getTOffset()}
-                    );
-                }
-            }
-            return result;
-        };
+        std::vector<std::vector<double>> getExplicitRoadMarks() const;;
     };
 
 }

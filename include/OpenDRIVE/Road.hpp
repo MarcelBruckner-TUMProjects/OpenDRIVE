@@ -319,6 +319,8 @@ namespace opendrive {
          * @get
          */
         const std::map<double, std::map<int, std::vector<std::pair<Vector, Vector>>>> &getExplicitRoadMarks() const;
+
+        void sort();
     };
 }
 

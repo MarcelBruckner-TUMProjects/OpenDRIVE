@@ -30,23 +30,28 @@ namespace opendrive {
             lateralProfileShapes(std::move(lateralProfileShapes)),
             lanes(lanes) {
 
+        sort();
+        extractExplicitRoadMarks();
+    }
+
+    void Road::sort() {
         std::sort(planView.begin(), planView.end(), [](const Geometry &lhs, const Geometry &rhs) {
             return lhs.getS() < rhs.getS();
         });
-        std::sort(elevationProfile.begin(), elevationProfile.end(), [](const Elevation &lhs, const Elevation &rhs) {
-            return lhs.getS() < rhs.getS();
-        });
+        std::sort(elevationProfile.begin(), elevationProfile.end(),
+                  [](const Elevation &lhs, const Elevation &rhs) {
+                      return lhs.getS() < rhs.getS();
+                  });
         std::sort(lateralProfileSuperElevations.begin(), lateralProfileSuperElevations.end(),
                   [](const SuperElevation &lhs, const SuperElevation &rhs) {
                       return lhs.getS() < rhs.getS();
                   });
-        std::sort(lateralProfileShapes.begin(), lateralProfileShapes.end(), [](const Shape &lhs, const Shape &rhs) {
-            return lhs.getS() < rhs.getS() || lhs.getT() < rhs.getT();
-        });
-
-        extractExplicitRoadMarks();
+        // TODO somehow including the next creates a SIGSEV
+//        std::sort(lateralProfileShapes.begin(), lateralProfileShapes.end(),
+//                  [](const Shape &lhs, const Shape &rhs) {
+//                      return (lhs.getS() < rhs.getS()) || (lhs.getT() < rhs.getT());
+//                  });
     }
-
 
     bool Road::operator==(const std::string &roadId) {
         return roadId == id;

@@ -18,15 +18,17 @@ namespace opendrive {
                                                              widths(std::move(widths)),
                                                              borders(std::move(borders)),
                                                              roadMarks(std::move(roadMarks)) {
-        std::sort(heights.begin(), heights.end(), [](const Height &lhs, const Height &rhs) {
+        std::sort(this->heights.begin(), this->heights.end(), [](const Height &lhs, const Height &rhs) {
             return lhs.getS() < rhs.getS();
         });
-        std::sort(widths.begin(), widths.end(), [](const CubicPolynomWrapper &lhs, const CubicPolynomWrapper &rhs) {
-            return lhs.getS() < rhs.getS();
-        });
-        std::sort(borders.begin(), borders.end(), [](const CubicPolynomWrapper &lhs, const CubicPolynomWrapper &rhs) {
-            return lhs.getS() < rhs.getS();
-        });
+        std::sort(this->widths.begin(), this->widths.end(),
+                  [](const CubicPolynomWrapper &lhs, const CubicPolynomWrapper &rhs) {
+                      return lhs.getS() < rhs.getS();
+                  });
+        std::sort(this->borders.begin(), this->borders.end(),
+                  [](const CubicPolynomWrapper &lhs, const CubicPolynomWrapper &rhs) {
+                      return lhs.getS() < rhs.getS();
+                  });
     }
 
     int Lane::getId() const {
@@ -71,6 +73,20 @@ namespace opendrive {
 
     const std::vector<opendrive::RoadMark> &Lane::getRoadMarks() const {
         return roadMarks;
+    }
+
+    std::vector<std::vector<double>> Lane::getExplicitRoadMarks() const {
+        std::vector<std::vector<double>> result;
+        for (const auto &roadMark : getRoadMarks()) {
+            for (const auto &explicitLine : roadMark.getExplicitLines()) {
+                double start = roadMark.getS() + explicitLine.getS();
+                result.emplace_back(
+                        std::vector<double>{start, start + explicitLine.getLength(),
+                                            explicitLine.getTOffset()}
+                );
+            }
+        }
+        return result;
     }
 
     Lane::Height::Height(double s, double inner, double outer) : OpenDriveWrapper(s), inner(inner), outer(outer) {}

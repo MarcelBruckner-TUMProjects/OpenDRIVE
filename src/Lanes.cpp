@@ -13,10 +13,16 @@ namespace opendrive {
     Lanes::Lanes(std::vector<opendrive::CubicPolynomWrapper> laneOffsets,
                  std::vector<opendrive::LaneSection> laneSections) : laneOffsets(std::move(laneOffsets)),
                                                                      laneSections(std::move(laneSections)) {
-        std::sort(laneSections.begin(), laneSections.end(), [](const LaneSection &lhs, const LaneSection &rhs) {
-            return lhs.getS() < rhs.getS();
-        });
-        std::transform(laneSections.begin(), laneSections.end(), std::back_inserter(laneSectionsSCoordinates),
+        sort();
+    }
+
+    void Lanes::sort() {
+        std::sort(this->laneSections.begin(), this->laneSections.end(),
+                  [](const LaneSection &lhs, const LaneSection &rhs) {
+                      return lhs.getS() < rhs.getS();
+                  });
+        std::transform(this->laneSections.begin(), this->laneSections.end(),
+                       std::back_inserter(laneSectionsSCoordinates),
                        [](const LaneSection &element) { return element.getS(); });
     }
 

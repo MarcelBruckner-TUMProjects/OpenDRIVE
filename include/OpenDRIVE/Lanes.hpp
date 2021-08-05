@@ -88,6 +88,8 @@ namespace opendrive {
         double calculateLaneTOffset(double s, int laneId) const;
 
         std::map<double, std::map<int, std::vector<std::vector<double>>>> calculateExplicitRoadMarks() const;
+
+        void sort();
     };
 }
 
