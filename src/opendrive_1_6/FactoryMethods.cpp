@@ -33,7 +33,6 @@ namespace opendrive {
                         openDriveObject.paramPoly3()->bU(),
                         openDriveObject.paramPoly3()->cU(),
                         openDriveObject.paramPoly3()->dU()};
-
             } else {
                 return {0, 0, 0, 0};
             }
@@ -52,15 +51,24 @@ namespace opendrive {
             }
         }
 
-        opendrive::Geometry createGeometry(
+        template<>
+        opendrive::Geometry create(
                 const simulation::standard::opendrive_schema::t_road_planView_geometry &openDriveObject) {
-            return opendrive::Geometry(openDriveObject.s().operator const double &(),
-                                       Vector{(double) openDriveObject.x(),
-                                              (double) openDriveObject.y()},
-                                       (double) openDriveObject.hdg(),
-                                       std::strtod(openDriveObject.length().c_str(), nullptr),
-                                       extractU(openDriveObject),
-                                       extractV(openDriveObject));
+            double s = openDriveObject.s();
+            const Vector &start = Vector{(double) openDriveObject.x(),
+                                         (double) openDriveObject.y()};
+            double heading = openDriveObject.hdg();
+            auto length = boost::lexical_cast<double>(openDriveObject.length());
+
+            if (openDriveObject.paramPoly3().present()) {
+                return opendrive::Geometry(s, start, heading, length,
+                                           extractU(openDriveObject),
+                                           extractV(openDriveObject));
+            } else if (openDriveObject.line().present()) {
+                return opendrive::Geometry(s, start, heading, length);
+            } else {
+                throw std::invalid_argument("Found geometry that is not a line or paramPoly3. Cannot parse!");
+            }
         }
 
 
@@ -151,7 +159,7 @@ namespace opendrive {
                 const simulation::standard::opendrive_schema::t_road &openDriveObject) {
             std::vector<opendrive::Geometry> planView;
             for (const auto &geometryNode : openDriveObject.planView().geometry()) {
-                planView.emplace_back(createGeometry(geometryNode));
+                planView.emplace_back(create<Geometry>(geometryNode));
             }
             return planView;
         }
@@ -440,11 +448,27 @@ namespace opendrive {
 
         template<>
         opendrive::HDMap create(const std::string &filename) {
-            return opendrive::HDMap(
-                    filename,
-                    extractRoads(*simulation::standard::opendrive_schema::OpenDRIVE_(filename,
-                                                                                     ::xml_schema::flags::dont_validate)),
-                    extractHeader(filename));
+            try {
+                return opendrive::HDMap(
+                        filename,
+                        extractRoads(*simulation::standard::opendrive_schema::OpenDRIVE_(filename,
+                                                                                         ::xml_schema::flags::dont_validate)),
+                        extractHeader(filename));
+            } catch (const xsd::cxx::tree::unexpected_element<char> &e) {
+                std::stringstream message;
+                message << e.what();
+                message << std::endl;
+                message
+                        << R"(You probably have to add the attribute 'xmlns="http://code.asam.net/simulation/standard/opendrive_schema"' to the OpenDRIVE node.)";
+                throw std::invalid_argument(message.str());
+            } catch (const xsd::cxx::tree::unexpected_enumerator<char> &e) {
+                std::stringstream message;
+                message << e.what();
+                message << "\n";
+                message << "You probably have to adjust objects with the type 'portal'." << std::endl;
+                message << R"(Either remove all objects with 'type="portal"' or change it to 'type="none"'.)";
+                throw std::invalid_argument(message.str());
+            }
         }
     }
 }

@@ -81,6 +81,19 @@ namespace opendrive {
 //                plyFile.close();
 //            }
 
+//            /**
+//             * Tests formatting the objects to PLY.
+//             */
+//            TEST_F(FormatterTests, testObjectsToPLY) {
+//                mockTestMap->sampleLanes(1);
+//                const std::string &ply = opendrive::objectsToPLY(*mockTestMap);
+//                std::cout << ply << std::endl;
+//                std::ofstream plyFile;
+//                plyFile.open("test.ply");
+//                plyFile << ply;
+//                plyFile.close();
+//            }
+
             /**
              * Tests formatting the objects to YAML.
              */

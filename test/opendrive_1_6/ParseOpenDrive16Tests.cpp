@@ -91,10 +91,12 @@ namespace opendrive {
                 ASSERT_EQ(planView.size(), 30);
 
                 auto geometry = planView[0];
-                EXPECT_EQ(geometry.getU(), CubicPolynom(-0.000000000000e+00, 1.000000000000e+00, -2.298912093268e-12,
-                                                        9.000529057042e-15));
-                EXPECT_EQ(geometry.getV(), CubicPolynom(0.000000000000e+00, 3.330669073875e-16, -1.829164785029e-07,
-                                                        4.630645388358e-10));
+                EXPECT_EQ(geometry.getParamPoly3()->getU(),
+                          CubicPolynom(-0.000000000000e+00, 1.000000000000e+00, -2.298912093268e-12,
+                                       9.000529057042e-15));
+                EXPECT_EQ(geometry.getParamPoly3()->getV(),
+                          CubicPolynom(0.000000000000e+00, 3.330669073875e-16, -1.829164785029e-07,
+                                       4.630645388358e-10));
             }
 
             /**

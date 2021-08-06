@@ -91,15 +91,15 @@ namespace opendrive {
                 ASSERT_EQ(planView.size(), 4);
 
                 auto geometry = planView[0];
-                EXPECT_NEAR(geometry.getU().a, -0.000000000000e+00, maxDifference);
-                EXPECT_NEAR(geometry.getU().b, 1.000000000000e+00, maxDifference);
-                EXPECT_NEAR(geometry.getU().c, -2.864238929279e-11, maxDifference);
-                EXPECT_NEAR(geometry.getU().d, 9.895389049440e-14, maxDifference);
+                EXPECT_NEAR(geometry.getParamPoly3()->getU().a, -0.000000000000e+00, maxDifference);
+                EXPECT_NEAR(geometry.getParamPoly3()->getU().b, 1.000000000000e+00, maxDifference);
+                EXPECT_NEAR(geometry.getParamPoly3()->getU().c, -2.864238929279e-11, maxDifference);
+                EXPECT_NEAR(geometry.getParamPoly3()->getU().d, 9.895389049440e-14, maxDifference);
 
-                EXPECT_NEAR(geometry.getV().a, 0.000000000000e+00, maxDifference);
-                EXPECT_NEAR(geometry.getV().b, 2.775557561563e-16, maxDifference);
-                EXPECT_NEAR(geometry.getV().c, -1.284829717715e-07, maxDifference);
-                EXPECT_NEAR(geometry.getV().d, 3.576738398807e-10, maxDifference);
+                EXPECT_NEAR(geometry.getParamPoly3()->getV().a, 0.000000000000e+00, maxDifference);
+                EXPECT_NEAR(geometry.getParamPoly3()->getV().b, 2.775557561563e-16, maxDifference);
+                EXPECT_NEAR(geometry.getParamPoly3()->getV().c, -1.284829717715e-07, maxDifference);
+                EXPECT_NEAR(geometry.getParamPoly3()->getV().d, 3.576738398807e-10, maxDifference);
 
 //            ASSERT_STREQ(geometry.pRange.c_str(), "arcLength");
             }

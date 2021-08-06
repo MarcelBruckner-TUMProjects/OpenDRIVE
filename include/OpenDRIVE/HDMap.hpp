@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <OpenDRIVE/utils/LongLatProjector.hpp>
 
 
 #include "Road.hpp"
@@ -114,6 +115,10 @@ namespace opendrive {
                 road.second.sampleLanes(interval);
             }
         }
+
+        Vector getWorldOriginById(const std::string &id) const;
+
+        Vector getWorldOriginByLongLat(double longitude, double latitude) const;
     };
 }
 #endif //OPENDRIVE_HDMAP_HPP

@@ -248,7 +248,6 @@ namespace opendrive {
 #pragma region Calculations
 
     Vector Road::interpolate(double s, double t) const {
-
         Geometry geometry = getElement<Geometry>(s);
 
         Vector tangent = geometry.calculateTangent(s);
@@ -257,7 +256,6 @@ namespace opendrive {
 
         auto height = getElement<Elevation>(s).interpolate(s);
         double roll = getElement<SuperElevation>(s).interpolate(s);
-
 
         Shape *shape = getElement(s, t);
         if (shape != nullptr) {
@@ -282,11 +280,23 @@ namespace opendrive {
         return position;
     }
 
+    const static std::vector<std::string> OBJECT_NAMES_TO_EXCLUDE{"guardRail", "trafficIsland", "raisedMedian", "wall"};
+
     template<>
     Vector Road::getWorldPosition(const Object &object) const {
         auto position = interpolate(object.getS(), object.getT());
+
         auto zOffset = object.getZOffset();
-        return position + Vector{0, 0, zOffset};
+
+        Vector result;
+        if (object.getType() == "barrier" &&
+            std::find(OBJECT_NAMES_TO_EXCLUDE.begin(), OBJECT_NAMES_TO_EXCLUDE.end(), object.getName()) ==
+            OBJECT_NAMES_TO_EXCLUDE.end()) {
+            result = Vector{position[0], position[1], zOffset};
+        } else {
+            result = position + Vector{0, 0, zOffset};
+        }
+        return result;
     }
 
     template<>

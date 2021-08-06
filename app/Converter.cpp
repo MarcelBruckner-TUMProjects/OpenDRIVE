@@ -7,6 +7,23 @@
 
 namespace po = boost::program_options;
 
+std::string getFilename(const po::variables_map &vm, const std::string &optionName) {
+    std::string name = vm[optionName].as<std::string>();
+    if (name == "<input>") {
+        name = vm["input"].as<std::string>() + "_" + optionName;
+    }
+    return name;
+}
+
+namespace std {
+    std::ostream &operator<<(std::ostream &os, const std::vector<double> &vec) {
+        for (auto item : vec) {
+            os << item << " ";
+        }
+        return os;
+    }
+}
+
 /**
  * Standalone mode for the converter.
  */
@@ -22,7 +39,7 @@ int main(int argc, char **argv) {
              "The prefix for the file that contains the roads. File ending is automatically appended.")
             ("explicit_road_marks,e", po::value<std::string>()->default_value("<input>"),
              "The prefix for the file that contains the explicit road marks. File ending is automatically appended.")
-            ("long_lat_origin,l", po::value<std::string>()->default_value(""),
+            ("long_lat_origin,l", po::value<std::vector<double>>()->multitoken()->default_value({}),
              "The origin coordinate of the global reference frame in <longitude,latitude> format.")
             ("world_origin_id,w", po::value<std::string>()->default_value(""),
              "The id of the object used as the origin of the world. Takes precedence over --long_lat_origin.");
@@ -46,83 +63,39 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    std::string objectsYAML = vm["objects"].as<std::string>();
-    if (objectsYAML == "<input>") {
-        objectsYAML = input + "_objects";
-    }
-    objectsYAML += ".yaml";
+    std::string objectsYAML = getFilename(vm, "objects") + ".yaml";
+    std::string objectsPLY = getFilename(vm, "objects") + ".ply";
 
-    std::string laneSamplesPLY = vm["lane_samples"].as<std::string>();
-    if (laneSamplesPLY == "<input>") {
-        laneSamplesPLY = input + "_lane_samples";
-    }
-    std::string explicitRoadMarksPLY = vm["explicit_road_marks"].as<std::string>();
-    if (explicitRoadMarksPLY == "<input>") {
-        explicitRoadMarksPLY = input + "_explicit_road_marks";
-    }
-    std::string laneSamplesYAML = laneSamplesPLY;
-    std::string explicitRoadMarksYAML = explicitRoadMarksPLY;
-    laneSamplesPLY += ".ply";
-    explicitRoadMarksPLY += ".ply";
-    laneSamplesYAML += ".yaml";
-    explicitRoadMarksYAML += ".yaml";
+    std::string laneSamplesYAML = getFilename(vm, "lane_samples") + ".yaml";
+    std::string laneSamplesPLY = getFilename(vm, "lane_samples") + ".ply";
+
+    std::string explicitRoadMarksYAML = getFilename(vm, "explicit_road_marks") + ".yaml";
+    std::string explicitRoadMarksPLY = getFilename(vm, "explicit_road_marks") + ".ply";
 
     opendrive::HDMap hdMap = opendrive::createHDMap(input);
     hdMap.sampleLanes(1);
 
-    std::string long_lat_origin_str = vm["long_lat_origin"].as<std::string>();
-    std::string objectsYAMLContent;
-    std::string laneSamplesPLYContent;
-    std::string explicitRoadMarksPLYContent;
-    std::string laneSamplesYAMLContent;
-    std::string explicitRoadMarksYAMLContent;
-
+    std::vector<double> longLatOrigin = vm["long_lat_origin"].as<std::vector<double>>();
     auto worldOriginID = vm["world_origin_id"].as<std::string>();
 
+    opendrive::Vector origin{0, 0, 0};
+
     if (!worldOriginID.empty()) {
-        objectsYAMLContent = opendrive::objectsToYAML(hdMap, worldOriginID);
-
-        laneSamplesPLYContent = opendrive::laneSamplesToPLY(hdMap, worldOriginID);
-        laneSamplesYAMLContent = opendrive::laneSamplesToYAML(hdMap, worldOriginID);
-
-        explicitRoadMarksPLYContent = opendrive::explicitRoadMarksToPLY(hdMap, worldOriginID);
-        explicitRoadMarksYAMLContent = opendrive::explicitRoadMarksToYAML(hdMap, worldOriginID);
-
-    } else if (!long_lat_origin_str.empty()) {
-        std::regex long_lat_regex(R"(-?(\d+)\.(\d+))");
-        auto words_begin = std::sregex_iterator(long_lat_origin_str.begin(), long_lat_origin_str.end(), long_lat_regex);
-        std::ptrdiff_t const match_count(std::distance(
-                std::sregex_iterator(long_lat_origin_str.begin(), long_lat_origin_str.end(), long_lat_regex),
-                std::sregex_iterator()));
-        if (match_count != 2) {
+        origin = hdMap.getWorldOriginById(worldOriginID);
+    } else if (!longLatOrigin.empty()) {
+        if (longLatOrigin.size() != 2) {
             std::cout << "Please provide the coordinate origin in the format <longitude [N], latitude [E]>."
                       << std::endl;
         }
-        double longitude = std::strtod(words_begin->str().c_str(), nullptr);
-        double latitude = std::strtod((++words_begin)->str().c_str(), nullptr);
-
-        objectsYAMLContent = opendrive::objectsToYAML(hdMap, longitude, latitude);
-
-        laneSamplesPLYContent = opendrive::laneSamplesToPLY(hdMap, longitude, latitude);
-        laneSamplesYAMLContent = opendrive::laneSamplesToYAML(hdMap, longitude, latitude);
-
-        explicitRoadMarksPLYContent = opendrive::explicitRoadMarksToPLY(hdMap, longitude, latitude);
-        explicitRoadMarksYAMLContent = opendrive::explicitRoadMarksToYAML(hdMap, longitude, latitude);
-    } else {
-        objectsYAMLContent = opendrive::objectsToYAML(hdMap);
-
-        laneSamplesPLYContent = opendrive::laneSamplesToPLY(hdMap);
-        laneSamplesYAMLContent = opendrive::laneSamplesToYAML(hdMap);
-
-        explicitRoadMarksPLYContent = opendrive::explicitRoadMarksToPLY(hdMap);
-        explicitRoadMarksYAMLContent = opendrive::explicitRoadMarksToYAML(hdMap);
+        origin = hdMap.getWorldOriginByLongLat(longLatOrigin[0], longLatOrigin[1]);
     }
 
-    opendrive::writeToFile(objectsYAML, objectsYAMLContent);
+    opendrive::writeToFile(objectsYAML, opendrive::objectsToYAML(hdMap, origin));
+    opendrive::writeToFile(objectsPLY, opendrive::objectsToPLY(hdMap, origin));
 
-    opendrive::writeToFile(laneSamplesPLY, laneSamplesPLYContent);
-    opendrive::writeToFile(laneSamplesYAML, laneSamplesYAMLContent);
+    opendrive::writeToFile(laneSamplesYAML, opendrive::laneSamplesToYAML(hdMap, origin));
+    opendrive::writeToFile(laneSamplesPLY, opendrive::laneSamplesToPLY(hdMap, origin));
 
-    opendrive::writeToFile(explicitRoadMarksPLY, explicitRoadMarksPLYContent);
-    opendrive::writeToFile(explicitRoadMarksYAML, explicitRoadMarksYAMLContent);
+    opendrive::writeToFile(explicitRoadMarksYAML, opendrive::explicitRoadMarksToYAML(hdMap, origin));
+    opendrive::writeToFile(explicitRoadMarksPLY, opendrive::explicitRoadMarksToPLY(hdMap, origin));
 }

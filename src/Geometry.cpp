@@ -10,10 +10,22 @@ namespace opendrive {
 
     Geometry::Geometry(double s, const Vector &start, double heading, double length, const CubicPolynom &u,
                        const CubicPolynom &v)
-            : OpenDriveWrapper(s), u(u), v(v), heading(heading), length(length), start(start) {}
+            : OpenDriveWrapper(s),
+              paramPoly3(std::make_shared<ParamPoly3>(ParamPoly3{u, v})),
+              heading(heading),
+              length(length),
+              start(start) {}
+
+    Geometry::Geometry(double s, const Vector &start, double heading, double length) : OpenDriveWrapper(s),
+                                                                                       heading(heading),
+                                                                                       length(length),
+                                                                                       start(start) {}
 
     Vector Geometry::interpolatePrimitive(double s) const {
-        return {u(s), v(s)};
+        if (paramPoly3 != nullptr) {
+            return {paramPoly3->getU()(s), paramPoly3->getV()(s)};
+        }
+        return {s, 0, 0};
     }
 
     Vector Geometry::interpolate(double s) const {
@@ -43,7 +55,10 @@ namespace opendrive {
     }
 
     Vector Geometry::calculatePrimitiveReferenceTangent(double s) const {
-        return {u[s], v[s]};
+        if (paramPoly3 != nullptr) {
+            return {paramPoly3->getU()[s], paramPoly3->getV()[s]};
+        }
+        return {0, 1, 0};
     }
 
     Vector Geometry::calculateTangent(double ss) const {
@@ -63,12 +78,18 @@ namespace opendrive {
         return {-tangent.getY(), tangent.getX()};
     }
 
-    const CubicPolynom &Geometry::getU() const {
+    const std::shared_ptr<Geometry::ParamPoly3> &Geometry::getParamPoly3() const {
+        return paramPoly3;
+    }
+
+
+    Geometry::ParamPoly3::ParamPoly3(const CubicPolynom &u, const CubicPolynom &v) : u(u), v(v) {}
+
+    const CubicPolynom &Geometry::ParamPoly3::getU() const {
         return u;
     }
 
-    const CubicPolynom &Geometry::getV() const {
+    const CubicPolynom &Geometry::ParamPoly3::getV() const {
         return v;
     }
-
 }

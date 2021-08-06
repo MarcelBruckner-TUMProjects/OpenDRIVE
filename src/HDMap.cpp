@@ -57,4 +57,23 @@ namespace opendrive {
         }
         return sum;
     }
+
+    Vector HDMap::getWorldOriginById(const std::string &id) const {
+        if (id.empty()) {
+            return {0, 0};
+        }
+
+        return getPosition<Object>(id);
+    }
+
+    Vector HDMap::getWorldOriginByLongLat(double longitude, double latitude) const {
+        Vector origin{latitude, longitude};
+        if (std::abs(latitude) <= 90. && std::abs(longitude) <= 180.) {
+            LongLatProjector longLatProjector = LongLatProjector(getGeoReference());
+            origin = longLatProjector.project(origin, PJ_INV);
+        } else {
+            origin = {0, 0};
+        }
+        return origin;
+    }
 }

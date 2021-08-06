@@ -20,14 +20,39 @@ namespace opendrive {
     private:
 
         /**
-         * The polynom to calculate the u ccordinate.
+         * Wrapper for the OpenDRIVE paramPoly3 class.
+         *
+         * https://www.asam.net/index.php?eID=dumpFile&t=f&f=3495&token=56b15ffd9dfe23ad8f759523c806fc1f1a90a0e8#_parametric_cubic_curve
          */
-        CubicPolynom u;
+        class ParamPoly3 {
+            /**
+             * The polynom to calculate the u ccordinate.
+             */
+            CubicPolynom u;
 
-        /**
-         * The polynom to calculate the v ccordinate.
-         */
-        CubicPolynom v;
+            /**
+             * The polynom to calculate the v ccordinate.
+             */
+            CubicPolynom v;
+
+        public:
+            /**
+             * @constructor
+             */
+            ParamPoly3(const CubicPolynom &u, const CubicPolynom &v);
+
+            /**
+             * @get
+             */
+            const CubicPolynom &getU() const;
+
+            /**
+             * @get
+             */
+            const CubicPolynom &getV() const;
+        };
+
+        std::shared_ptr<ParamPoly3> paramPoly3;
 
         /**
          * The heading direction of the geometry.
@@ -84,6 +109,11 @@ namespace opendrive {
                  const CubicPolynom &v);
 
         /**
+        * @constructor
+        */
+        Geometry(double s, const Vector &start, double heading, double length);
+
+        /**
         * @destructor
         */
         ~Geometry() override = default;
@@ -132,12 +162,7 @@ namespace opendrive {
         /**
          * @get
          */
-        const CubicPolynom &getU() const;
-
-        /**
-         * @get
-         */
-        const CubicPolynom &getV() const;
+        const std::shared_ptr<ParamPoly3> &getParamPoly3() const;
     };
 
 }
