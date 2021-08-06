@@ -275,6 +275,7 @@ namespace opendrive {
         addGenericAttributes(map, yaml, origin);
         yaml << YAML::Key << "roads" << YAML::Value;
 
+        std::hash<std::string> hasher;
         yaml << YAML::BeginSeq;
         for (const auto &roadEntry : map.getRoads()) {
             auto road = roadEntry.second;
@@ -294,6 +295,9 @@ namespace opendrive {
                     yaml << YAML::BeginMap;
                     int i = lane.first;
                     yaml << YAML::Key << "lane" << YAML::Value << i;
+
+                    std::string laneId = road.getId() + std::to_string(laneSection.first) + std::to_string(lane.first);
+                    yaml << YAML::Key << "laneId" << YAML::Value << hasher(laneId);
                     yaml << YAML::Key << "samples" << YAML::Value;
                     yaml << YAML::BeginSeq;
                     for (const auto &sample : lane.second) {

@@ -26,22 +26,22 @@ namespace opendrive {
              */
             TEST_F(LanesTests, testSampleSCoordinates) {
                 auto sCoordinates = mockTestRoad->sampleSCoordinates(1.5);
-                ASSERT_EQ(sCoordinates.size(), 67);
+                ASSERT_EQ(sCoordinates.size(), 82);
                 ASSERT_EQ(sCoordinates[0], 0);
-                ASSERT_EQ(sCoordinates[66], mockTestRoad->getLength());
-                ASSERT_EQ(sCoordinates[10], 15);
+                ASSERT_EQ(sCoordinates[sCoordinates.size() - 1], mockTestRoad->getLength());
+                ASSERT_EQ(sCoordinates[51], 61.5);
+                EXPECT_NEAR(sCoordinates[57], 70, 1e-8);
 
 
                 sCoordinates = mockTestRoad->sampleSCoordinates(50);
-                ASSERT_EQ(sCoordinates.size(), 3);
-                ASSERT_EQ(sCoordinates[0], 0);
-                ASSERT_EQ(sCoordinates[1], 50);
-                ASSERT_EQ(sCoordinates[2], mockTestRoad->getLength());
+                ASSERT_EQ(sCoordinates.size(), 20);
+                EXPECT_NEAR(sCoordinates[9], 50, 1e-8);
+                ASSERT_EQ(sCoordinates[sCoordinates.size() - 1], mockTestRoad->getLength());
 
                 sCoordinates = mockTestRoad->sampleSCoordinates(500);
-                ASSERT_EQ(sCoordinates.size(), 2);
-                ASSERT_EQ(sCoordinates[0], 0);
-                ASSERT_EQ(sCoordinates[1], mockTestRoad->getLength());
+                ASSERT_EQ(sCoordinates.size(), 20);
+                EXPECT_NEAR(sCoordinates[9], 50, 1e-8);
+                ASSERT_EQ(sCoordinates[sCoordinates.size() - 1], mockTestRoad->getLength());
             }
 
             /**
@@ -65,12 +65,13 @@ namespace opendrive {
                 std::map<int, std::vector<Vector>> sampledLanePoints = laneSections[0];
 
                 auto oneOverSqrtTwo = 1.0 / std::sqrt(2);
-                double numSamples = sections * sectionLength + 1;
+                double numSamples = sections * (sectionLength + 1);
 
-                ASSERT_EQ(mockTestMap->getNumberOfSampledLanePoints(), numSamples * (numLanesPerSide * 2 + 1));
+                int points = mockTestMap->getNumberOfSampledLanePoints();
+                ASSERT_EQ(points, numSamples * (numLanesPerSide * 2 + 1));
                 ASSERT_EQ(sampledLanePoints.size(), numLanesPerSide * 2 + 1);
                 for (const auto &entry : sampledLanePoints) {
-                    ASSERT_EQ(entry.second.size(), 10);
+                    ASSERT_EQ(entry.second.size(), 11);
 
                     double offsetFromShape = 0;
                     if (entry.first == numLanesPerSide) {
@@ -78,7 +79,7 @@ namespace opendrive {
                     }
 
                     for (int i = 0; i < entry.second.size(); i++) {
-                        ASSERT_EQ(entry.second[i][0], i);
+                        ASSERT_NEAR(entry.second[i][0], i, 1e-8);
                         ASSERT_NEAR(entry.second[i][1], oneOverSqrtTwo * (entry.first * 2 + 1) + offsetFromShape, 1e-8);
                         ASSERT_NEAR(entry.second[i][2], oneOverSqrtTwo * (entry.first * 2 + 1) + i - offsetFromShape,
                                     1e-8);

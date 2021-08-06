@@ -4,6 +4,7 @@
 
 #include "OpenDRIVE/Road.hpp"
 #include <string>
+#include <set>
 #include <iomanip>
 #include <utility>
 #include<algorithm>
@@ -329,20 +330,32 @@ namespace opendrive {
     }
 
     std::vector<double> Road::sampleSCoordinates(double interval) const {
-        if (length < interval) {
-            return {0, length};
-        }
-
         std::vector<double> result;
-        int steps = (int) (length / interval);
-        for (int step = 0; step < steps; step++) {
-            double s = step * interval;
-            result.emplace_back(s);
+        if (length < interval) {
+            result = {0, length};
+        } else {
+            int steps = (int) (length / interval);
+            for (int step = 0; step < steps; step++) {
+                double s = step * interval;
+                result.emplace_back(s);
+            }
+
+            if (*result.end() < length) {
+                result.emplace_back(length);
+            }
         }
 
-        if (*result.end() != length) {
-            result.emplace_back(length);
+        for (const auto &laneSection : getLanes().getLaneSections()) {
+            if (laneSection.getS() == 0) {
+                continue;
+            }
+            result.emplace_back(laneSection.getS());
+            result.emplace_back(laneSection.getS() - 1e-10);
         }
+
+        std::set<double> removeDuplicates(result.begin(), result.end());
+        result.assign(removeDuplicates.begin(), removeDuplicates.end());
+        std::sort(result.begin(), result.end());
 
         return result;
     }

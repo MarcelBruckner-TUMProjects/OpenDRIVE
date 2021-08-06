@@ -131,11 +131,7 @@ namespace opendrive {
                                 numSamples++;
                                 ASSERT_EQ(sampleNode.IsSequence(), true);
                             }
-                            if (numLaneSections == 10) {
-                                ASSERT_EQ(numSamples, 11);
-                            } else {
-                                ASSERT_EQ(numSamples, 10);
-                            }
+                            ASSERT_EQ(numSamples, 11);
                         }
                         ASSERT_EQ(numLanes, 2 * numLanesPerSide + 1);
                     }
