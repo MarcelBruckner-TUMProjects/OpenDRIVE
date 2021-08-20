@@ -86,8 +86,8 @@ namespace opendrive {
                     double startS = explicitRoadMark[0];
                     double endS = explicitRoadMark[1];
 
-                    double startT = calculateLaneTOffset(startS - laneSectionS, lane.first) + explicitRoadMark[2];
-                    double endT = calculateLaneTOffset(endS - laneSectionS, lane.first) + explicitRoadMark[2];
+                    double startT = calculateLaneTOffset(startS, lane.first) + explicitRoadMark[2];
+                    double endT = calculateLaneTOffset(endS, lane.first) + explicitRoadMark[2];
                     result[laneSectionS][lane.first].emplace_back(std::vector<double>{startS, endS, startT, endT});
                 }
             }

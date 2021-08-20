@@ -324,6 +324,8 @@ namespace opendrive {
         addGenericAttributes(map, yaml, origin);
         yaml << YAML::Key << "roads" << YAML::Value;
 
+        int i = 0;
+
         yaml << YAML::BeginSeq;
         for (const auto &roadEntry : map.getRoads()) {
             auto road = roadEntry.second;
@@ -346,10 +348,19 @@ namespace opendrive {
                     yaml << YAML::Key << "explicitRoadMarks" << YAML::Value;
                     yaml << YAML::BeginSeq;
                     for (const auto &explicitRoadMark : explicitRoadMarks.second) {
+                        auto length = (explicitRoadMark.first - explicitRoadMark.second).length();
+                        if (length > 20) {
+                            std::cout << length << std::endl;
+                            continue;
+                        }
+                        yaml << YAML::BeginMap;
+                        yaml << YAML::Key << "id" << YAML::Value << i++;
+                        yaml << YAML::Key << "coordinates" << YAML::Value;
                         yaml << YAML::BeginSeq;
                         yaml << YAML::Flow << (explicitRoadMark.first - origin).getElements();
                         yaml << YAML::Flow << (explicitRoadMark.second - origin).getElements();
                         yaml << YAML::EndSeq;
+                        yaml << YAML::EndMap;
                     }
                     yaml << YAML::EndSeq;
                     yaml << YAML::EndMap;

@@ -173,10 +173,11 @@ namespace opendrive {
                             int numRoadMarks = 0;
                             for (const auto &explicitRoadMarksNode : laneNode["explicitRoadMarks"]) {
                                 numRoadMarks++;
-                                ASSERT_EQ(explicitRoadMarksNode.IsSequence(), true);
+                                ASSERT_TRUE(explicitRoadMarksNode["id"].IsDefined());
+                                ASSERT_EQ(explicitRoadMarksNode["coordinates"].IsSequence(), true);
 
                                 int numCoordinates = 0;
-                                for (const auto &explicitRoadMark : explicitRoadMarksNode) {
+                                for (const auto &explicitRoadMark : explicitRoadMarksNode["coordinates"]) {
                                     numCoordinates++;
                                     ASSERT_EQ(explicitRoadMark.IsSequence(), true);
                                 }

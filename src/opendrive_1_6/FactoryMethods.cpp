@@ -207,7 +207,7 @@ namespace opendrive {
         create(const simulation::standard::opendrive_schema::t_road_lanes_laneSection_lcr_lane_roadMark_explicit_line &lineNode) {
             double sOffset = lineNode.sOffset();
             double length = boost::lexical_cast<double>(lineNode.length());
-//            if (length < 0.1) {
+//            if (length > 10) {
 //                std::cout << length << std::endl;
 //            }
             double space = -1;
